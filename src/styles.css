@@ -1,8 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+@import "tailwindcss-primeui";
 
-/* Déclaration de la police */
+@import "primeicons/primeicons.css";
+
 @font-face {
   font-family: 'Poppins-Regular';
   src: url('/fonts/Poppins-Regular.ttf') format('truetype');
@@ -32,4 +34,5 @@ body,
     'Poppins-Regular',
     system-ui,
     sans-serif !important;
+    font-size: 14px;
 }

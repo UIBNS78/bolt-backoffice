@@ -1,0 +1,30 @@
+<div class="flex flex-col justify-between bg-gray-50 h-full rounded-2xl p-5">
+    <div class="flex flex-col gap-5">
+        <img src="images/bolt-logo.png" alt="logo" style="width: 50px; height: 50px">
+        
+        <div class="flex flex-col gap-3">
+            <a routerLink="/dashboard" routerLinkActive="bg-blue-100" #dashboardLink="routerLinkActive" pTooltip="Tableau de bord" appendTo="body" class="p-3 flex justify-center items-center rounded-lg transition-all w-12">
+                <i [ngClass]="['pi pi-home', dashboardLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+            </a>
+            <a routerLink="/deliveries" routerLinkActive="bg-blue-100" #deliveriesLink="routerLinkActive" pTooltip="Livraisons" class="p-3 flex justify-center items-center rounded-lg transition-all w-12">
+                <i [ngClass]="['pi pi-truck', deliveriesLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+            </a>
+            <a routerLink="/delivery-prices" routerLinkActive="bg-blue-100" #deliveryPricesLink="routerLinkActive" pTooltip="Frais de livraison" class="p-3 flex justify-center items-center rounded-lg transition-all w-12">
+                <i [ngClass]="['pi pi-map-marker', deliveryPricesLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+            </a>
+            <a routerLink="/delivery-men" routerLinkActive="bg-blue-100" #deliveryMenLink="routerLinkActive" pTooltip="Livreurs" class="p-3 flex justify-center items-center rounded-lg transition-all w-12">
+                <i [ngClass]="['pi pi-users', deliveryMenLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+            </a>
+            <a routerLink="/owners" routerLinkActive="bg-blue-100" #ownersLink="routerLinkActive" pTooltip="Propriétaires" class="p-3 flex justify-center items-center rounded-lg transition-all w-12">
+                <i [ngClass]="['pi pi-users', ownersLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+            </a>
+        </div>
+    </div>
+    <div class="flex flex-col items-center gap-3">
+        <a routerLink="/settings" routerLinkActive="bg-blue-100" #settingsLink="routerLinkActive" pTooltip="Paramètres" class="p-3 flex justify-center items-center rounded-lg transition-all w-12">
+            <i [ngClass]="['pi pi-cog', settingsLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+        </a>
+        <p-divider />
+        <p-avatar image="images/pdp.jpg" size="large" shape="circle" />
+    </div>
+</div>
