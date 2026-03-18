@@ -1,0 +1,1 @@
+export type ProfilePictureSize = "sm" | "md" | "lg" | "xl";

@@ -1,0 +1,33 @@
+import { InputSelectOptions } from "@shared/components/types/input-select-options";
+import { ValueOf } from "./owner-plan";
+import { User } from "./user";
+import { LoadingState } from "./loading-state";
+
+export const transportOptions: InputSelectOptions[] = [
+    { id: 1, label: "A pied" },
+    { id: 2, label: "Vélo" },
+    { id: 3, label: "Moto" },
+];
+
+export const transportObj: {
+    foot: 1;
+    bicyle: 2;
+    motorcycle: 3;
+} = {
+    foot: 1,
+    bicyle: 2,
+    motorcycle: 3
+};
+export type DeliveryManTransport = ValueOf<typeof transportObj>;
+
+export type DeliveryMan = 
+    Omit<User, "id" | "modifiedAt"> & 
+    {
+        id: number;
+        userId: number;
+        birthday: string;
+        address: string;
+        totalPackages: number;
+        transport: DeliveryManTransport;
+    } &
+    Pick<LoadingState, "isUpdating" | "isDeleting">
