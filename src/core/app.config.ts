@@ -19,7 +19,10 @@ export const appConfig: ApplicationConfig = {
     // primeNG
     providePrimeNG({
       theme: {
-        preset: Aura
+        preset: Aura,
+        options: {
+          prefix: "bolt"
+        }
       }
     }),
     // store
