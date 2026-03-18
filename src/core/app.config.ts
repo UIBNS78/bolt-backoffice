@@ -8,12 +8,20 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { AppInterceptor } from './app-interceptor';
 import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { environment } from 'environments/environment';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeuix/themes/lara';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     // routing
     provideRouter(routes),
+    // primeNG
+    providePrimeNG({
+      theme: {
+        preset: Aura
+      }
+    }),
     // store
     provideStore([
       AppState,
