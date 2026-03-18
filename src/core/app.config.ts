@@ -22,7 +22,11 @@ export const appConfig: ApplicationConfig = {
         preset: Lara,
         options: {
           prefix: "bolt",
-          darkModeSelector: ".none"
+          darkModeSelector: ".none",
+          cssLayer: {
+            name: "primeng",
+            order: "tailwind-base, primeng, tailwind-utilities"
+          }
         }
       }
     }),
