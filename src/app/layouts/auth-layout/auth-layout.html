@@ -1,2 +1,15 @@
-<p>auth-layout works!</p>
-<router-outlet></router-outlet>
+<main class="bg-auth-gradient h-screen flex items-center justify-center">
+    <div class="flex items-center w-[65%] gap-8">
+        <div class="flex flex-col gap-4 w-full">
+            <h1 class="font-extrabold text-4xl text-blue-400">Bolt MG</h1>
+            <h4 class="text-xl text-blue-950">La Révolution Numérique de la Livraison à Madagascar</h4>
+            <p class="text-gray-500">
+                Bolt MG est la solution conçue pour moderniser et simplifier le transport de colis à travers tout Madagascar. Notre mission est de digitaliser l'intégralité du processus logistique, offrant une transparence et une efficacité sans précédent sur le marché malgache.
+            </p>
+        </div>
+        
+        <p-card class="w-full">
+            <router-outlet></router-outlet>
+        </p-card>
+    </div>
+</main>
