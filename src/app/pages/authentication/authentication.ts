@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Store } from '@ngxs/store';
 import { SetUserAction } from '../../../store/user/user.action';
@@ -20,7 +20,8 @@ export class Authentication {
     private router: Router
   ) { }
 
-  signin(): void {
+  signin(): Observable<void> {
+    return of(undefined);
     // return this.http.post<SigninResponse>(`${environment.apiURL}/auth/signin`, { user });
   }
 
