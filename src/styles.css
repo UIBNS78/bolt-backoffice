@@ -1,9 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
-@import "tailwindcss-primeui";
+@import 'tailwindcss-primeui';
 
-@import "primeicons/primeicons.css";
+@import 'primeicons/primeicons.css';
 
 @font-face {
   font-family: 'Poppins-Regular';
@@ -27,19 +26,19 @@
   font-display: swap;
 }
 
-/* Application globale à l'application et aux composants PrimeNG */
-body,
-.bolt-component {
-  font-family:
-    'Poppins-Regular',
-    system-ui,
-    sans-serif !important;
-    font-size: 14px;
+.big-backdrop {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: transparent;
+  z-index: 9999;
 }
 
-.p-tooltip .p-tooltip-text {
-  padding: 0.4rem 0.5rem !important;
-  border-radius: 6px !important;
-  font-size: 0.7rem !important;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+/* Application globale à l'application et aux composants PrimeNG */
+body,
+.p-component {
+  font-family: 'Poppins-Regular', system-ui, sans-serif !important;
+  font-size: 14px;
 }

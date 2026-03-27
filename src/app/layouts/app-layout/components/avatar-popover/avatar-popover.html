@@ -1,7 +1,7 @@
 <p-avatar (click)="profilePopover.toggle($event)" image="images/pdp.jpg" size="large" shape="circle" class="cursor-pointer" />
 
 <p-popover #profilePopover>
-    <div class="flex flex-col gap-3 p-3">
+    <div class="flex flex-col gap-3">
         <div class="flex justify-center items-center gap-2">
             <p-avatar image="images/pdp.jpg" shape="circle" size="normal" />
             <div class="flex flex-col items-center">
@@ -12,15 +12,15 @@
         <div class="flex flex-col">
             <a class="flex items-center gap-2 py-2 px-3 rounded-lg cursor-pointer hover:bg-gray-100">
                 <i class="pi pi-user" style="font-size: 0.8rem;"></i>
-                <span class="text-xs">Mon compte</span>
+                <span class="text-sm">Mon compte</span>
             </a>
             <a class="flex items-center gap-2 py-2 px-3 rounded-lg cursor-pointer hover:bg-gray-100">
                 <i class="pi pi-lock" style="font-size: 0.8rem;"></i>
-                <span class="text-xs">Sécurité</span>
+                <span class="text-sm">Sécurité</span>
             </a>
-            <a class="flex items-center gap-2 text-red-500 py-2 px-3 rounded-lg cursor-pointer hover:bg-red-100">
+            <a (click)="handleLogout()" class="flex items-center gap-2 text-red-500 py-2 px-3 rounded-lg cursor-pointer hover:bg-red-100">
                 <i class="pi pi-sign-out" style="font-size: 0.8rem;"></i>
-                <span class="text-xs">Se déconnecter</span>
+                <span class="text-sm">Se déconnecter</span>
             </a>
         </div>
     </div>

@@ -1,4 +1,3 @@
-import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -17,13 +16,12 @@ export class Authentication {
 
   constructor(
     private http: HttpClient,
-    private googleAuthService: SocialAuthService,
     private store: Store,
     private router: Router
   ) { }
 
-  signin(user: SocialUser): Observable<SigninResponse> {
-    return this.http.post<SigninResponse>(`${environment.apiURL}/auth/signin`, { user });
+  signin(): void {
+    // return this.http.post<SigninResponse>(`${environment.apiURL}/auth/signin`, { user });
   }
 
   refreshToken(refreshToken: string): Observable<SigninResponse> {
@@ -40,7 +38,7 @@ export class Authentication {
         localStorage.removeItem(TOKEN);
         localStorage.removeItem(REFRESH_TOKEN);
         this.router.navigate(["/authentication"]);
-        this.googleAuthService.authState.subscribe((user: SocialUser) => user && this.googleAuthService.signOut());
+        // this.googleAuthService.authState.subscribe((user: SocialUser) => user && this.googleAuthService.signOut());
     });
   }
 }
