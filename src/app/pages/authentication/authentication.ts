@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Store } from '@ngxs/store';
 import { SetUserAction } from '../../../store/user/user.action';
@@ -8,21 +8,20 @@ import { SetRefreshTokenAction, SetTokenAction } from '../../../store/app/app.ac
 import { Router } from '@angular/router';
 import { SigninResponse } from './types/signin-response';
 import { REFRESH_TOKEN, TOKEN, USER } from '@shared/constants/storage';
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Authentication {
+  private http: HttpClient = inject(HttpClient);
+  private store: Store = inject(Store);
+  private router: Router = inject(Router);
+  protected socialAuthService: SocialAuthService = inject(SocialAuthService);
 
-  constructor(
-    private http: HttpClient,
-    private store: Store,
-    private router: Router
-  ) { }
-
-  signin(): Observable<void> {
-    return of(undefined);
-    // return this.http.post<SigninResponse>(`${environment.apiURL}/auth/signin`, { user });
+  
+  signin(user: SocialUser): Observable<SigninResponse> {
+    return this.http.post<SigninResponse>(`${environment.apiURL}/auth/signin`, { user });
   }
 
   refreshToken(refreshToken: string): Observable<SigninResponse> {
@@ -39,7 +38,7 @@ export class Authentication {
         localStorage.removeItem(TOKEN);
         localStorage.removeItem(REFRESH_TOKEN);
         this.router.navigate(["/authentication"]);
-        // this.googleAuthService.authState.subscribe((user: SocialUser) => user && this.googleAuthService.signOut());
+        this.socialAuthService.authState.subscribe((user: SocialUser) => user && this.socialAuthService.signOut());
     });
   }
 }

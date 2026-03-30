@@ -24,7 +24,15 @@
                     <p-button label="Mot de passe oublié ?" link size="small"></p-button>
                 </div>
             </div>
-            <p-button type="submit" label="Se connecter" severity="info" size="small" styleClass="w-full"></p-button>
+            <div class="flex flex-col">
+                <p-button type="submit" label="Se connecter" severity="info" size="small" styleClass="w-full"></p-button>
+                <p-divider align="center" type="dotted">
+                    <p class="text-gray-500">ou</p>
+                </p-divider>
+                <div class="flex justify-center">
+                    <asl-google-signin-button type='standard' size='medium'></asl-google-signin-button>
+                </div>
+            </div>
         </div>
     </form>
 </div>
