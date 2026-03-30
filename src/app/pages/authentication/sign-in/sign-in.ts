@@ -3,20 +3,26 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { Authentication } from '../authentication';
-import { Subject, takeUntil } from 'rxjs';
+import { first, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { SetUserAction } from 'store/user/user.action';
 import { SetRefreshTokenAction, SetTokenAction } from 'store/app/app.action';
-import { mockRefreshToken, mockToken, mockUser } from '@shared/constants/mocks';
 import { MessageModule } from 'primeng/message';
 import { Router } from '@angular/router';
+import { GoogleSigninButtonModule, SocialAuthService } from '@abacritt/angularx-social-login';
+import { REFRESH_TOKEN, TOKEN, USER } from '@shared/constants/storage';
+import { SigninResponse } from '../types/signin-response';
+import { DividerModule } from 'primeng/divider';
+
 @Component({
   selector: 'app-sign-in',
   imports: [
     ReactiveFormsModule,
     InputTextModule,
     ButtonModule,
-    MessageModule
+    MessageModule,
+    DividerModule,
+    GoogleSigninButtonModule
   ],
   templateUrl: './sign-in.html',
   styleUrl: './sign-in.css',
@@ -25,12 +31,33 @@ export class SignIn implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
   
   protected form: FormGroup = new FormGroup({});
-  protected formBuilder: FormBuilder = inject(FormBuilder);
-  protected authService: Authentication = inject(Authentication);
-  protected router: Router = inject(Router);
-  protected store: Store = inject(Store);
+  private formBuilder: FormBuilder = inject(FormBuilder);
+  private authService: Authentication = inject(Authentication);
+  private socialAuthService: SocialAuthService = inject(SocialAuthService);
+  private router: Router = inject(Router);
+  private store: Store = inject(Store);
 
   ngOnInit(): void {
+    this.socialAuthService.authState.subscribe((user) => {
+      if (user != null) {
+        this.authService.signin(user).pipe(
+          first(),
+          takeUntil(this.unsubscribe$),
+        ).subscribe((response: SigninResponse) => {
+          this.store.dispatch([
+            new SetUserAction(response.user),
+            new SetTokenAction(response.token),
+            new SetRefreshTokenAction(response.refreshToken)
+          ]).subscribe(() => {
+            localStorage.setItem(USER, JSON.stringify(response.user));
+            localStorage.setItem(TOKEN, response.token);
+            localStorage.setItem(REFRESH_TOKEN, response.refreshToken);
+            this.router.navigate(["/"]);
+          });
+        });
+      }
+    });
+
     this.form = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -48,17 +75,6 @@ export class SignIn implements OnInit, OnDestroy {
       return;
     }
 
-    this.authService.signin().pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe(() => {
-      this.store.dispatch([
-        new SetUserAction(mockUser),
-        new SetTokenAction(mockToken),
-        new SetRefreshTokenAction(mockRefreshToken)
-      ]).subscribe(() => {
-        this.form.reset();
-        this.router.navigate(["/"]);
-      });
-    });
+    console.log(this.form.getRawValue());
   }
 }

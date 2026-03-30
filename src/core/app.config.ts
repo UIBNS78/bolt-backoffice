@@ -9,6 +9,9 @@ import { AppInterceptor } from './app-interceptor';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { SocialAuthServiceConfig, GoogleLoginProvider, SOCIAL_AUTH_CONFIG } from '@abacritt/angularx-social-login';
+import { environment } from 'environments/environment';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -27,6 +30,26 @@ export const appConfig: ApplicationConfig = {
         }
       }
     }),
+    MessageService,
+    // google auth
+    {
+      provide: SOCIAL_AUTH_CONFIG,
+      useValue: {
+        autoLogin: true,
+        lang: "fr",
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(environment.googleClientID, {
+              oneTapEnabled: false
+            })
+          }
+        ],
+        onError: (err: unknown) => {
+          console.log("Error from app.config :", err);
+        }
+      } as SocialAuthServiceConfig,
+    },
     // store
     provideStore([
       AppState,
