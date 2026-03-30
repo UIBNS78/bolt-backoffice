@@ -7,24 +7,23 @@ import { UserState } from 'store/user/user.state';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AppInterceptor } from './app-interceptor';
 import { providePrimeNG } from 'primeng/config';
-import Lara from '@primeuix/themes/lara';
+import Aura from '@primeuix/themes/aura';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     // routing
     provideRouter(routes),
+    // animations
+    provideAnimationsAsync(),
     // primeNG
     providePrimeNG({
       theme: {
-        preset: Lara,
+        preset: Aura,
         options: {
-          prefix: "bolt",
           darkModeSelector: ".none",
-          cssLayer: {
-            name: "primeng",
-            order: "tailwind-base, primeng, tailwind-utilities"
-          }
+          cssLayer: false
         }
       }
     }),

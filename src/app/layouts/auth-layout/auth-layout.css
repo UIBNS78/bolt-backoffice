@@ -1,0 +1,8 @@
+.bg-auth-gradient {
+    background: radial-gradient(
+        circle at 10% 90%,    /* Positionné plus précisément dans le coin inférieur gauche */
+        #c9e0ff 0%,            /* Bleu plus intense au point d'origine */
+        #e8f2ff 40%,           /* Bleu très clair en transition */
+        #f8faff 100%           /* Blanc cassé bleuté pour le reste de la page */
+    );
+}

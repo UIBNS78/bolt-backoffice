@@ -1,0 +1,15 @@
+<div class="flex flex-col gap-4">
+    <div class="flex flex-col items-center gap-2">
+        <div class="flex items-center justify-center rounded-full p-5 bg-red-100">
+            <i [ngClass]="[icon, 'text-red-500']" style="font-size: 1.5rem;"></i>
+        </div>
+        <h3 class="font-semibold">{{ title }}</h3>
+    </div>
+
+    <p class="text-gray-500">{{ message }}</p>
+    
+    <div class="flex items-center justify-center gap-2">
+        <p-button [label]="rejectLabel" severity="secondary" variant="text" size="small" (click)="handleReject()"></p-button>
+        <p-button [label]="acceptLabel" severity="danger" size="small" (click)="handleAccept()"></p-button>
+    </div>
+</div>
