@@ -1,1 +1,53 @@
-<p>owners works!</p>
+<div class="flex flex-col gap-5">
+    <div class="flex justify-between items-center">
+        <div class="flex flex-col">
+            <h1 class="text-xl text-blue-950">Propriétaires</h1>
+            <p class="text-gray-400">Contient toutes les informations nécessaires pour une gestion efficace de notre clientèle.</p>
+        </div>
+    </div>
+    <div class="border rounded-xl border-gray-200 p-2">
+        <p-table [value]="data().owners" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #header>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th>Nom complet</th>
+                    <th>Nom commercial</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Nombre de colis</th>
+                    <th>Date de création</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-owner>
+                <tr>
+                    <td>{{ owner.id }}</td>
+                    <td>{{ owner.name + ' ' + owner.firstName }}</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <p>{{ owner.commercialName }}</p>
+                            @if (owner.planId === 2) {
+                                <i class="pi pi-star-fill" style="color: orange" pInputText pTooltip="Premium"></i>
+                            }
+                        </div>
+                    </td>
+                    <td>{{ owner.email }}</td>
+                    <td>{{ owner.phone }}</td>
+                    <td>{{ owner.totalPackages }}</td>
+                    <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMM yyyy" }}</td>
+                    <td>
+                        <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" />
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <p-paginator 
+            (onPageChange)="onPageChange($event)" 
+            [first]="first()" 
+            [rows]="rows()" 
+            [totalRecords]="data().totalItems" 
+            [rowsPerPageOptions]="[10, 20, 30]"
+            class="p-paginator-sm"
+        />
+    </div>
+</div>
