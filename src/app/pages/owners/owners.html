@@ -4,6 +4,23 @@
             <h1 class="text-xl text-blue-950">Propriétaires</h1>
             <p class="text-gray-400">Contient toutes les informations nécessaires pour une gestion efficace de notre clientèle.</p>
         </div>
+        <div class="flex justify-end items-center gap-3">
+            <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
+                <i class="pi pi-users" style="color: green"></i>
+                <p>{{ counts().ownersCount }}</p>
+                <p class="text-gray-500">Propriétaires</p>
+            </div>
+            <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
+                <i class="pi pi-star-fill" style="color: orange"></i>
+                <p>{{ counts().premiumCount }}</p>
+                <p class="text-gray-500">Premium</p>
+            </div>
+            <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
+                <i class="pi pi-users"></i>
+                <p>{{ counts().simpleCount }}</p>
+                <p class="text-gray-500">Simple</p>
+            </div>
+        </div>
     </div>
     <div class="border rounded-xl border-gray-200 p-2">
         <p-table [value]="data().owners" [tableStyle]="{ 'min-width': '50rem' }">
