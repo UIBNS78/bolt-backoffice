@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -13,15 +13,14 @@ import { AppState } from '../store/app/app.state';
 import { Authentication } from 'app/pages/authentication/authentication';
 import { SetUserAction } from 'store/user/user.action';
 import { REFRESH_TOKEN, TOKEN, USER } from '@shared/constants/storage';
+import { MessageService } from 'primeng/api';
 
 @Injectable()
 export class AppInterceptor implements HttpInterceptor {
   private httpCalls: number = 0;
-
-  constructor(
-    private authService: Authentication,
-    private store: Store
-  ) {}
+  private authService: Authentication = inject(Authentication);
+  private store: Store = inject(Store);
+  private messageService: MessageService = inject(MessageService);
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token: string | null = this.store.selectSnapshot<string | null>(AppState.token);
@@ -34,6 +33,12 @@ export class AppInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         switch(error.status) {
           case 400: {
+            this.messageService.add({
+              severity: 'error',
+              summary: "Erreur",
+              detail: error.error.message ?? "Certain champ sont invalide.",
+              life: 5000
+            });
             console.log(error.error.message ?? "Certain champ sont invalide.", "Erreur");
             break;
           }
@@ -53,26 +58,56 @@ export class AppInterceptor implements HttpInterceptor {
                   return next.handle(this.injectToken(request, response.token))
                 }),
                 catchError(() => {
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: "Session expirée",
+                    detail: "Veuillez vous reconnecter.",
+                    life: 5000
+                  });
                   console.log("Veuillez vous reconnecter.", "Session expirée");
                   this.authService.logout();
                   return EMPTY;
                 })
               );
             } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: "Session expirée",
+                detail: "Veuillez vous reconnecter.",
+                life: 5000
+              });
               console.log("Veuillez vous reconnecter.", "Session expirée");
               this.authService.logout();
             }
             break;
           }
           case 402: {
+            this.messageService.add({
+              severity: 'error',
+              summary: "Erreur",
+              detail: error.error.message,
+              life: 5000
+            });
             console.log(error.error.message, "Erreur");
             break;
           }
           case 403: {
+            this.messageService.add({
+              severity: 'error',
+              summary: "Erreur",
+              detail: error.error.message ?? "Forbidden.",
+              life: 5000
+            });
             console.log(error.error.message ?? "Forbidden.", "Erreur");
             break;
           }
           default: 
+            this.messageService.add({
+              severity: 'error',
+              summary: "Erreur",
+              detail: "Une erreur inattendue s'est produite dans le serveur.",
+              life: 5000
+            });
             console.log("Une erreur inattendue s'est produite dans le serveur.", "Erreur");
             break;
         }

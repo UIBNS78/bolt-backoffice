@@ -42,7 +42,7 @@ export class SignIn implements OnInit, OnDestroy {
       if (user != null) {
         this.authService.signin(user).pipe(
           first(),
-          takeUntil(this.unsubscribe$)
+          takeUntil(this.unsubscribe$),
         ).subscribe((response: SigninResponse) => {
           this.store.dispatch([
             new SetUserAction(response.user),

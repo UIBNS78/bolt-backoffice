@@ -8,13 +8,14 @@ import { AsyncPipe } from '@angular/common';
 import { REFRESH_TOKEN, TOKEN, USER } from '@shared/constants/storage';
 import { SetUserAction } from 'store/user/user.action';
 import { User } from '@shared/types/user';
-
+import { ToastModule } from 'primeng/toast';
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
-    AsyncPipe
+    AsyncPipe,
+    ToastModule
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
