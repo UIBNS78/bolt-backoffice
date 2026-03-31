@@ -39,7 +39,8 @@ import { OwnerCounts } from './components/owner-counts/owner-counts';
     SkeletonModule,
     OwnersPlaceholder,
     OwnerForm,
-    OwnerCounts
+    OwnerCounts,
+    TooltipModule
   ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',

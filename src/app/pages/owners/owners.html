@@ -45,7 +45,7 @@
                             <td>{{ owner.totalPackages }}</td>
                             <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
                             <td>
-                                <p-button (click)="handleDelete(owner)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="owner.isDeleting" />
+                                <p-button (click)="handleDelete(owner)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="owner.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
                             </td>
                         </tr>
                 </ng-template>
