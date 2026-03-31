@@ -12,6 +12,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { SocialAuthServiceConfig, GoogleLoginProvider, SOCIAL_AUTH_CONFIG } from '@abacritt/angularx-social-login';
 import { environment } from 'environments/environment';
 import { MessageService } from 'primeng/api';
+import { provideNgxMask } from 'ngx-mask';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -62,5 +63,7 @@ export const appConfig: ApplicationConfig = {
       useClass: AppInterceptor,
       multi: true
     },
+    // ngx-mask
+    provideNgxMask()
   ]
 };

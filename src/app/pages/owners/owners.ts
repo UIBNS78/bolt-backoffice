@@ -12,6 +12,9 @@ import { TooltipModule } from 'primeng/tooltip';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { ChipModule } from 'primeng/chip';
+import { NgxMaskPipe } from 'ngx-mask';
+
 @Component({
   selector: 'app-owners',
   imports: [
@@ -22,7 +25,9 @@ import { InputTextModule } from 'primeng/inputtext';
     TooltipModule,
     IconFieldModule,
     InputIconModule,
-    InputTextModule
+    InputTextModule,
+    ChipModule,
+    NgxMaskPipe
   ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',
