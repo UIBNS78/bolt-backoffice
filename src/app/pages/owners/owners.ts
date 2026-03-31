@@ -14,6 +14,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { ChipModule } from 'primeng/chip';
 import { NgxMaskPipe } from 'ngx-mask';
+import { PluralPipe } from '@shared/pipes/plural.pipe';
 
 @Component({
   selector: 'app-owners',
@@ -27,7 +28,8 @@ import { NgxMaskPipe } from 'ngx-mask';
     InputIconModule,
     InputTextModule,
     ChipModule,
-    NgxMaskPipe
+    NgxMaskPipe,
+    PluralPipe
   ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',

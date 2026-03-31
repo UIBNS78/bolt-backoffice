@@ -8,17 +8,17 @@
             <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
                 <i class="pi pi-users" style="color: green"></i>
                 <p>{{ counts().ownersCount }}</p>
-                <p class="text-gray-500">Propriétaires</p>
+                <p class="text-gray-500">{{ 'Propriétaire' | plural:counts().ownersCount }}</p>
             </div>
             <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
                 <i class="pi pi-star-fill" style="color: orange"></i>
                 <p>{{ counts().premiumCount }}</p>
-                <p class="text-gray-500">Premium</p>
+                <p class="text-gray-500">{{ 'Premium' | plural:counts().premiumCount }}</p>
             </div>
             <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
                 <i class="pi pi-users"></i>
                 <p>{{ counts().simpleCount }}</p>
-                <p class="text-gray-500">Simple</p>
+                <p class="text-gray-500">{{ 'Simple' | plural:counts().simpleCount }}</p>
             </div>
         </div>
     </div>
@@ -57,7 +57,7 @@
                     <td>{{ owner.email }}</td>
                     <td><p-chip [label]="owner.phone | mask:'00 00 000 00'" icon="pi pi-phone" /></td>
                     <td>{{ owner.totalPackages }}</td>
-                    <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMM yyyy" }}</td>
+                    <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
                     <td>
                         <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" />
                     </td>
