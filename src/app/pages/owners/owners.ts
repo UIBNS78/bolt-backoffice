@@ -87,7 +87,14 @@ export class Owners implements OnInit, OnDestroy {
   }
 
   handleOpenForm(): void {
-    this.showForm.update(prev => !prev);
+    this.showForm.update(prev => {
+      if (prev) {
+        this.loadData();
+        return false;
+      }
+      
+      return true;
+    });
   }
 
   handleDelete(owner: Owner): void {

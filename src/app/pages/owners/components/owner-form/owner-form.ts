@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DEFAULT_USER_PASSWORD } from '@shared/constants/user';
 import { Owner } from '@shared/types/owner';
@@ -13,6 +13,7 @@ import { SelectModule } from 'primeng/select';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { planObj } from '@shared/types/owner-plan';
 import { ButtonModule } from 'primeng/button';
+import { Subject, take, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-owner-form',
@@ -29,7 +30,8 @@ import { ButtonModule } from 'primeng/button';
   templateUrl: './owner-form.html',
   styleUrl: './owner-form.css',
 })
-export class OwnerForm {
+export class OwnerForm implements OnDestroy {
+  private unsubscribe$: Subject<void> = new Subject<void>();
   private _form: FormGroup = new FormGroup({});
 
   // services
@@ -62,16 +64,31 @@ export class OwnerForm {
     return this._form;
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   handleSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    console.log(this.form.getRawValue() as Owner);
+    this.ownerService.create(this.form.getRawValue() as Owner).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Création réussie',
+        detail: 'Le propriétaire a été créé avec succès.'
+      });
+      this.handleClose();
+    });
   }
 
   handleClose(): void {
+    this.form.reset();
     this.onCloseEmitter.emit();
   }
 }
