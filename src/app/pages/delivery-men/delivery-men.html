@@ -7,8 +7,8 @@
         @defer (when !isLoading()) {
             <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
                 <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                <p>{{ acitveCounts() }}</p>
-                <p class="text-gray-500">{{ 'livreur' | plural:acitveCounts() }} {{ 'active' | plural:acitveCounts() }}</p>
+                <p [ngClass]="[acitveCounts() > 0 ? '' : 'text-gray-500']">{{ acitveCounts() > 0 ? acitveCounts() : 'Aucun'}}</p>
+                <p class="text-gray-500">{{ 'livreur' | plural:acitveCounts() }} {{ 'actif' | plural:acitveCounts() }}</p>
             </div>
         } @placeholder (minimum 600ms) {
             <p-skeleton width="9rem" height="2.1rem"/>
@@ -18,7 +18,7 @@
         <p-button label="Nouveau" (click)="handleOpenForm()" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
         <p-iconfield>
             <p-inputicon class="pi pi-search" />
-            <input type="text" pInputText pSize="small" placeholder="Search" [disabled]="isLoading()" />
+            <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading()" />
         </p-iconfield>
     </div>
     <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-2">
@@ -55,10 +55,10 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><p-chip [label]="man.phone | mask:'00 00 000 00'" icon="pi pi-phone" /></td>
+                            <td><p-chip [label]="'0' + (man.phone | mask:'00 00 000 00')" icon="pi pi-phone" /></td>
                             <td>{{ man.totalPackages }}</td>
                             <td>
-                                <p-badge value="active" severity="success" size="small" />
+                                <p-badge value="actif" severity="success" size="small" />
                             </td>
                             <td>{{ man.createdAt | seniority }}</td>
                             <td>

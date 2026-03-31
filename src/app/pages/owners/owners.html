@@ -10,7 +10,7 @@
         <p-button label="Nouveau" (click)="handleOpenForm()" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
         <p-iconfield>
             <p-inputicon class="pi pi-search" />
-            <input type="text" pInputText pSize="small" placeholder="Search" [disabled]="isLoading()" />
+            <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading()" />
         </p-iconfield>
     </div>
     <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-2">
@@ -41,7 +41,7 @@
                                 </div>
                             </td>
                             <td>{{ owner.email }}</td>
-                            <td><p-chip [label]="owner.phone | mask:'00 00 000 00'" icon="pi pi-phone" /></td>
+                            <td><p-chip [label]="'0' + (owner.phone | mask:'00 00 000 00')" icon="pi pi-phone" /></td>
                             <td>{{ owner.totalPackages }}</td>
                             <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
                             <td>

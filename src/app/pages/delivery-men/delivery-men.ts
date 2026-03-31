@@ -16,7 +16,7 @@ import { ChipModule } from 'primeng/chip';
 import { DeliveryMenPlaceholder } from './components/delivery-men-placeholder/delivery-men-placeholder';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { SkeletonModule } from 'primeng/skeleton';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgClass } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { AgePipe } from '@shared/pipes/age.pipe';
 import { BadgeModule } from 'primeng/badge';
@@ -42,8 +42,9 @@ import { TooltipModule } from 'primeng/tooltip';
     SeniorityPipe,
     AvatarModule,
     BadgeModule,
-    TooltipModule
-  ],
+    TooltipModule,
+    NgClass
+],
   templateUrl: './delivery-men.html',
   styleUrl: './delivery-men.css',
 })
