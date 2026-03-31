@@ -9,6 +9,9 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
 import { TooltipModule } from 'primeng/tooltip';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 @Component({
   selector: 'app-owners',
   imports: [
@@ -16,7 +19,10 @@ import { TooltipModule } from 'primeng/tooltip';
     TableModule,
     TodayYesterdayTomorrowPipe,
     ButtonModule,
-    TooltipModule
+    TooltipModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule
   ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',

@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-4">
     <div class="flex justify-between items-center">
         <div class="flex flex-col">
             <h1 class="text-xl text-blue-950">Propriétaires</h1>
@@ -22,6 +22,12 @@
             </div>
         </div>
     </div>
+    <div class="flex justify-end gap-2">
+        <p-iconfield>
+            <p-inputicon class="pi pi-search" />
+            <input type="text" pInputText pSize="small" placeholder="Search" />
+        </p-iconfield>
+    </div>
     <div class="border rounded-xl border-gray-200 p-2">
         <p-table [value]="data().owners" [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template #header>
@@ -44,7 +50,7 @@
                         <div class="flex items-center gap-2">
                             <p>{{ owner.commercialName }}</p>
                             @if (owner.planId === 2) {
-                                <i class="pi pi-star-fill" style="color: orange" pInputText pTooltip="Premium"></i>
+                                <i class="pi pi-star-fill" style="color: orange" pTooltip="Premium"></i>
                             }
                         </div>
                     </td>
