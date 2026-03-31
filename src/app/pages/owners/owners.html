@@ -4,29 +4,7 @@
             <h1 class="text-xl text-blue-950">Propriétaires</h1>
             <p class="text-gray-400">Contient toutes les informations nécessaires pour une gestion efficace de notre clientèle.</p>
         </div>
-        <div class="flex justify-end items-center gap-3">
-            @defer (when !isLoading()) {
-                <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
-                    <i class="pi pi-users" style="color: green"></i>
-                    <p>{{ counts().ownersCount }}</p>
-                    <p class="text-gray-500">{{ 'Propriétaire' | plural:counts().ownersCount }}</p>
-                </div>
-                <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
-                    <i class="pi pi-star-fill" style="color: orange"></i>
-                    <p>{{ counts().premiumCount }}</p>
-                    <p class="text-gray-500">{{ 'Premium' | plural:counts().premiumCount }}</p>
-                </div>
-                <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
-                    <i class="pi pi-users"></i>
-                    <p>{{ counts().simpleCount }}</p>
-                    <p class="text-gray-500">{{ 'Simple' | plural:counts().simpleCount }}</p>
-                </div>
-            } @placeholder (minimum 600ms) {
-                <p-skeleton width="8rem" height="2.1rem"/>
-                <p-skeleton width="8rem" height="2.1rem"/>
-                <p-skeleton width="8rem" height="2.1rem"/>
-            }
-        </div>
+        <app-owner-counts [counts]="counts()" [loading]="isLoading()"></app-owner-counts>
     </div>
     <div class="flex justify-end gap-3">
         <p-button label="Nouveau" (click)="handleOpenForm()" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
