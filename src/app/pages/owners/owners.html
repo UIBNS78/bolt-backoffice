@@ -28,14 +28,14 @@
             }
         </div>
     </div>
-    <div class="flex justify-end gap-2">
+    <div class="flex justify-end gap-3">
+        <p-button label="Nouveau" (click)="handleOpenForm()" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
         <p-iconfield>
             <p-inputicon class="pi pi-search" />
             <input type="text" pInputText pSize="small" placeholder="Search" [disabled]="isLoading()" />
         </p-iconfield>
     </div>
     <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-2">
-        
         @defer (when !isLoading()) {
             <p-table [value]="data().owners" [tableStyle]="{ 'min-width': '50rem' }">
                 <ng-template #header>
@@ -92,3 +92,5 @@
         }
     </div>
 </div>
+
+<app-owner-form [open]="showForm()" (onCloseEmitter)="handleOpenForm()"></app-owner-form>

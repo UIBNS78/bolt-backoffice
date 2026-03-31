@@ -21,6 +21,7 @@ import { Owner } from '@shared/types/owner';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
 import { MessageService } from 'primeng/api';
+import { OwnerForm } from './components/owner-form/owner-form';
 
 @Component({
   selector: 'app-owners',
@@ -37,7 +38,8 @@ import { MessageService } from 'primeng/api';
     NgxMaskPipe,
     PluralPipe,
     SkeletonModule,
-    OwnersPlaceholder
+    OwnersPlaceholder,
+    OwnerForm
   ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',
@@ -49,6 +51,7 @@ export class Owners implements OnInit, OnDestroy {
   protected dialogService: DialogService = inject(DialogService);
   protected messageService: MessageService = inject(MessageService);
   // vars
+  protected showForm: WritableSignal<boolean> = signal(false);
   protected first: WritableSignal<number> = signal(0);
   protected rows: WritableSignal<number> = signal(10);
   protected data: WritableSignal<OwnerList> = signal({
@@ -81,6 +84,10 @@ export class Owners implements OnInit, OnDestroy {
       this.data.set(response);
       this.countOwners();
     });
+  }
+
+  handleOpenForm(): void {
+    this.showForm.update(prev => !prev);
   }
 
   handleDelete(owner: Owner): void {
