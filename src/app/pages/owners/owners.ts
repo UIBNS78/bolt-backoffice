@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, take, takeUntil } from 'rxjs';
 import { OwnerList } from './types/owner-list';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { OwnersService } from './owners-service';
@@ -17,6 +17,10 @@ import { NgxMaskPipe } from 'ngx-mask';
 import { PluralPipe } from '@shared/pipes/plural.pipe';
 import { SkeletonModule } from 'primeng/skeleton';
 import { OwnersPlaceholder } from './components/owners-placeholder/owners-placeholder';
+import { Owner } from '@shared/types/owner';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-owners',
@@ -42,6 +46,8 @@ export class Owners implements OnInit, OnDestroy {
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   // services
   private ownersService: OwnersService = inject(OwnersService);
+  protected dialogService: DialogService = inject(DialogService);
+  protected messageService: MessageService = inject(MessageService);
   // vars
   protected first: WritableSignal<number> = signal(0);
   protected rows: WritableSignal<number> = signal(10);
@@ -75,6 +81,41 @@ export class Owners implements OnInit, OnDestroy {
       this.data.set(response);
       this.countOwners();
     });
+  }
+
+  handleDelete(owner: Owner): void {
+    const modalRef: DynamicDialogRef<DialogConfirm> | null = this.dialogService.open(DialogConfirm, {
+      inputValues: {
+        title: "Suppression",
+        message: "Êtes-vous sûr de vouloir supprimer ce propriétaire ? cette action est irreversible.",
+        icon: "pi pi-trash",
+        acceptLabel: "Oui, supprimer",
+      },
+      modal: true,
+      draggable: false,
+      resizable: false
+    });
+    
+    modalRef?.onClose.pipe(
+      take(1),
+      takeUntil(this.unsubscribe$),
+    ).subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        owner.isDeleting = true;
+        this.ownersService.delete(owner.id).pipe(
+          take(1),
+          takeUntil(this.unsubscribe$),
+          finalize(() => owner.isDeleting = false)
+        ).subscribe(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Suppression réussie',
+            detail: 'Le propriétaire a été supprimé avec succès.'
+          });
+          this.loadData();
+        });
+      }
+    })
   }
 
   onPageChange(event: PaginatorState) {

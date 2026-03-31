@@ -67,7 +67,7 @@
                             <td>{{ owner.totalPackages }}</td>
                             <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
                             <td>
-                                <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" />
+                                <p-button (click)="handleDelete(owner)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="owner.isDeleting" />
                             </td>
                         </tr>
                 </ng-template>

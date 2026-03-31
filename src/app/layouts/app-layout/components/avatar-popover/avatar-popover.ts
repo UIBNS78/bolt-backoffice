@@ -12,7 +12,6 @@ import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-
     PopoverModule
   ],
   providers: [
-    DialogService,
     Authentication
   ],
   templateUrl: './avatar-popover.html',
