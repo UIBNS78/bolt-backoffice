@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <p-tabs value="dashboard">
+        <p-tabs [value]="0">
             <p-tablist>
                 @for (tab of tabs; track tab.id) {
                     <p-tab [value]="tab.id" class="flex items-center gap-2 text-inherit">
