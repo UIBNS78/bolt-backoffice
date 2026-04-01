@@ -54,8 +54,8 @@
             </div>
 
             <div class="flex items-center justify-end gap-3">
-                <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" />
-                <p-button type="submit" [label]="isUpdate() ? 'Modifier' : 'Enregistrer'" severity="contrast" size="small" />
+                <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" [disabled]="loading()" />
+                <p-button type="submit" [label]="isUpdate() ? 'Modifier' : 'Enregistrer'" severity="contrast" size="small" [loading]="loading()" [disabled]="loading()" />
             </div>
         </div>
     </form>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DEFAULT_USER_PASSWORD } from '@shared/constants/user';
 import { Owner } from '@shared/types/owner';
@@ -13,7 +13,7 @@ import { SelectModule } from 'primeng/select';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { planObj } from '@shared/types/owner-plan';
 import { ButtonModule } from 'primeng/button';
-import { Subject, take, takeUntil } from 'rxjs';
+import { finalize, Subject, take, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-owner-form',
@@ -40,6 +40,7 @@ export class OwnerForm implements OnDestroy {
   private messageService: MessageService = inject(MessageService);
 
   // vars
+  protected loading: WritableSignal<boolean> = signal(false);
   protected ownerPlanOptions: InputSelectOptions[] = [
     { id: planObj.premium, label: "Premium" },
     { id: planObj.simple, label: "Simple" },
@@ -75,15 +76,20 @@ export class OwnerForm implements OnDestroy {
       return;
     }
 
+    this.loading.set(true);
     this.ownerService.create(this.form.getRawValue() as Owner).pipe(
-      takeUntil(this.unsubscribe$)
+      takeUntil(this.unsubscribe$),
+      finalize(() => {
+        this.form.reset();
+        this.loading.set(false);
+      })
     ).subscribe(() => {
       this.messageService.add({
         severity: 'success',
         summary: 'Création réussie',
         detail: 'Le propriétaire a été créé avec succès.'
       });
-      this.handleClose();
+      this.onCloseEmitter.emit();
     });
   }
 

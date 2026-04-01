@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DEFAULT_USER_PASSWORD } from '@shared/constants/user';
 import { transportOptions as tOptions, type DeliveryMan } from '@shared/types/delivery-men';
@@ -11,6 +11,9 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { type InputSelectOptions } from '@shared/components/types/input-select-options';
 import { SelectModule } from 'primeng/select';
+import { MessageService } from 'primeng/api';
+import { DeliveryMenService } from '../../delivery-men-service';
+import { finalize, Subject, take, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-delivery-man-form',
@@ -28,13 +31,18 @@ import { SelectModule } from 'primeng/select';
   templateUrl: './delivery-man-form.html',
   styleUrl: './delivery-man-form.css',
 })
-export class DeliveryManForm {
+export class DeliveryManForm implements OnDestroy {
+  private unsubscribe$: Subject<void> = new Subject<void>();
   private _form: FormGroup = new FormGroup({});
   
   // services
   protected formBuilder: FormBuilder = inject(FormBuilder);
+  protected deliveryManService: DeliveryMenService = inject(DeliveryMenService);
+  protected messageService: MessageService = inject(MessageService);
+
   // vars
   protected isUpdate: WritableSignal<boolean> = signal(false);
+  protected loading: WritableSignal<boolean> = signal(false);
   protected transportOptions: InputSelectOptions[] = tOptions;
 
   @Output() onCloseEmitter: EventEmitter<void> = new EventEmitter<void>();
@@ -59,13 +67,32 @@ export class DeliveryManForm {
     return this._form;
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   handleSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    console.log(this.form.getRawValue());
+    this.loading.set(true);
+    this.deliveryManService[this.isUpdate() ? 'update' : 'create'](this.form.getRawValue() as DeliveryMan).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => {
+        this.form.reset();
+        this.loading.set(false);
+      })
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: this.isUpdate() ? 'Mise à jour réussie' : 'Création réussie',
+        detail: `Le livreur a été ${this.isUpdate() ? 'mis à jour' : 'créé'} avec succès.`
+      });
+      this.onCloseEmitter.emit();
+    });
   }
 
   handleClose(): void {
