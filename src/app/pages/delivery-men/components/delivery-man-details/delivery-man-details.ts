@@ -6,6 +6,9 @@ import { DividerModule } from 'primeng/divider';
 import { DrawerModule } from 'primeng/drawer';
 import { TabsModule } from 'primeng/tabs';
 import { TooltipModule } from 'primeng/tooltip';
+import { DeliveryManInformations } from './delivery-man-informations/delivery-man-informations';
+import { DeliveryManData } from './delivery-man-data/delivery-man-data';
+import { DeliveryManHistory } from './delivery-man-history/delivery-man-history';
 
 @Component({
   selector: 'app-delivery-man-details',
@@ -14,9 +17,9 @@ import { TooltipModule } from 'primeng/tooltip';
     AvatarModule,
     TabsModule,
     FormsModule,
-    ButtonModule,
-    DividerModule,
-    TooltipModule
+    DeliveryManInformations,
+    DeliveryManData,
+    DeliveryManHistory
   ],
   templateUrl: './delivery-man-details.html',
   styleUrl: './delivery-man-details.css',
