@@ -1,0 +1,45 @@
+<p-drawer [(visible)]="open" position="right" header="Fiche du livreur" (onHide)="handleClose()" styleClass="!w-[30rem]">
+    <div class="flex flex-col gap-4">
+        <div class="flex gap-3">
+            <p-avatar image="images/delivery-man-1.jpg" style="width: 120px; height: 120px;" />
+            <div class="flex flex-col justify-between">
+                <div class="flex flex-col">
+                    <h1 class="text-xl font-bold">RAKOTOARISOA</h1>
+                    <p class="text-gray-500">Gabriel Parany</p>
+                    <p class="text-blue-400">Livreur il y a 6 mois</p>
+                </div>
+                <div class="flex flex-col">
+                    <p class="text-gray-500">Note</p>
+                    <div class="flex items-center gap-1">
+                        <i class="pi pi-star-fill text-amber-300"></i>
+                        <i class="pi pi-star-fill text-amber-300"></i>
+                        <i class="pi pi-star-fill text-amber-300"></i>
+                        <i class="pi pi-star text-amber-300"></i>
+                        <i class="pi pi-star text-amber-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p-tabs [value]="0">
+            <p-tablist>
+                @for (tab of tabs; track tab.id) {
+                    <p-tab [value]="tab.id" class="flex items-center gap-2 text-inherit">
+                        <i [class]="tab.icon"></i>
+                        <span>{{ tab.label }}</span>
+                    </p-tab>
+                }
+            </p-tablist>
+            <p-tabpanels>
+                <p-tabpanel [value]="0">
+                    <app-delivery-man-informations></app-delivery-man-informations>
+                </p-tabpanel>
+                <p-tabpanel [value]="1">
+                    <app-delivery-man-data></app-delivery-man-data>
+                </p-tabpanel>
+                <p-tabpanel [value]="2">
+                    <app-delivery-man-history></app-delivery-man-history>
+                </p-tabpanel>
+            </p-tabpanels>
+        </p-tabs>
+    </div>
+</p-drawer>

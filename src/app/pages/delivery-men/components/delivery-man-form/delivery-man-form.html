@@ -1,4 +1,4 @@
-<p-drawer [(visible)]="open" [dismissible]="false" position="right" header="Nouveau propriétaire" (onHide)="handleClose()" styleClass="!w-[30rem]">
+<p-drawer [(visible)]="open" [dismissible]="false" position="right" [header]="isUpdate() ? 'Modification' : 'Nouveau livreur'" (onHide)="handleClose()" styleClass="!w-[30rem]">
     <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="h-full">
         <div class="flex flex-col justify-between h-full">
             <div class="flex flex-col gap-4">
@@ -18,41 +18,22 @@
                         }
                     </div>
                 </div>
-                
-                <div class="flex flex-col gap-1">
-                    <label for="commercialName">Nom commercial</label>
-                    <p-iconfield>
-                        <p-inputicon class="pi pi-shop" />
-                        <input type="text" pInputText pSize="small" id="commercialName" class="w-full" formControlName="commercialName" [invalid]="form.get('commercialName')?.invalid && (form.get('commercialName')?.touched || form.get('commercialName')?.dirty)" required />
-                    </p-iconfield>
-                    @if (form.get('commercialName')?.invalid && (form.get('commercialName')?.touched || form.get('commercialName')?.dirty)) {
-                        <p-message severity="error" size="small" variant="simple">Nom commercial requis.</p-message>
-                    }
-                </div>
-
-                <div class="flex items-center gap-3">
-                    <div class="flex flex-col gap-1">
-                        <label for="email">Email</label>
-                        <p-iconfield>
-                            <p-inputicon class="pi pi-envelope" />
-                            <input type="text" pInputText pSize="small" id="email" formControlName="email" class="w-full" [invalid]="form.get('email')?.invalid && (form.get('email')?.touched || form.get('email')?.dirty)" required />
-                        </p-iconfield>
-                        @if (form.get('email')?.invalid && (form.get('email')?.touched || form.get('email')?.dirty)) {
-                            <p-message severity="error" size="small" variant="simple">Email requis.</p-message>
+                <div class="flex items-center gap-3 w-full">
+                    <div class="flex flex-col gap-1 w-full">
+                        <label for="birthday">Date de naissance</label>
+                        <p-datepicker formControlName="selectedDate" size="small" [invalid]="form.get('birthday')?.invalid && (form.get('birthday')?.touched || form.get('birthday')?.dirty)" />
+                        @if (form.get('birthday')?.invalid && (form.get('birthday')?.touched || form.get('birthday')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Date de naissance requise.</p-message>
                         }
                     </div>
-                    <div class="flex flex-col gap-1">
-                        <label for="phone">Numéro téléphone</label>
-                        <p-iconfield>
-                            <p-inputicon class="pi pi-phone" />
-                            <input type="text" pInputText pSize="small" id="phone" formControlName="phone" class="w-full" [invalid]="form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)" required />
-                        </p-iconfield>
-                        @if (form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)) {
-                            <p-message severity="error" size="small" variant="simple">Numéro téléphone requis.</p-message>
+                    <div class="flex flex-col gap-1 w-full">
+                        <label for="address">Adresse</label>
+                        <input type="text" pInputText pSize="small" id="address" formControlName="address" [invalid]="form.get('address')?.invalid && (form.get('address')?.touched || form.get('address')?.dirty)" required>
+                        @if (form.get('address')?.invalid && (form.get('address')?.touched || form.get('address')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Adresse requis.</p-message>
                         }
                     </div>
                 </div>
-                
                 <div class="flex flex-col gap-1">
                     <label for="password">Mot de passe <small class="text-gray-500">(par défaut)</small></label>
                     <p-iconfield>
@@ -63,10 +44,9 @@
                         <p-message severity="error" size="small" variant="simple">Mot de passe requis.</p-message>
                     }
                 </div>
-
                 <div class="flex flex-col gap-1">
-                    <label for="planId">Plan</label>
-                    <p-select [options]="ownerPlanOptions" formControlName="planId" size="small" optionLabel="label" optionValue="id"[invalid]="form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)" required />
+                    <label for="planId">Moyen de transport</label>
+                    <p-select [options]="transportOptions" formControlName="planId" size="small" optionLabel="label" optionValue="id"[invalid]="form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)" required />
                     @if (form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)) {
                         <p-message severity="error" size="small" variant="simple">Mot de passe requis.</p-message>
                     }
@@ -75,7 +55,7 @@
 
             <div class="flex items-center justify-end gap-3">
                 <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" [disabled]="loading()" />
-                <p-button type="submit" label="Enregistrer" severity="contrast" size="small" [loading]="loading()" [disabled]="loading()" />
+                <p-button type="submit" [label]="isUpdate() ? 'Modifier' : 'Enregistrer'" severity="contrast" size="small" [loading]="loading()" [disabled]="loading()" />
             </div>
         </div>
     </form>

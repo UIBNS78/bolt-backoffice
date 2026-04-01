@@ -1,0 +1,96 @@
+<div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+        <p>15 Octobre 2020</p>
+        <p-panel [toggleable]="true" [collapsed]="true">
+            <ng-template #header>
+                <div class="flex items-center gap-2">
+                    <p-avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" />
+                    <div class="flex flex-col">
+                        <span class="font-bold">Rabary Lodge</span>
+                        <small class="text-gray-500">Livraison 15</small>
+                    </div>
+                </div>
+            </ng-template>
+
+            <p-timeline [value]="events15">
+                <ng-template #opposite let-event>
+                    <small class="text-surface-500 dark:text-surface-400">{{ event.date }}</small>
+                </ng-template>
+                <ng-template #marker let-event>
+                    <div 
+                        [ngClass]="[
+                            'flex w-6 h-6 items-center justify-center rounded-full z-10 shadow-sm',
+                            event.status === 'delivered' ? 'bg-green-50' : (event.status === 'reported' ? 'bg-amber-50' : (event.status === 'cancelled' ? 'bg-red-50' : (event.status === 'in-progress' ? 'bg-blue-50' : 'bg-gray-50'))),
+                            event.status === 'delivered' ? 'text-green-500' : (event.status === 'reported' ? 'text-amber-500' : (event.status === 'cancelled' ? 'text-red-500' : (event.status === 'in-progress' ? 'text-blue-500' : 'text-gray-500')))
+                        ]"
+                        [pTooltip]="event.status === 'delivered' ? 'Colis livré' : (event.status === 'reported' ? 'Colis reporté' : (event.status === 'cancelled' ? 'Colis annulé' : (event.status === 'in-progress' ? 'En cours' : '')))"
+                        tooltipPosition="top"
+                    >
+                        <i 
+                            [ngClass]="[
+                                'pi', event.status === 'delivered' ? 'pi-check' : (event.status === 'reported' ? 'pi-sync' : (event.status === 'cancelled' ? 'pi-times' : (event.status === 'in-progress' ? 'pi-spinner-dotted' : 'pi-question')))
+                            ]" 
+                            style="font-size: 0.6rem;"
+                        ></i>
+                    </div>
+                </ng-template>
+                <ng-template #content let-event>
+                    <div class="flex flex-col">
+                        <p class="font-bold">{{ event.customer }}</p>
+                        <div class="flex items-center gap-1">
+                            <i class="pi pi-map-marker text-gray-500" style="font-size: 0.5rem;"></i>
+                            <small class="text-gray-500">{{ event.location }}</small>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-timeline>
+        </p-panel>
+    </div>
+    <div class="flex flex-col gap-2">
+        <p>16 Octobre 2020</p>
+        <p-panel [toggleable]="true" [collapsed]="true">
+            <ng-template #header>
+                <div class="flex items-center gap-2">
+                    <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png" shape="circle" />
+                    <div class="flex flex-col">
+                        <span class="font-bold">USA Shirt</span>
+                        <small class="text-gray-500">Livraison 16</small>
+                    </div>
+                </div>
+            </ng-template>
+
+            <p-timeline [value]="events16">
+                <ng-template #opposite let-event>
+                    <small class="text-surface-500 dark:text-surface-400">{{ event.date }}</small>
+                </ng-template>
+                <ng-template #marker let-event>
+                    <div 
+                        [ngClass]="[
+                            'flex w-6 h-6 items-center justify-center rounded-full z-10 shadow-sm',
+                            event.status === 'delivered' ? 'bg-green-50' : (event.status === 'reported' ? 'bg-amber-50' : (event.status === 'cancelled' ? 'bg-red-50' : (event.status === 'in-progress' ? 'bg-blue-50' : 'bg-gray-50'))),
+                            event.status === 'delivered' ? 'text-green-500' : (event.status === 'reported' ? 'text-amber-500' : (event.status === 'cancelled' ? 'text-red-500' : (event.status === 'in-progress' ? 'text-blue-500' : 'text-gray-500')))
+                        ]"
+                        [pTooltip]="event.status === 'delivered' ? 'Colis livré' : (event.status === 'reported' ? 'Colis reporté' : (event.status === 'cancelled' ? 'Colis annulé' : (event.status === 'in-progress' ? 'En cours' : '')))"
+                        tooltipPosition="top"
+                    >
+                        <i 
+                            [ngClass]="[
+                                'pi', event.status === 'delivered' ? 'pi-check' : (event.status === 'reported' ? 'pi-sync' : (event.status === 'cancelled' ? 'pi-times' : (event.status === 'in-progress' ? 'pi-spinner-dotted' : 'pi-question')))
+                            ]" 
+                            style="font-size: 0.6rem;"
+                        ></i>
+                    </div>
+                </ng-template>
+                <ng-template #content let-event>
+                    <div class="flex flex-col">
+                        <p class="font-bold">{{ event.customer }}</p>
+                        <div class="flex items-center gap-1">
+                            <i class="pi pi-map-marker text-gray-500" style="font-size: 0.5rem;"></i>
+                            <small class="text-gray-500">{{ event.location }}</small>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-timeline>
+        </p-panel>
+    </div>
+</div>

@@ -4,35 +4,13 @@
             <h1 class="text-xl text-blue-950">Propriétaires</h1>
             <p class="text-gray-400">Contient toutes les informations nécessaires pour une gestion efficace de notre clientèle.</p>
         </div>
-        <div class="flex justify-end items-center gap-3">
-            @defer (when !isLoading()) {
-                <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
-                    <i class="pi pi-users" style="color: green"></i>
-                    <p>{{ counts().ownersCount }}</p>
-                    <p class="text-gray-500">{{ 'Propriétaire' | plural:counts().ownersCount }}</p>
-                </div>
-                <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
-                    <i class="pi pi-star-fill" style="color: orange"></i>
-                    <p>{{ counts().premiumCount }}</p>
-                    <p class="text-gray-500">{{ 'Premium' | plural:counts().premiumCount }}</p>
-                </div>
-                <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
-                    <i class="pi pi-users"></i>
-                    <p>{{ counts().simpleCount }}</p>
-                    <p class="text-gray-500">{{ 'Simple' | plural:counts().simpleCount }}</p>
-                </div>
-            } @placeholder (minimum 600ms) {
-                <p-skeleton width="8rem" height="2.1rem"/>
-                <p-skeleton width="8rem" height="2.1rem"/>
-                <p-skeleton width="8rem" height="2.1rem"/>
-            }
-        </div>
+        <app-owner-counts [counts]="counts()" [loading]="isLoading()"></app-owner-counts>
     </div>
     <div class="flex justify-end gap-3">
         <p-button label="Nouveau" (click)="handleOpenForm()" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
         <p-iconfield>
             <p-inputicon class="pi pi-search" />
-            <input type="text" pInputText pSize="small" placeholder="Search" [disabled]="isLoading()" />
+            <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading()" />
         </p-iconfield>
     </div>
     <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-2">
@@ -63,11 +41,11 @@
                                 </div>
                             </td>
                             <td>{{ owner.email }}</td>
-                            <td><p-chip [label]="owner.phone | mask:'00 00 000 00'" icon="pi pi-phone" /></td>
+                            <td><p-chip [label]="'0' + (owner.phone | mask:'00 00 000 00')" icon="pi pi-phone" /></td>
                             <td>{{ owner.totalPackages }}</td>
                             <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
                             <td>
-                                <p-button (click)="handleDelete(owner)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="owner.isDeleting" />
+                                <p-button (click)="handleDelete(owner)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="owner.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
                             </td>
                         </tr>
                 </ng-template>

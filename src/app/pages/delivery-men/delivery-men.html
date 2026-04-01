@@ -1,1 +1,102 @@
-<p>delivery-men works!</p>
+<div class="flex flex-col gap-4">
+    <div class="flex justify-between items-center">
+        <div class="flex flex-col">
+            <h1 class="text-xl text-blue-950">Livreurs</h1>
+            <p class="text-gray-400">Ils représentent le cœur battant de notre service.</p>
+        </div>
+        @defer (when !isLoading()) {
+            <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
+                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                <p [ngClass]="[acitveCounts() > 0 ? '' : 'text-gray-500']">{{ acitveCounts() > 0 ? acitveCounts() : 'Aucun'}}</p>
+                <p class="text-gray-500">{{ 'livreur' | plural:acitveCounts() }} {{ 'actif' | plural:acitveCounts() }}</p>
+            </div>
+        } @placeholder (minimum 600ms) {
+            <p-skeleton width="9rem" height="2.1rem"/>
+        }
+    </div>
+    <div class="flex justify-end gap-3">
+        <p-button label="Nouveau" (click)="handleOpenForm()" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
+        <p-iconfield>
+            <p-inputicon class="pi pi-search" />
+            <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading()" />
+        </p-iconfield>
+    </div>
+    <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-2">
+        @defer (when !isLoading()) {
+            <p-table [value]="data().deliveryMen" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template #header>
+                    <tr>
+                        <th class="text-center">ID</th>
+                        <th>Nom complet</th>
+                        <th>Age</th>
+                        <th>Phone</th>
+                        <th>Nombre de colis</th>
+                        <th>Statut</th>
+                        <th>Date de début</th>
+                        <th>Pièce d'identité</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-man>
+                        <tr>
+                            <td>{{ man.id }}</td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <p-avatar image="images/delivery-man-1.jpg" shape="circle" style="font-size: 12px; width: 30px; height: 30px" />
+                                    <p>{{ man.name + ' ' + man.firstName }}</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex flex-col gap-1">
+                                    <p class="font-bold">{{ man.birthday | age }}</p>
+                                    <div class="flex items-center gap-1">
+                                        <i class="pi pi-calendar text-gray-500" style="font-size: 0.8rem;"></i>
+                                        <p class="text-gray-500">{{ man.birthday | date:'dd MMM yyyy'}}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><p-chip [label]="'0' + (man.phone | mask:'00 00 000 00')" icon="pi pi-phone" /></td>
+                            <td>{{ man.totalPackages }}</td>
+                            <td>
+                                <p-badge value="actif" severity="success" size="small" />
+                            </td>
+                            <td>{{ man.createdAt | seniority }}</td>
+                            <td>
+                                <div class="flex flex-col">
+                                    <p-button label="CIN" link icon="pi pi-id-card" size="small" severity="info" pTooltip="Voir la copie du CIN" tooltipPosition="left" />
+                                    <p-button label="Cert. Résidence" link icon="pi pi-file" size="small" severity="info" pTooltip="Voir le certificat de résidence" tooltipPosition="left" />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <p-button (click)="handleOpenDetails(man.id)" icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" [loading]="man.isDeleting" size="small" pTooltip="Ouvrir la fiche" tooltipPosition="top" [disabled]="man.isDeleting" />
+                                    <p-button (click)="handleOpenForm(man)" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" [loading]="man.isUpdating" size="small" pTooltip="Modifier" tooltipPosition="top" [disabled]="man.isDeleting" />
+                                    <p-button (click)="handleDelete(man)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="man.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" [loading]="man.isDeleting" [disabled]="man.isDeleting" />
+                                </div>
+                            </td>
+                        </tr>
+                </ng-template>
+            </p-table>
+        } @placeholder (minimum 600ms) {
+            <app-delivery-men-placeholder></app-delivery-men-placeholder>
+        }
+
+        @defer (when !isLoading()) {
+            <p-paginator 
+                (onPageChange)="onPageChange($event)" 
+                [first]="first()" 
+                [rows]="rows()" 
+                [totalRecords]="data().totalItems" 
+                [rowsPerPageOptions]="[10, 20, 30]"
+                class="p-paginator-sm"
+            />
+        } @placeholder (minimum 600ms) {
+            <div class="flex justify-center">
+                <p-skeleton width="15%" height="1.5rem" />
+            </div>
+        }
+    </div>
+</div>
+
+<app-delivery-man-details [open]="showDetails()" (onCloseEmitter)="handleOpenDetails()" [deliveryManId]="selectedDeliveryManId()"></app-delivery-man-details>
+<app-delivery-man-form [open]="showForm()" (onCloseEmitter)="handleOpenForm()" [deliveryMan]="selectedDeliveryManEdit()"></app-delivery-man-form>

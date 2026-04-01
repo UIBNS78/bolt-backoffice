@@ -45,3 +45,10 @@ body,
 .p-button-link {
   color: #0284C7 !important;
 }
+
+.p-paginator-rpp-dropdown {
+  height: 30px !important;
+}
+.p-paginator-rpp-dropdown > .p-select-label {
+  padding: 2px 5px 0 10px !important;
+}

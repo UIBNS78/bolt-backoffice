@@ -14,7 +14,6 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { ChipModule } from 'primeng/chip';
 import { NgxMaskPipe } from 'ngx-mask';
-import { PluralPipe } from '@shared/pipes/plural.pipe';
 import { SkeletonModule } from 'primeng/skeleton';
 import { OwnersPlaceholder } from './components/owners-placeholder/owners-placeholder';
 import { Owner } from '@shared/types/owner';
@@ -22,6 +21,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
 import { MessageService } from 'primeng/api';
 import { OwnerForm } from './components/owner-form/owner-form';
+import { OwnerCounts } from './components/owner-counts/owner-counts';
 
 @Component({
   selector: 'app-owners',
@@ -36,10 +36,11 @@ import { OwnerForm } from './components/owner-form/owner-form';
     InputTextModule,
     ChipModule,
     NgxMaskPipe,
-    PluralPipe,
     SkeletonModule,
     OwnersPlaceholder,
-    OwnerForm
+    OwnerForm,
+    OwnerCounts,
+    TooltipModule
   ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',
@@ -105,6 +106,7 @@ export class Owners implements OnInit, OnDestroy {
         icon: "pi pi-trash",
         acceptLabel: "Oui, supprimer",
       },
+      showHeader: false,
       modal: true,
       draggable: false,
       resizable: false
