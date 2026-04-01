@@ -46,9 +46,9 @@ body,
   color: #0284C7 !important;
 }
 
-.p-select.p-paginator-rpp-dropdown {
+.p-paginator-rpp-dropdown {
   height: 30px !important;
 }
-.p-select-label {
+.p-paginator-rpp-dropdown > .p-select-label {
   padding: 2px 5px 0 10px !important;
 }

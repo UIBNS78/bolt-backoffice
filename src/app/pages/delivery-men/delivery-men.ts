@@ -23,6 +23,7 @@ import { BadgeModule } from 'primeng/badge';
 import { SeniorityPipe } from '@shared/pipes/seniority.pipe';
 import { TooltipModule } from 'primeng/tooltip';
 import { DeliveryManDetails } from './components/delivery-man-details/delivery-man-details';
+import { DeliveryManForm } from './components/delivery-man-form/delivery-man-form';
 
 @Component({
   selector: 'app-delivery-men',
@@ -45,7 +46,8 @@ import { DeliveryManDetails } from './components/delivery-man-details/delivery-m
     BadgeModule,
     TooltipModule,
     NgClass,
-    DeliveryManDetails
+    DeliveryManDetails,
+    DeliveryManForm
 ],
   templateUrl: './delivery-men.html',
   styleUrl: './delivery-men.css',
@@ -65,6 +67,7 @@ export class DeliveryMen implements OnInit, OnDestroy {
   protected showForm: WritableSignal<boolean> = signal(false);
   protected showDetails: WritableSignal<boolean> = signal(false);
   protected selectedDeliveryManId: WritableSignal<number | null> = signal(null);
+  protected selectedDeliveryManEdit: WritableSignal<DeliveryMan | null> = signal(null);
   protected data: WritableSignal<DeliveryMenList> = signal({
     deliveryMen: [],
     totalItems: 0
@@ -90,9 +93,13 @@ export class DeliveryMen implements OnInit, OnDestroy {
     });
   }
   
-  handleOpenForm(): void {}
+  handleOpenForm(deliveryMan: DeliveryMan | null = null): void {
+    this.selectedDeliveryManEdit.set(deliveryMan);
+    this.showForm.update(prev => !prev);
+  }
 
-  handleEdit(deliveryMan: DeliveryMan): void {}
+  handleCreate(deliveryMan: DeliveryMan): void {
+  }
 
   handleOpenDetails(deliveryManId: number | null = null): void {
     this.selectedDeliveryManId.set(deliveryManId);

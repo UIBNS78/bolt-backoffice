@@ -70,7 +70,7 @@
                             <td>
                                 <div class="flex items-center gap-2">
                                     <p-button (click)="handleOpenDetails(man.id)" icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" [loading]="man.isDeleting" size="small" pTooltip="Ouvrir la fiche" tooltipPosition="top" />
-                                    <p-button (click)="handleEdit(man)" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" [loading]="man.isUpdating" size="small" pTooltip="Modifier" tooltipPosition="top" />
+                                    <p-button (click)="handleOpenForm(man)" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" [loading]="man.isUpdating" size="small" pTooltip="Modifier" tooltipPosition="top" />
                                     <p-button (click)="handleDelete(man)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="man.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
                                 </div>
                             </td>
@@ -99,3 +99,4 @@
 </div>
 
 <app-delivery-man-details [open]="showDetails()" (onCloseEmitter)="handleOpenDetails()" [deliveryManId]="selectedDeliveryManId()"></app-delivery-man-details>
+<app-delivery-man-form [open]="showForm()" (onCloseEmitter)="handleOpenForm()" [deliveryMan]="selectedDeliveryManEdit()"></app-delivery-man-form>
