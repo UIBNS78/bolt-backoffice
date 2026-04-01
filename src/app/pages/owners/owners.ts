@@ -106,6 +106,7 @@ export class Owners implements OnInit, OnDestroy {
         icon: "pi pi-trash",
         acceptLabel: "Oui, supprimer",
       },
+      showHeader: false,
       modal: true,
       draggable: false,
       resizable: false

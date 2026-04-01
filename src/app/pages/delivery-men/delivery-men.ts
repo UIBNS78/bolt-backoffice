@@ -6,8 +6,8 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { DeliveryMenList } from './types/delivery-men-list';
-import { finalize, Subject, takeUntil } from 'rxjs';
-import { DialogService } from 'primeng/dynamicdialog';
+import { animationFrameScheduler, finalize, Subject, take, takeUntil } from 'rxjs';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { DeliveryMenService } from './delivery-men-service';
 import { NgxMaskPipe } from 'ngx-mask';
@@ -24,6 +24,7 @@ import { SeniorityPipe } from '@shared/pipes/seniority.pipe';
 import { TooltipModule } from 'primeng/tooltip';
 import { DeliveryManDetails } from './components/delivery-man-details/delivery-man-details';
 import { DeliveryManForm } from './components/delivery-man-form/delivery-man-form';
+import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
 
 @Component({
   selector: 'app-delivery-men',
@@ -98,15 +99,46 @@ export class DeliveryMen implements OnInit, OnDestroy {
     this.showForm.update(prev => !prev);
   }
 
-  handleCreate(deliveryMan: DeliveryMan): void {
-  }
-
   handleOpenDetails(deliveryManId: number | null = null): void {
     this.selectedDeliveryManId.set(deliveryManId);
     this.showDetails.update(prev => !prev);
   }
-  
-  handleDelete(deliveryMan: DeliveryMan): void {}
+
+  handleDelete(man: DeliveryMan): void {
+    const modalRef: DynamicDialogRef<DialogConfirm> | null = this.dialogService.open(DialogConfirm, {
+      inputValues: {
+        title: "Suppression",
+        message: "Êtes-vous sûr de vouloir supprimer ce livreur ? cette action est irreversible.",
+        icon: "pi pi-trash",
+        acceptLabel: "Oui, supprimer",
+      },
+      showHeader: false,
+      modal: true,
+      draggable: false,
+      resizable: false
+    });
+    
+    modalRef?.onClose.pipe(
+      take(1),
+      takeUntil(this.unsubscribe$),
+    ).subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        man.isDeleting = true;
+        this.deliveryMenService.delete(man.id).pipe(
+          take(1),
+          takeUntil(this.unsubscribe$),
+          finalize(() => man.isDeleting = false)
+        ).subscribe(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Suppression réussie',
+            detail: 'Le livreur a été supprimé avec succès.'
+          });
+          this.loadData();
+        });
+      }
+    })
+  }
 
   onPageChange(event: PaginatorState) {
     this.first.set(event.first ?? 0);
