@@ -57,7 +57,7 @@
                     <label for="password">Mot de passe <small class="text-gray-500">(par défaut)</small></label>
                     <p-iconfield>
                         <p-inputicon class="pi pi-lock" />
-                        <input type="text" pInputText pSize="small" id="password" class="w-full" formControlName="password" [invalid]="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)" required [disabled]="true" />
+                        <input type="text" pInputText pSize="small" id="password" class="w-full" formControlName="password" [invalid]="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)" required />
                     </p-iconfield>
                     @if (form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)) {
                         <p-message severity="error" size="small" variant="simple">Mot de passe requis.</p-message>
