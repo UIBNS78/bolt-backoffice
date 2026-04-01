@@ -42,7 +42,7 @@
                             <td>{{ man.id }}</td>
                             <td>
                                 <div class="flex items-center gap-2">
-                                    <p-avatar [label]="man.name[0]" shape="circle" style="font-size: 12px; width: 30px; height: 30px" />
+                                    <p-avatar image="images/delivery-man-1.jpg" shape="circle" style="font-size: 12px; width: 30px; height: 30px" />
                                     <p>{{ man.name + ' ' + man.firstName }}</p>
                                 </div>
                             </td>
@@ -69,7 +69,7 @@
                             </td>
                             <td>
                                 <div class="flex items-center gap-2">
-                                    <p-button (click)="handleOpenDetails()" icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" [loading]="man.isDeleting" size="small" pTooltip="Ouvrir la fiche" tooltipPosition="top" />
+                                    <p-button (click)="handleOpenDetails(man.id)" icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" [loading]="man.isDeleting" size="small" pTooltip="Ouvrir la fiche" tooltipPosition="top" />
                                     <p-button (click)="handleEdit(man)" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" [loading]="man.isUpdating" size="small" pTooltip="Modifier" tooltipPosition="top" />
                                     <p-button (click)="handleDelete(man)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="man.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
                                 </div>
@@ -97,3 +97,5 @@
         }
     </div>
 </div>
+
+<app-delivery-man-details [open]="showDetails()" (onCloseEmitter)="handleOpenDetails()" [deliveryManId]="selectedDeliveryManId()"></app-delivery-man-details>

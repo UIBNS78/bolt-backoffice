@@ -1,0 +1,40 @@
+import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { AvatarModule } from 'primeng/avatar';
+import { ButtonModule } from 'primeng/button';
+import { DividerModule } from 'primeng/divider';
+import { DrawerModule } from 'primeng/drawer';
+import { TabsModule } from 'primeng/tabs';
+import { TooltipModule } from 'primeng/tooltip';
+
+@Component({
+  selector: 'app-delivery-man-details',
+  imports: [
+    DrawerModule,
+    AvatarModule,
+    TabsModule,
+    FormsModule,
+    ButtonModule,
+    DividerModule,
+    TooltipModule
+  ],
+  templateUrl: './delivery-man-details.html',
+  styleUrl: './delivery-man-details.css',
+})
+export class DeliveryManDetails {
+  
+  @Output() onCloseEmitter: EventEmitter<void> = new EventEmitter<void>();
+  @Input() open: boolean = false;
+  @Input() deliveryManId: number | null = null;
+  
+  protected currentTab: WritableSignal<number> = signal(0);
+  protected tabs: { id: number; label: string; icon: string }[] = [
+    { id: 0, label: "A propos", icon: "pi pi-info-circle" },
+    { id: 1, label: "Données", icon: "pi pi-chart-line" },
+    { id: 2, label: "Historique", icon: "pi pi-history" },
+  ];
+    
+  handleClose(): void {
+    this.onCloseEmitter.emit();
+  }
+}

@@ -22,6 +22,7 @@ import { AgePipe } from '@shared/pipes/age.pipe';
 import { BadgeModule } from 'primeng/badge';
 import { SeniorityPipe } from '@shared/pipes/seniority.pipe';
 import { TooltipModule } from 'primeng/tooltip';
+import { DeliveryManDetails } from './components/delivery-man-details/delivery-man-details';
 
 @Component({
   selector: 'app-delivery-men',
@@ -43,7 +44,8 @@ import { TooltipModule } from 'primeng/tooltip';
     AvatarModule,
     BadgeModule,
     TooltipModule,
-    NgClass
+    NgClass,
+    DeliveryManDetails
 ],
   templateUrl: './delivery-men.html',
   styleUrl: './delivery-men.css',
@@ -61,6 +63,8 @@ export class DeliveryMen implements OnInit, OnDestroy {
   protected acitveCounts: WritableSignal<number> = signal(0);
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected showForm: WritableSignal<boolean> = signal(false);
+  protected showDetails: WritableSignal<boolean> = signal(false);
+  protected selectedDeliveryManId: WritableSignal<number | null> = signal(null);
   protected data: WritableSignal<DeliveryMenList> = signal({
     deliveryMen: [],
     totalItems: 0
@@ -90,7 +94,10 @@ export class DeliveryMen implements OnInit, OnDestroy {
 
   handleEdit(deliveryMan: DeliveryMan): void {}
 
-  handleOpenDetails(): void {}
+  handleOpenDetails(deliveryManId: number | null = null): void {
+    this.selectedDeliveryManId.set(deliveryManId);
+    this.showDetails.update(prev => !prev);
+  }
   
   handleDelete(deliveryMan: DeliveryMan): void {}
 
