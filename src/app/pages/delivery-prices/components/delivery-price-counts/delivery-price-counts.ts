@@ -1,9 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
+import { PluralPipe } from '@shared/pipes/plural.pipe';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-delivery-price-counts',
-  imports: [],
+  imports: [
+    SkeletonModule,
+    PluralPipe
+  ],
   templateUrl: './delivery-price-counts.html',
   styleUrl: './delivery-price-counts.css',
 })
-export class DeliveryPriceCounts {}
+export class DeliveryPriceCounts {
+  protected loading: WritableSignal<boolean> = signal(false);
+}
