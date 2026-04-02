@@ -11,11 +11,14 @@ import { BadgeModule } from 'primeng/badge';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { DeliveryPriceForm } from '../delivery-price-form/delivery-price-form';
+import { ChipModule } from 'primeng/chip';
 
 @Component({
   selector: 'app-delivery-price-city',
   imports: [
     DeliveryPricePlaceholder,
+    DeliveryPriceForm,
     CardModule,
     ButtonModule,
     TooltipModule,
@@ -23,6 +26,7 @@ import { InputTextModule } from 'primeng/inputtext';
     IconFieldModule,
     InputIconModule,
     BadgeModule,
+    ChipModule,
     NgClass
   ],
   templateUrl: './delivery-price-city.html',
@@ -31,11 +35,13 @@ import { InputTextModule } from 'primeng/inputtext';
 export class DeliveryPriceCity implements OnInit, OnDestroy {
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
+  // services
+  private deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
   // vars
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected data: WritableSignal<DeliveryPriceCityType[]> = signal([]);
-  // services
-  private deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
+  protected showForm: WritableSignal<boolean> = signal(false);
+  protected selectedLocation: WritableSignal<DeliveryPriceCityType | undefined> = signal(undefined);
 
   ngOnInit(): void {
     this.isLoading.set(true);
@@ -57,5 +63,15 @@ export class DeliveryPriceCity implements OnInit, OnDestroy {
     });
   }
 
-  handleUpdate(deliveryPrice: DeliveryPriceCityType): void {}
+  handleShowForm(deliveryPrice: DeliveryPriceCityType | undefined = undefined): void {
+    this.selectedLocation.set(deliveryPrice);
+    this.showForm.update(prev => {
+      if (prev) {
+        this.loadData();
+        return false;
+      }
+      
+      return true;
+    });
+  }
 }

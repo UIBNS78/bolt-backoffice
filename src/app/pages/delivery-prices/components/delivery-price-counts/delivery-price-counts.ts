@@ -13,4 +13,6 @@ import { SkeletonModule } from 'primeng/skeleton';
 })
 export class DeliveryPriceCounts {
   protected loading: WritableSignal<boolean> = signal(false);
+
+  // TODO: call API for count
 }
