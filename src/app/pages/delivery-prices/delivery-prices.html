@@ -1,1 +1,27 @@
-<p>delivery-prices works!</p>
+<div class="flex flex-col gap-4">
+    <div class="flex justify-between items-center">
+        <div class="flex flex-col">
+            <h1 class="text-xl text-blue-950">Frais de livraison</h1>
+            <p class="text-gray-400">Les frais de livraison sont calculés en fonction de la distance et du poids du colis.</p>
+        </div>
+        <app-delivery-price-counts></app-delivery-price-counts>
+    </div>
+    <p-tabs [value]="0">
+        <p-tablist>
+            @for (tab of tabs; track tab.id) {
+                <p-tab [value]="tab.id" class="flex items-center gap-2 text-inherit">
+                    <i [class]="tab.icon"></i>
+                    <span>{{ tab.label }}</span>
+                </p-tab>
+            }
+        </p-tablist>
+        <p-tabpanels>
+            <p-tabpanel [value]="0">
+                <app-delivery-price-city></app-delivery-price-city>
+            </p-tabpanel>
+            <p-tabpanel [value]="1">
+                <app-delivery-price-cooperative></app-delivery-price-cooperative>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</div>
