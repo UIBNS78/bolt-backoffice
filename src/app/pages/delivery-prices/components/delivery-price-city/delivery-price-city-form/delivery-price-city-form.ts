@@ -109,7 +109,7 @@ export class DeliveryPriceCityForm implements OnDestroy {
     this.loading.set(true);
     const rawValue: DeliveryPriceCity = this.form.getRawValue() as DeliveryPriceCity;
 
-    this.deliveryPricesService.update(
+    this.deliveryPricesService.updateCity(
       {
         id: rawValue.id,
         location: rawValue.location,

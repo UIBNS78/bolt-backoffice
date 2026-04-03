@@ -2,7 +2,7 @@
     <div class="flex justify-start gap-4">
         @for (d of data(); track d.price) {
             <div class="border border-gray-200 rounded-md flex-1 p-4">
-                <app-delivery-price-cooperative-card [data]="d" (showFormEmitter)="handleShowForm($event)" [loading]="isLoading()"></app-delivery-price-cooperative-card>
+                <app-delivery-price-cooperative-card [deliveryPrice]="d" (showFormEmitter)="handleShowForm($event)" [loading]="isLoading()"></app-delivery-price-cooperative-card>
             </div>
         }
     </div>
@@ -10,4 +10,4 @@
     <app-delivery-price-placeholder></app-delivery-price-placeholder>
 }
 
-<!-- <app-delivery-price-form [open]="showForm()" (onCloseEmitter)="handleShowForm()" [deliveryPrice]="selectedLocation()"></app-delivery-price-form> -->
+<app-delivery-price-cooperative-form [open]="showForm()" (onCloseEmitter)="handleShowForm()" [deliveryPrice]="selectedLocation()"></app-delivery-price-cooperative-form>

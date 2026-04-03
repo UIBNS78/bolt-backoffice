@@ -4,12 +4,14 @@ import { DeliveryPricesService } from '../../delivery-prices-service';
 import { DeliveryPriceProvince } from '@shared/types/delivery-price';
 import { DeliveryPriceCooperativeCard } from './delivery-price-cooperative-card/delivery-price-cooperative-card';
 import { DeliveryPricePlaceholder } from '../delivery-price-placeholder/delivery-price-placeholder';
+import { DeliveryPriceCooperativeForm } from './delivery-price-cooperative-form/delivery-price-cooperative-form';
 
 @Component({
   selector: 'app-delivery-price-cooperative',
   imports: [
     DeliveryPriceCooperativeCard,
-    DeliveryPricePlaceholder
+    DeliveryPricePlaceholder,
+    DeliveryPriceCooperativeForm
   ],
   templateUrl: './delivery-price-cooperative.html',
   styleUrl: './delivery-price-cooperative.css',

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, EventEmitter, Input, Output, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, EventEmitter, input, Input, InputSignal, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DeliveryPriceCity, DeliveryPricePlace, DeliveryPriceProvince } from '@shared/types/delivery-price';
@@ -25,26 +25,21 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
   styleUrl: './delivery-price-cooperative-card.css',
 })
 export class DeliveryPriceCooperativeCard {
-  private _data: DeliveryPriceProvince | null = null;
-  protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
-  
   @Output() showFormEmitter: EventEmitter<DeliveryPriceProvince> = new EventEmitter<DeliveryPriceProvince>();
-  @Input() loading: boolean = false;
-  @Input() 
-  set data(data: DeliveryPriceProvince | null) {
-    if (!data) return;
+  loading: InputSignal<boolean> = input<boolean>(false);
+  deliveryPrice: InputSignal<DeliveryPriceProvince> = input.required<DeliveryPriceProvince>();
 
-    if (this.loading || (data.cooperatives ?? []).length <= 0) {
+  protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
+  protected data: Signal<DeliveryPriceProvince> = computed(() => {
+    if (this.loading() || (this.deliveryPrice()?.cooperatives ?? []).length <= 0) {
       this.searchControl.disable();
     } else {
       this.searchControl.enable();
     }
 
-    this._data = data;
-  }
-  get data(): DeliveryPriceProvince | null {
-    return this._data;
-  };
+    return this.deliveryPrice();
+  });
+
   protected searchValue: Signal<string> = toSignal(
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
@@ -53,11 +48,9 @@ export class DeliveryPriceCooperativeCard {
     { initialValue: "" }
   );
   protected cooperatives: Signal<DeliveryPricePlace[]> = computed(() => {
-    if (!this.data) return [];
+    if (this.searchValue() === "") return this.data().cooperatives;
     
-    if (this.searchValue() === "") return this.data.cooperatives;
-    
-    return this.data.cooperatives.filter(p => p.name.toLowerCase().includes(this.searchValue().toLowerCase()));
+    return this.data().cooperatives.filter(p => p.name.toLowerCase().includes(this.searchValue().toLowerCase()));
   });
 
   handleShowForm(deliveryPrice: DeliveryPriceProvince): void {

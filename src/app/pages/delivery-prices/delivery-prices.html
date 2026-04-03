@@ -19,8 +19,10 @@
             <p-tabpanel [value]="0">
                 <app-delivery-price-city></app-delivery-price-city>
             </p-tabpanel>
-            <p-tabpanel [value]="1">
-                <app-delivery-price-cooperative></app-delivery-price-cooperative>
+            <p-tabpanel [value]="1" #secondTab>
+                @if (secondTab.active()) {
+                    <app-delivery-price-cooperative></app-delivery-price-cooperative>
+                }
             </p-tabpanel>
         </p-tabpanels>
     </p-tabs>
