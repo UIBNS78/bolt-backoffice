@@ -1,8 +1,8 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, EventEmitter, Input, Output, Signal } from '@angular/core';
+import { Component, computed, EventEmitter, Input, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { DeliveryPriceCity, DeliveryPricePlace } from '@shared/types/delivery-price';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DeliveryPriceCity, DeliveryPricePlace, DeliveryPriceProvince } from '@shared/types/delivery-price';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -11,7 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
-  selector: 'app-delivery-price-city-card',
+  selector: 'app-delivery-price-cooperative-card',
   imports: [
     ButtonModule,
     IconFieldModule,
@@ -21,20 +21,20 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
     ReactiveFormsModule,
     NgClass
   ],
-  templateUrl: './delivery-price-city-card.html',
-  styleUrl: './delivery-price-city-card.css',
+  templateUrl: './delivery-price-cooperative-card.html',
+  styleUrl: './delivery-price-cooperative-card.css',
 })
-export class DeliveryPriceCityCard {
-  private _data: DeliveryPriceCity | null = null;
+export class DeliveryPriceCooperativeCard {
+  private _data: DeliveryPriceProvince | null = null;
   protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
   
-  @Output() showFormEmitter: EventEmitter<DeliveryPriceCity> = new EventEmitter<DeliveryPriceCity>();
+  @Output() showFormEmitter: EventEmitter<DeliveryPriceProvince> = new EventEmitter<DeliveryPriceProvince>();
   @Input() loading: boolean = false;
   @Input() 
-  set data(data: DeliveryPriceCity | null) {
+  set data(data: DeliveryPriceProvince | null) {
     if (!data) return;
 
-    if (this.loading || (data.places ?? []).length <= 0) {
+    if (this.loading || (data.cooperatives ?? []).length <= 0) {
       this.searchControl.disable();
     } else {
       this.searchControl.enable();
@@ -42,10 +42,9 @@ export class DeliveryPriceCityCard {
 
     this._data = data;
   }
-  get data(): DeliveryPriceCity | null {
+  get data(): DeliveryPriceProvince | null {
     return this._data;
   };
-  
   protected searchValue: Signal<string> = toSignal(
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
@@ -53,15 +52,15 @@ export class DeliveryPriceCityCard {
     ),
     { initialValue: "" }
   );
-  protected places: Signal<DeliveryPricePlace[]> = computed(() => {
+  protected cooperatives: Signal<DeliveryPricePlace[]> = computed(() => {
     if (!this.data) return [];
     
-    if (this.searchValue() === "") return this.data.places;
+    if (this.searchValue() === "") return this.data.cooperatives;
     
-    return this.data.places.filter(p => p.name.toLowerCase().includes(this.searchValue().toLowerCase()));
+    return this.data.cooperatives.filter(p => p.name.toLowerCase().includes(this.searchValue().toLowerCase()));
   });
 
-  handleShowForm(deliveryPrice: DeliveryPriceCity): void {
+  handleShowForm(deliveryPrice: DeliveryPriceProvince): void {
     this.showFormEmitter.emit(deliveryPrice);
   }
 }
