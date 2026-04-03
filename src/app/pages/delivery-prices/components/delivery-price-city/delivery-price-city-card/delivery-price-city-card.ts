@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, EventEmitter, Input, Output, Signal } from '@angular/core';
+import { Component, computed, EventEmitter, input, Input, InputSignal, Output, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DeliveryPriceCity, DeliveryPricePlace } from '@shared/types/delivery-price';
@@ -25,26 +25,20 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
   styleUrl: './delivery-price-city-card.css',
 })
 export class DeliveryPriceCityCard {
-  private _data: DeliveryPriceCity | null = null;
-  protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
-  
   @Output() showFormEmitter: EventEmitter<DeliveryPriceCity> = new EventEmitter<DeliveryPriceCity>();
-  @Input() loading: boolean = false;
-  @Input() 
-  set data(data: DeliveryPriceCity | null) {
-    if (!data) return;
-
-    if (this.loading || (data.places ?? []).length <= 0) {
+  loading: InputSignal<boolean> = input<boolean>(false);
+  deliveryPrice: InputSignal<DeliveryPriceCity> = input.required<DeliveryPriceCity>();
+  
+  protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
+  protected data: Signal<DeliveryPriceCity> = computed(() => {
+    if (this.loading() || (this.deliveryPrice()?.places ?? []).length <= 0) {
       this.searchControl.disable();
     } else {
       this.searchControl.enable();
     }
 
-    this._data = data;
-  }
-  get data(): DeliveryPriceCity | null {
-    return this._data;
-  };
+    return this.deliveryPrice();
+  });
   
   protected searchValue: Signal<string> = toSignal(
     this.searchControl.valueChanges.pipe(
@@ -53,12 +47,11 @@ export class DeliveryPriceCityCard {
     ),
     { initialValue: "" }
   );
-  protected places: Signal<DeliveryPricePlace[]> = computed(() => {
-    if (!this.data) return [];
+  
+  protected places: Signal<DeliveryPricePlace[]> = computed(() => {    
+    if (this.searchValue() === "") return this.data().places;
     
-    if (this.searchValue() === "") return this.data.places;
-    
-    return this.data.places.filter(p => p.name.toLowerCase().includes(this.searchValue().toLowerCase()));
+    return this.data().places.filter(p => p.name.toLowerCase().includes(this.searchValue().toLowerCase()));
   });
 
   handleShowForm(deliveryPrice: DeliveryPriceCity): void {
