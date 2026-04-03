@@ -30,7 +30,7 @@
                 </div>
                 <div class="flex justify-center items-center gap-3 flex-wrap overflow-y-auto max-h-100">
                     @for (p of places(); track p.id) {
-                        <p-chip [label]="p.name" severity="secondary" size="small" [removable]="true" (onRemove)="removePlace(p.id)" />
+                        <p-chip [label]="p.name" [removable]="true" (onRemove)="removePlace(p.id)" />
                     }
                 </div>
             </div>
