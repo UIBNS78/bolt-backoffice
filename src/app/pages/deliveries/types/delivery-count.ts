@@ -1,5 +1,5 @@
 export type DeliveryCount = {
-    monthlyAmount: number;
+    deliveryCount: number;
     package: {
         total: number;
         delivered: number;
