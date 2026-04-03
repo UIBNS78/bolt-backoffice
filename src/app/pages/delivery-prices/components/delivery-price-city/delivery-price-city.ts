@@ -11,7 +11,7 @@ import { BadgeModule } from 'primeng/badge';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { DeliveryPriceForm } from '../delivery-price-form/delivery-price-form';
+import { DeliveryPriceCityForm } from './delivery-price-city-form/delivery-price-city-form';
 import { ChipModule } from 'primeng/chip';
 import { DeliveryPriceCityCard } from './delivery-price-city-card/delivery-price-city-card';
 
@@ -19,7 +19,7 @@ import { DeliveryPriceCityCard } from './delivery-price-city-card/delivery-price
   selector: 'app-delivery-price-city',
   imports: [
     DeliveryPricePlaceholder,
-    DeliveryPriceForm,
+    DeliveryPriceCityForm,
     CardModule,
     ButtonModule,
     TooltipModule,

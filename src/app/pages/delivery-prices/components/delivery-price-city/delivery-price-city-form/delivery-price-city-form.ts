@@ -1,7 +1,7 @@
 import { Component, computed, EventEmitter, inject, Input, OnDestroy, Output, Signal, signal, WritableSignal, effect } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DrawerModule } from 'primeng/drawer';
-import { DeliveryPricesService } from '../../delivery-prices-service';
+import { DeliveryPricesService } from '../../../delivery-prices-service';
 import { MessageService } from 'primeng/api';
 import { finalize, first, Subject, takeUntil } from 'rxjs';
 import { DeliveryPriceCityUpdateForm, deliveryLocationOptions as dlOptions, type DeliveryPriceCity, type DeliveryPricePlace } from '@shared/types/delivery-price';
@@ -15,7 +15,7 @@ import { ChipModule } from 'primeng/chip';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-delivery-price-form',
+  selector: 'app-delivery-price-city-form',
   imports: [
     DrawerModule,
     ReactiveFormsModule,
@@ -26,10 +26,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
     InputTextModule,
     ChipModule
   ],
-  templateUrl: './delivery-price-form.html',
-  styleUrl: './delivery-price-form.css',
+  templateUrl: './delivery-price-city-form.html',
+  styleUrl: './delivery-price-city-form.css',
 })
-export class DeliveryPriceForm implements OnDestroy {
+export class DeliveryPriceCityForm implements OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
   private _defaultPlaces: DeliveryPricePlace[] = [];
   private _placesToAdd: DeliveryPricePlace[] = [];

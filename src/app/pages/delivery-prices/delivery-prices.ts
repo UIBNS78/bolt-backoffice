@@ -18,7 +18,7 @@ import { DeliveryPriceCooperative } from './components/delivery-price-cooperativ
 export class DeliveryPrices {
   
   protected tabs: { id: number; label: string; icon: string }[] = [
-    { id: 0, label: "Clients à Antananarivo", icon: "pi pi-building" },
-    { id: 1, label: "Clients en province", icon: "pi pi-truck" }
+    { id: 0, label: "Livraison à Antananarivo", icon: "pi pi-building" },
+    { id: 1, label: "Livraison en province", icon: "pi pi-truck" }
   ];
 }
