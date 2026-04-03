@@ -52,3 +52,7 @@ body,
 .p-paginator-rpp-dropdown > .p-select-label {
   padding: 2px 5px 0 10px !important;
 }
+
+.p-tag-label {
+  font-size: 10px !important;
+}

@@ -58,7 +58,7 @@
                             <td><p-chip [label]="'0' + (man.phone | mask:'00 00 000 00')" icon="pi pi-phone" /></td>
                             <td>{{ man.totalPackages }}</td>
                             <td>
-                                <p-badge value="actif" severity="success" size="small" />
+                                <p-tag severity="success" value="actif" [rounded]="true" />
                             </td>
                             <td>{{ man.createdAt | seniority }}</td>
                             <td>
