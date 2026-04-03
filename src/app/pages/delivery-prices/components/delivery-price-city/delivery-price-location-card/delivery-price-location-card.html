@@ -38,6 +38,8 @@
         <div class="flex justify-center items-center gap-3 flex-wrap overflow-y-auto max-h-100">
             @for (p of places(); track p.id) {
                 <p-chip [label]="p.name" />
+            } @empty {
+                <p class="text-gray-400">Aucun lieu de livraison trouvé.</p>
             }
         </div>
     </div>
