@@ -13,7 +13,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { DeliveryPriceForm } from '../delivery-price-form/delivery-price-form';
 import { ChipModule } from 'primeng/chip';
-import { DeliveryPriceLocationCard } from './delivery-price-location-card/delivery-price-location-card';
+import { DeliveryPriceCityCard } from './delivery-price-city-card/delivery-price-city-card';
 
 @Component({
   selector: 'app-delivery-price-city',
@@ -28,7 +28,7 @@ import { DeliveryPriceLocationCard } from './delivery-price-location-card/delive
     InputIconModule,
     BadgeModule,
     ChipModule,
-    DeliveryPriceLocationCard
+    DeliveryPriceCityCard
   ],
   templateUrl: './delivery-price-city.html',
   styleUrl: './delivery-price-city.css',

@@ -11,7 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
-  selector: 'app-delivery-price-location-card',
+  selector: 'app-delivery-price-city-card',
   imports: [
     ButtonModule,
     IconFieldModule,
@@ -21,10 +21,10 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
     ReactiveFormsModule,
     NgClass
   ],
-  templateUrl: './delivery-price-location-card.html',
-  styleUrl: './delivery-price-location-card.css',
+  templateUrl: './delivery-price-city-card.html',
+  styleUrl: './delivery-price-city-card.css',
 })
-export class DeliveryPriceLocationCard {
+export class DeliveryPriceCityCard {
   protected searchControl: FormControl<string> = new FormControl("", { nonNullable: true });
   
   @Output() showFormEmitter: EventEmitter<DeliveryPriceCity> = new EventEmitter<DeliveryPriceCity>();

@@ -2,7 +2,7 @@
     <div class="flex justify-start gap-4">
         @for (d of data(); track d.price) {
             <div class="border border-gray-200 rounded-md flex-1 p-4">
-                <app-delivery-price-location-card [data]="d" (showFormEmitter)="handleShowForm($event)" [loading]="isLoading()"></app-delivery-price-location-card>
+                <app-delivery-price-city-card [data]="d" (showFormEmitter)="handleShowForm($event)" [loading]="isLoading()"></app-delivery-price-city-card>
             </div>
         }
     </div>
