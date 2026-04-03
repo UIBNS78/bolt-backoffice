@@ -49,8 +49,8 @@ export class Owners implements OnInit, OnDestroy {
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   // services
   private ownersService: OwnersService = inject(OwnersService);
-  protected dialogService: DialogService = inject(DialogService);
-  protected messageService: MessageService = inject(MessageService);
+  private dialogService: DialogService = inject(DialogService);
+  private messageService: MessageService = inject(MessageService);
   // vars
   protected showForm: WritableSignal<boolean> = signal(false);
   protected first: WritableSignal<number> = signal(0);

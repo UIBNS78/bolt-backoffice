@@ -1,0 +1,44 @@
+<div class="flex flex-col gap-3">
+    <div class="flex justify-between items-center">
+        <div class="flex justify-start items-center gap-3">
+            <div class="flex items-center justify-center bg-blue-100 rounded-full p-3">
+                <i class="pi pi-map text-blue-500"></i>
+            </div>
+            <div class="flex flex-col">
+                <div class="flex justify-start items-center gap-2">
+                    <span [ngClass]="[data().promotion > 0 ? 'line-through' : 'font-bold']" style="font-size: 1rem;">{{ data().price.toLocaleString("fr-MG") }} Ar</span> 
+                    @if (data().promotion > 0) {
+                        <span class="text-red-500 font-bold" style="font-size: 1rem;">{{ data().promotion.toLocaleString("fr-MG") }} Ar</span>
+                    }
+                </div>
+                <div class="flex items-center gap-1">
+                    <p class="text-gray-500 text-xs">{{ data().location }}</p>
+                    @if (data().promotion > 0) {
+                        <p class="text-red-500 text-xs">en promotion</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <p-button
+            (click)="handleShowForm(data())"
+            icon="pi pi-ellipsis-h"
+            [rounded]="true"
+            [text]="true"
+            severity="contrast"
+            pTooltip="Gérer cette emplacement"
+            tooltipPosition="top"
+            [loading]="data().isUpdating"
+        />
+    </div>
+    <p-iconfield>
+        <p-inputicon class="pi pi-search" />
+        <input type="text" pInputText [formControl]="searchControl" pSize="small" placeholder="Recherche" class="w-full" />
+    </p-iconfield>
+    <div class="flex justify-center items-center gap-3 flex-wrap overflow-y-auto max-h-100">
+        @for (p of cooperatives(); track p.id) {
+            <p-chip [label]="p.name" />
+        } @empty {
+            <p class="text-gray-400">Aucun lieu de livraison trouvé.</p>
+        }
+    </div>
+</div>

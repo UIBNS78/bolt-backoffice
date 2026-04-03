@@ -1,0 +1,17 @@
+<div class="flex justify-end items-center gap-3">
+    @defer (when !loading()) {
+        <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
+            <i class="pi pi-building text-blue-500"></i>
+            <p>{{ 148 }}</p>
+            <p class="text-gray-500">{{ 'Emplacement' | plural:148 }}</p>
+        </div>
+        <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
+            <i class="pi pi-truck"></i>
+            <p>{{ 21 }}</p>
+            <p class="text-gray-500">{{ 'Coopérative' | plural:21 }}</p>
+        </div>
+    } @placeholder (minimum 600ms) {
+        <p-skeleton width="10rem" height="2.1rem"/>
+        <p-skeleton width="10rem" height="2.1rem"/>
+    }
+</div>

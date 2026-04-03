@@ -1,0 +1,44 @@
+<p-drawer [(visible)]="open" [dismissible]="false" position="right" header="Gérer cette emplacement" (onHide)="handleClose()" styleClass="!w-[30rem]">
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="h-full">
+        <div class="flex flex-col justify-between h-full">
+            <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-1 flex-1">
+                    <label for="location">Emplacement</label>
+                    <p-select [options]="deliveryLocationOptions" formControlName="location" size="small" optionLabel="label" optionValue="id"[invalid]="form.get('location')?.invalid && (form.get('location')?.touched || form.get('location')?.dirty)" required />
+                    @if (form.get('location')?.invalid && (form.get('location')?.touched || form.get('location')?.dirty)) {
+                        <p-message severity="error" size="small" variant="simple">Emplacement requis.</p-message>
+                    }
+                </div>
+                <div class="flex items-center gap-3 flex-1">
+                    <div class="flex flex-col gap-1 flex-1">
+                        <label for="price">Frais (Ariary)</label>
+                        <p-inputnumber inputId="integeronly" formControlName="price" size="small" [invalid]="form.get('price')?.invalid && (form.get('price')?.touched || form.get('price')?.dirty)" required />
+                        @if (form.get('price')?.invalid && (form.get('price')?.touched || form.get('price')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Frais requis.</p-message>
+                        }
+                    </div>
+                    <div class="flex items-center gap-3 flex-1">
+                        <div class="flex flex-col gap-1 flex-1">
+                            <label for="promotion">Promotion (Ariary)</label>
+                            <p-inputnumber inputId="integeronly" formControlName="promotion" size="small" [invalid]="form.get('promotion')?.invalid && (form.get('promotion')?.touched || form.get('promotion')?.dirty)" />
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1 flex-1">
+                    <label for="places">Lieu de livraison</label>
+                    <input type="text" pInputText pSize="small" id="places" formControlName="places" [invalid]="form.get('places')?.invalid && (form.get('places')?.touched || form.get('places')?.dirty)">
+                </div>
+                <div class="flex justify-center items-center gap-3 flex-wrap overflow-y-auto max-h-100">
+                    @for (p of places(); track p.id) {
+                        <p-chip [label]="p.name" [removable]="true" (onRemove)="removePlace(p.id)" />
+                    }
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-3">
+                <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" [disabled]="loading()" />
+                <p-button type="submit" [label]="loading() ? 'Modification...' : 'Modifier'" severity="contrast" size="small" [loading]="loading()" [disabled]="loading()" />
+            </div>
+        </div>
+    </form>
+</p-drawer>

@@ -68,14 +68,14 @@
                     <label for="planId">Plan</label>
                     <p-select [options]="ownerPlanOptions" formControlName="planId" size="small" optionLabel="label" optionValue="id"[invalid]="form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)" required />
                     @if (form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)) {
-                        <p-message severity="error" size="small" variant="simple">Mot de passe requis.</p-message>
+                        <p-message severity="error" size="small" variant="simple">Plan requis.</p-message>
                     }
                 </div>
             </div>
 
             <div class="flex items-center justify-end gap-3">
                 <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" [disabled]="loading()" />
-                <p-button type="submit" label="Enregistrer" severity="contrast" size="small" [loading]="loading()" [disabled]="loading()" />
+                <p-button type="submit" [label]="loading() ? 'Enregistrement...' : 'Enregistrer'" severity="contrast" size="small" [loading]="loading()" [disabled]="loading()" />
             </div>
         </div>
     </form>
