@@ -1,5 +1,5 @@
 <div class="flex justify-end items-center gap-3">
-    @defer (when !loading()) {
+    @defer (when !isLoading()) {
         <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
             <i class="pi pi-truck text-blue-500"></i>
             <p class="text-gray-500">{{ counts().deliveryCount }} {{ 'Livraison' | plural:counts().deliveryCount }}</p>

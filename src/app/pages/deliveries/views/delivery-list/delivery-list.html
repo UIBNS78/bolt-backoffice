@@ -4,6 +4,48 @@
             <h1 class="text-xl text-blue-950">Livraisons</h1>
             <p class="text-gray-400">Un aperçu détaillé de l'historique et du statut de tous les colis.</p>
         </div>
-        <app-deliveries-count [loading]="isLoading()" [counts]="counts()"></app-deliveries-count>
+        <app-deliveries-count></app-deliveries-count>
+    </div>    
+    <div class="flex gap-3">
+        <div class="flex flex-col gap-2 border rounded-xl border-gray-200 pb-2 flex-1">
+            <div class="flex justify-between items-center pt-3 px-4">
+                <h1 class="text-gray-400">Liste des livraisons</h1>
+                <div class="flex justify-end gap-3">
+                    <p-button icon="pi pi-refresh" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Rafraîchir la liste" tooltipPosition="top" />
+                    <p-button icon="pi pi-plus" size="small" severity="contrast" pTooltip="Nouvelle livraison" tooltipPosition="top" />
+                </div>
+            </div>
+            <p-tabs [value]="0">
+                <p-tablist>
+                    @for (tab of tabs; track tab.id) {
+                        <p-tab [value]="tab.id" class="flex items-center gap-2 text-inherit">
+                            <i [class]="tab.icon"></i>
+                            <span>{{ tab.label }}</span>
+                        </p-tab>
+                    }
+                </p-tablist>
+                <p-tabpanels>
+                    <p-tabpanel [value]="0">
+                        <app-deliveries-by-owner></app-deliveries-by-owner>
+                    </p-tabpanel>
+                    <p-tabpanel [value]="1">
+                        <app-deliveries-by-men></app-deliveries-by-men>
+                    </p-tabpanel>
+                </p-tabpanels>
+            </p-tabs>
+        </div>
+        <div class="flex flex-col gap-2 border rounded-xl border-gray-200 py-3 px-4 flex-3">
+            <div class="flex justify-between items-center">
+                <h1 class="text-gray-400">Liste des colis</h1>
+                <div class="flex justify-end gap-3">
+                    <p-button icon="pi pi-filter" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Filtre avancée" tooltipPosition="top" />
+                    <p-button icon="pi pi-refresh" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Rafraîchir" tooltipPosition="top" />
+                    <p-iconfield>
+                        <p-inputicon class="pi pi-search" />
+                        <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || data().totalItems <= 0" />
+                    </p-iconfield>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

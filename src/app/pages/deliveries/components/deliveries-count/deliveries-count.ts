@@ -1,4 +1,4 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 import { DeliveryCount } from '../../types/delivery-count';
 import { SkeletonModule } from 'primeng/skeleton';
 import { PluralPipe } from '@shared/pipes/plural.pipe';
@@ -13,6 +13,13 @@ import { PluralPipe } from '@shared/pipes/plural.pipe';
   styleUrl: './deliveries-count.css',
 })
 export class DeliveriesCount {
-  loading: InputSignal<boolean> = input<boolean>(false);
-  counts: InputSignal<DeliveryCount> = input.required<DeliveryCount>();
+  protected isLoading: WritableSignal<boolean> = signal(false);
+  protected counts: WritableSignal<DeliveryCount> = signal({
+    deliveryCount: 0,
+    package: {
+      total: 0,
+      delivered: 0,
+      cancelled: 0
+    }
+  });
 }
