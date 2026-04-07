@@ -44,4 +44,8 @@ export class DeliveryList {
   }
   
   handleOpenForm(): void {}
+
+  onTabChange(): void {
+    this.selectedDeliveryId.set(null);
+  }
 }

@@ -15,7 +15,7 @@
                     <p-button icon="pi pi-plus" size="small" severity="contrast" pTooltip="Nouvelle livraison" tooltipPosition="top" />
                 </div>
             </div>
-            <p-tabs [value]="0">
+            <p-tabs [value]="0" (valueChange)="onTabChange()">
                 <p-tablist>
                     @for (tab of tabs; track tab.id) {
                         <p-tab [value]="tab.id" class="flex items-center gap-2 text-inherit">

@@ -56,3 +56,8 @@ body,
 .p-tag-label {
   font-size: 10px !important;
 }
+
+.p-tab-active {
+  color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+}
