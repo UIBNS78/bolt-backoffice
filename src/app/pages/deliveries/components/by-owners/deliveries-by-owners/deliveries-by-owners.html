@@ -1,0 +1,40 @@
+<div class="flex flex-col gap-2">
+    <p-iconfield>
+        <p-inputicon class="pi pi-search" />
+        <input type="text" pInputText pSize="small" placeholder="Recherche" class="w-full" [disabled]="isLoading() || data().totalItems <= 0" />
+    </p-iconfield>
+    <div class="flex flex-col overflow-y-auto">
+        @for (delivery of data().deliveries; track $index; let last = $last) {
+            <div>
+                <div (click)="handleSelectDelivery(delivery.id)" [ngClass]="['flex justify-between items-center p-2 rounded-md cursor-pointer', selectedDelivery() === delivery.id ? 'bg-blue-500' : 'hover:bg-blue-50']">
+                    <div class="flex items-center gap-4">
+                        <i [ngClass]="['pi pi-shop', selectedDelivery() === delivery.id ? 'text-white' : 'text-blue-500']"></i>
+                        <div class="flex flex-col">
+                            <p [ngClass]="['font-bold', selectedDelivery() === delivery.id ? 'text-white' : '']">{{ delivery.owner.commercialName }}</p>
+                            <div class="flex items-center gap-2">
+                                <i [ngClass]="['pi pi-user', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
+                                <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.owner.name }}</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-2">
+                                    <i [ngClass]="['pi pi-wallet', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-blue-500']" style="font-size: 0.6rem;"></i>
+                                    <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-blue-500']">{{ delivery.payment.toLocaleString('fr-FR') }} Ar</p>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <i [ngClass]="['pi pi-box', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
+                                    <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.packageNumber }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p-tag [severity]="delivery.status | deliveryStatusSeverity" [value]="delivery.status | deliveryStatus" [rounded]="true" />
+                </div>
+                @if (!last) {
+                    <div class="bg-gray-200 h-[0.1px] w-full my-2"></div>
+                }
+            </div>
+        } @empty {
+            <p class="text-gray-500">Aucune livraison trouvée</p>
+        }
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="flex flex-col gap-2">
+    <div class="flex justify-between items-center">
+        <h1 class="text-gray-400">Liste des colis</h1>
+        <div class="flex justify-end gap-3">
+            <p-button icon="pi pi-filter" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Filtre avancée" tooltipPosition="top" />
+            <p-button icon="pi pi-refresh" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Rafraîchir" tooltipPosition="top" />
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading()" />
+            </p-iconfield>
+        </div>
+    </div>
+
+    <div class="flex-1">
+        @if (deliveryId()) {
+            <p>{{ deliveryId() }}</p>
+        } @else {
+            <div class="flex justify-center items-center h-[calc(100vh-200px)]">
+                <div class="flex flex-col justify-center items-center gap-2 w-80">
+                    <i class="pi pi-box"></i>
+                    <div class="flex flex-col items-center">
+                        <p class="text-center">Aucun colis trouvé</p>
+                        <p class="text-gray-400 text-center">Merci de séléctionner une livraison dans la liste afin de voir ses colis</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
