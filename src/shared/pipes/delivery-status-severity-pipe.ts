@@ -8,7 +8,7 @@ export class DeliveryStatusSeverityPipe implements PipeTransform {
   transform(value: DeliveryStatus): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' {
     switch(value) {
       case 1:
-        return "secondary";
+        return "contrast";
 
       case 2:
         return "warn";

@@ -8,15 +8,15 @@
         </div>
         <p-button icon="pi pi-sliders-h" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || data().totalItems <= 0" pTooltip="Filtre avancée" tooltipPosition="top" />
     </div>
-    <div class="flex flex-col h-[calc(100vh-308px)] overflow-y-auto">
+    <div class="flex flex-col h-[calc(100vh-308px)] overflow-y-auto pr-2">
         @defer (when !isLoading()) {
             @for (d of data().deliveries; track $index) {
                 <p-divider align="left">
                     <p class="text-gray-400">{{ d.date | todayYesterdayTomorrow:"dd MMMM yyyy" }}</p>
                 </p-divider>
-                @for (delivery of d.deliveries; track $index; let last = $last) {
-                    <div>
-                        <div (click)="handleSelectDelivery(delivery.id)" [ngClass]="['flex justify-between items-center p-2 rounded-md cursor-pointer', selectedDelivery() === delivery.id ? 'bg-blue-500' : 'hover:bg-blue-50']">
+                <div class="flex flex-col gap-2">
+                    @for (delivery of d.deliveries; track $index) {
+                        <div (click)="handleSelectDelivery(delivery.id)" [ngClass]="['flex justify-between items-center p-2 rounded-md cursor-pointer', selectedDelivery() === delivery.id ? 'bg-blue-500' : 'bg-gray-100']">
                             <div class="flex items-center gap-4">
                                 <i [ngClass]="['pi pi-shop', selectedDelivery() === delivery.id ? 'text-white' : 'text-blue-500']"></i>
                                 <div class="flex flex-col">
@@ -39,11 +39,8 @@
                             </div>
                             <p-tag [severity]="delivery.status | deliveryStatusSeverity" [value]="delivery.status | deliveryStatus" [rounded]="true" />
                         </div>
-                        @if (!last) {
-                            <div class="bg-gray-200 h-[0.1px] w-full my-2"></div>
-                        }
-                    </div>
-                }
+                    }
+                </div>
             } @empty {
                 <div class="flex flex-col flex-1 justify-center items-center">
                     <p class="text-gray-400">Aucune livraison trouvée</p>
