@@ -13,6 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { finalize, Subject, takeUntil } from 'rxjs';
+import { DeliveriesPlaceholder } from '../../deliveries-placeholder/deliveries-placeholder';
 
 @Component({
   selector: 'app-deliveries-by-owners',
@@ -28,7 +29,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     ButtonModule,
     TooltipModule,
     TodayYesterdayTomorrowPipe,
-    DividerModule
+    DeliveriesPlaceholder
   ],
   templateUrl: './deliveries-by-owners.html',
   styleUrl: './deliveries-by-owners.css',
