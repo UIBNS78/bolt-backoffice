@@ -10,16 +10,16 @@ export class DeliveryStatusPipe implements PipeTransform {
   transform(value: DeliveryStatus): string {
     switch(value) {
       case 1:
-        return "en attente";
+        return "En attente";
 
       case 2:
-        return "récupération";
+        return "Récupération";
 
       case 3:
-        return "livraison";
+        return "Livraison";
 
       case 4:
-        return "finished";
+        return "Terminé";
 
       default:
         return value;

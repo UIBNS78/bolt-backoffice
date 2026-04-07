@@ -37,7 +37,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <p-tag [severity]="delivery.status | deliveryStatusSeverity" [value]="delivery.status | deliveryStatus" [rounded]="true" />
+                            <p-tag [severity]="selectedDelivery() === delivery.id ? 'secondary' : delivery.status | deliveryStatusSeverity" [value]="delivery.status | deliveryStatus" [rounded]="true" />
                         </div>
                     }
                 </div>
