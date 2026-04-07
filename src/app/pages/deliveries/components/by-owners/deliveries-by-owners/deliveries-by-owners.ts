@@ -4,11 +4,13 @@ import { DeliveryStatusSeverityPipe } from '@shared/pipes/delivery-status-severi
 import { DeliveryStatusPipe } from '@shared/pipes/delivery-status.pipe';
 import { DeliveriesService } from 'app/pages/deliveries/deliveries-service';
 import { DeliveryList } from 'app/pages/deliveries/types/delivery-list';
+import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -21,7 +23,9 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     DeliveryStatusPipe,
     DeliveryStatusSeverityPipe,
     NgClass,
-    DividerModule
+    DividerModule,
+    ButtonModule,
+    TooltipModule
   ],
   templateUrl: './deliveries-by-owners.html',
   styleUrl: './deliveries-by-owners.css',

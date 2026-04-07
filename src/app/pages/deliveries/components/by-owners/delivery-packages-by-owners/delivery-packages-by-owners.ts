@@ -3,6 +3,7 @@ import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-delivery-packages-by-owners',
@@ -10,7 +11,8 @@ import { InputTextModule } from 'primeng/inputtext';
     ButtonModule,
     IconFieldModule,
     InputIconModule,
-    InputTextModule
+    InputTextModule,
+    TooltipModule
   ],
   templateUrl: './delivery-packages-by-owners.html',
   styleUrl: './delivery-packages-by-owners.css',

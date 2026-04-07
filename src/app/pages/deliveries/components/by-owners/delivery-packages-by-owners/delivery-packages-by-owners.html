@@ -6,7 +6,7 @@
             <p-button icon="pi pi-refresh" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Rafraîchir" tooltipPosition="top" />
             <p-iconfield>
                 <p-inputicon class="pi pi-search" />
-                <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading()" />
+                <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || !deliveryId()" />
             </p-iconfield>
         </div>
     </div>
