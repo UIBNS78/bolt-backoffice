@@ -8,36 +8,41 @@
         </div>
         <p-button icon="pi pi-sliders-h" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Filtre avancée" tooltipPosition="top" />
     </div>
-    <div class="flex flex-col overflow-y-auto">
-        @for (delivery of data().deliveries; track $index; let last = $last) {
-            <div>
-                <div (click)="handleSelectDelivery(delivery.id)" [ngClass]="['flex justify-between items-center p-2 rounded-md cursor-pointer', selectedDelivery() === delivery.id ? 'bg-blue-500' : 'hover:bg-blue-50']">
-                    <div class="flex items-center gap-4">
-                        <i [ngClass]="['pi pi-shop', selectedDelivery() === delivery.id ? 'text-white' : 'text-blue-500']"></i>
-                        <div class="flex flex-col">
-                            <p [ngClass]="['font-bold', selectedDelivery() === delivery.id ? 'text-white' : '']">{{ delivery.owner.commercialName }}</p>
-                            <div class="flex items-center gap-2">
-                                <i [ngClass]="['pi pi-user', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
-                                <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.owner.name }}</p>
-                            </div>
-                            <div class="flex items-center gap-3">
+    <div class="flex flex-col h-[calc(100vh-310px)] overflow-y-auto">
+        @for (d of data().deliveries; track $index) {
+            <p-divider align="left">
+                <p class="text-gray-400">{{ d.date | todayYesterdayTomorrow:"dd MMMM yyyy" }}</p>
+            </p-divider>
+            @for (delivery of d.deliveries; track $index; let last = $last) {
+                <div>
+                    <div (click)="handleSelectDelivery(delivery.id)" [ngClass]="['flex justify-between items-center p-2 rounded-md cursor-pointer', selectedDelivery() === delivery.id ? 'bg-blue-500' : 'hover:bg-blue-50']">
+                        <div class="flex items-center gap-4">
+                            <i [ngClass]="['pi pi-shop', selectedDelivery() === delivery.id ? 'text-white' : 'text-blue-500']"></i>
+                            <div class="flex flex-col">
+                                <p [ngClass]="['font-bold', selectedDelivery() === delivery.id ? 'text-white' : '']">{{ delivery.owner.commercialName }}</p>
                                 <div class="flex items-center gap-2">
-                                    <i [ngClass]="['pi pi-wallet', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-blue-500']" style="font-size: 0.6rem;"></i>
-                                    <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-blue-500']">{{ delivery.payment.toLocaleString('fr-FR') }} Ar</p>
+                                    <i [ngClass]="['pi pi-user', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
+                                    <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.owner.name }}</p>
                                 </div>
-                                <div class="flex items-center gap-1">
-                                    <i [ngClass]="['pi pi-box', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
-                                    <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.packageNumber }}</p>
+                                <div class="flex items-center gap-3">
+                                    <div class="flex items-center gap-2">
+                                        <i [ngClass]="['pi pi-wallet', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-blue-500']" style="font-size: 0.6rem;"></i>
+                                        <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-blue-500']">{{ delivery.payment.toLocaleString('fr-FR') }} Ar</p>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <i [ngClass]="['pi pi-box', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
+                                        <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.packageNumber }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <p-tag [severity]="delivery.status | deliveryStatusSeverity" [value]="delivery.status | deliveryStatus" [rounded]="true" />
                     </div>
-                    <p-tag [severity]="delivery.status | deliveryStatusSeverity" [value]="delivery.status | deliveryStatus" [rounded]="true" />
+                    @if (!last) {
+                        <div class="bg-gray-200 h-[0.1px] w-full my-2"></div>
+                    }
                 </div>
-                @if (!last) {
-                    <div class="bg-gray-200 h-[0.1px] w-full my-2"></div>
-                }
-            </div>
+            }
         } @empty {
             <p class="text-gray-500">Aucune livraison trouvée</p>
         }

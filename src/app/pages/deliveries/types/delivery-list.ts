@@ -1,6 +1,6 @@
-import type { Delivery } from "@shared/types/delivery";
+import type { DeliveryByDate } from "@shared/types/delivery";
 
 export type DeliveryList = {
-    deliveries: Delivery[];
+    deliveries: DeliveryByDate[];
     totalItems: number;
 }

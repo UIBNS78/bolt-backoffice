@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, EventEmitter, inject, OnDestroy, OnInit, Output, signal, WritableSignal } from '@angular/core';
 import { DeliveryStatusSeverityPipe } from '@shared/pipes/delivery-status-severity-pipe';
 import { DeliveryStatusPipe } from '@shared/pipes/delivery-status.pipe';
+import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
 import { DeliveriesService } from 'app/pages/deliveries/deliveries-service';
 import { DeliveryList } from 'app/pages/deliveries/types/delivery-list';
 import { ButtonModule } from 'primeng/button';
@@ -25,7 +26,9 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     NgClass,
     DividerModule,
     ButtonModule,
-    TooltipModule
+    TooltipModule,
+    TodayYesterdayTomorrowPipe,
+    DividerModule
   ],
   templateUrl: './deliveries-by-owners.html',
   styleUrl: './deliveries-by-owners.css',

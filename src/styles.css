@@ -61,3 +61,32 @@ body,
   color: #3b82f6 !important;
   border-color: #3b82f6 !important;
 }
+
+/* 1. Largeur de la barre */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px; 
+}
+
+/* 2. Fond de la barre (piste) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;      
+  border-radius: 10px;
+}
+
+/* 3. La partie mobile (le pouce) */
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px; 
+}
+
+/* 4. Effet au survol */
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* --- Firefox (Standard) --- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 #f1f1f1;
+}
