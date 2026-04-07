@@ -1,9 +1,22 @@
 <div class="flex flex-col gap-2">
     <div class="flex justify-between items-center">
-        <h1 class="text-gray-400">Liste des colis</h1>
+        <div class="flex flex-col gap-1">
+            <h1 class="text-gray-400">
+                Liste des colis
+            </h1>
+            @if (deliveryId()) {
+                <div class="flex items-center gap-2">
+                    <p-tag [value]="packages().filter(p => p.status === 1).length + ' colis en cours'" severity="secondary" [rounded]="true" icon="pi pi-bullseye" />
+                    <p-tag [value]="packages().filter(p => p.status === 2).length + ' colis livrés'" severity="secondary" [rounded]="true" icon="pi pi-check" />
+                    <p-tag [value]="packages().filter(p => p.status === 3).length + ' colis reporté'" severity="secondary" [rounded]="true" icon="pi pi-refresh" />
+                    <p-tag [value]="packages().filter(p => p.status === 4).length + ' colis annulés'" severity="secondary" [rounded]="true" icon="pi pi-times" />
+                </div>
+            }
+        </div>
         <div class="flex justify-end gap-3">
+            <p-button icon="pi pi-pencil" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Modifier la livraison" tooltipPosition="top" />
             <p-button icon="pi pi-filter" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Filtre avancée" tooltipPosition="top" />
-            <p-button icon="pi pi-refresh" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Rafraîchir" tooltipPosition="top" />
+            <p-button (click)="loadData()" icon="pi pi-refresh" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Rafraîchir" tooltipPosition="top" />
             <p-iconfield>
                 <p-inputicon class="pi pi-search" />
                 <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || !deliveryId()" />
@@ -12,18 +25,76 @@
     </div>
 
     <div class="flex-1">
-        @if (deliveryId()) {
-            <p>{{ deliveryId() }}</p>
+        @if (isLoading()) {
+            <span></span>
         } @else {
-            <div class="flex justify-center items-center h-[calc(100vh-200px)]">
-                <div class="flex flex-col justify-center items-center gap-2 w-80">
-                    <i class="pi pi-box"></i>
-                    <div class="flex flex-col items-center">
-                        <p class="text-center">Aucun colis trouvé</p>
-                        <p class="text-gray-400 text-center">Merci de séléctionner une livraison dans la liste afin de voir ses colis</p>
+            @defer (on idle) {
+                @if (deliveryId()) {
+                    <p-table [value]="packages()" [tableStyle]="{ 'min-width': '50rem' }">
+                        <ng-template #header>
+                            <tr>
+                                <th>ID</th>
+                                <th>Client</th>
+                                <th>Numéro téléphone</th>
+                                <th>Lieu de livraison</th>
+                                <th>Prix et frais de livraison</th>
+                                <th>Fragile</th>
+                                <th>Statut</th>
+                                <th>Action</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-package>
+                            <tr>
+                                <td>{{ package.id }}</td>
+                                <td>{{ package.customer }}</td>
+                                <td>
+                                    <p class="font-bold">{{ '0' + (package.phone | mask:'00 00 000 00') }}</p>
+                                </td>
+                                <td>
+                                    <div class="flex flex-col">
+                                        <p>{{ package.place }}</p>
+                                        <p class="text-gray-400">{{ package.precision }}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex flex-col items-end">
+                                        <p class="font-bold">{{ package.price.toLocaleString('fr-FR') }} Ar</p>
+                                        <p class="text-gray-400">+ {{ package.deliveryPrice.toLocaleString('fr-FR') }} Ar</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex justify-center">
+                                        @if (package.isFragile) {
+                                            <i class="pi pi-exclamation-triangle text-orange-400" pTooltip="Ce colis est fragile" tooltipPosition="top"></i>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <p-tag [value]="package.status | packageStatus" [severity]="package.status | packageStatusSeverity" [rounded]="true" [icon]="package.status | packageStatusIcon" />
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-1">
+                                        <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" [loading]="package.isUpdating" size="small" pTooltip="Modifier" tooltipPosition="top" />
+                                        <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="package.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                } @else {
+                    <div class="flex justify-center items-center h-[calc(100vh-200px)]">
+                        <div class="flex flex-col justify-center items-center gap-2 w-80">
+                            <i class="pi pi-box"></i>
+                            <div class="flex flex-col items-center">
+                                <p class="text-center">Aucun colis trouvé</p>
+                                <p class="text-gray-400 text-center">Merci de séléctionner une livraison dans la liste afin de voir ses colis</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                }
+            } @placeholder (minimum 600ms) {
+                <app-delivery-packages-placeholder></app-delivery-packages-placeholder>
+            }
         }
     </div>
 </div>

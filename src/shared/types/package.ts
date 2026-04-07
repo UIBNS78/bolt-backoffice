@@ -1,15 +1,15 @@
 import { ValueOf } from "./owner-plan";
 
 export const PACKAGE_STATUS: {
-    inProgress: "in-progress";
-    delivered: "delivered";
-    reported: "reported";
-    cancelled: "cancelled";
+    inProgress: 1;
+    delivered: 2;
+    reported: 3;
+    cancelled: 4;
 } = {
-    inProgress: "in-progress",
-    delivered: "delivered",
-    reported: "reported",
-    cancelled: "cancelled",
+    inProgress: 1,
+    delivered: 2,
+    reported: 3,
+    cancelled: 4,
 } as const;
 export type PackageStatus = ValueOf<typeof PACKAGE_STATUS>;
 
@@ -24,4 +24,5 @@ export type Package = {
     isFragile: boolean;
     fixedTime?: string;
     description?: string;
+    status: PackageStatus;
 }

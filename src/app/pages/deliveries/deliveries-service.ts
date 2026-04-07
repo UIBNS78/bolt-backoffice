@@ -5,6 +5,7 @@ import { DeliveryList } from './types/delivery-list';
 import { environment } from 'environments/environment';
 import { DeliveryCount } from './types/delivery-count';
 import { DeliveryForm } from './types/delivery-form';
+import { Package } from '@shared/types/package';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class DeliveriesService {
   getDeliveriesByOwners(pagination?: {
     itemsPerPage: number;
     page: number;
-}): Observable<DeliveryList> {
+  }): Observable<DeliveryList> {
     const params = new HttpParams({
       fromObject: {
         page: pagination ? pagination.page : 1,
@@ -24,6 +25,13 @@ export class DeliveriesService {
     });
     
     return this.http.get<DeliveryList>(`${environment.apiURL}/deliveries/all-by-owners`, { params });
+  }
+
+  getPackagesByOwnersByDeliveryId(deliveryId: number): Observable<Package[]> {
+    return this.http.get<{ packages: Package[] }>(`${environment.apiURL}/deliveries/packages/${deliveryId}`).pipe(
+      map(data => data.packages)
+    );
+
   }
 
   getDeliveryCount(): Observable<DeliveryCount> {

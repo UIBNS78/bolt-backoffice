@@ -1,0 +1,30 @@
+<div class="p-datatable p-component">
+    <table class="p-datatable-table w-full">
+        <thead class="p-datatable-thead">
+            <tr>
+                <th class="text-center">ID</th>
+                <th>Client</th>
+                <th>Numéro téléphone</th>
+                <th>Lieu de livraison</th>
+                <th>Prix et frais de livraison</th>
+                <th>Fragile</th>
+                <th>Statut</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody class="p-datatable-tbody">
+            @for (item of [1, 2, 3, 4, 5, 6]; track $index) {
+                <tr>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
