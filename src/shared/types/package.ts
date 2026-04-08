@@ -22,7 +22,7 @@ export type Package = {
     precision: string;
     price: number;
     deliveryPrice: number;
-    isFragile: boolean;
+    isFragile: 0 | 1;
     fixedTime?: string;
     description?: string;
     status: PackageStatus;

@@ -119,7 +119,7 @@ export class DeliveryPackagesByOwners implements OnDestroy {
   }
 
   handleFilterByFragility(fragility: number): void {
-    const packages: Package[] = this.packages().filter(p => p.isFragile === !!fragility);
+    const packages: Package[] = this.packages().filter(p => p.isFragile === fragility);
     if (packages.length <= 0) {
       this.messageService.add({
         severity: 'info',
