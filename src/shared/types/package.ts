@@ -1,3 +1,4 @@
+import { DeliveryMan } from "./delivery-men";
 import { ValueOf } from "./owner-plan";
 
 export const PACKAGE_STATUS: {
@@ -25,4 +26,5 @@ export type Package = {
     fixedTime?: string;
     description?: string;
     status: PackageStatus;
+    deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName">;
 }

@@ -1,7 +1,9 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import { DeliveryCount } from '../../types/delivery-count';
 import { SkeletonModule } from 'primeng/skeleton';
 import { PluralPipe } from '@shared/pipes/plural.pipe';
+import { DeliveriesService } from '../../deliveries-service';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-deliveries-count',
@@ -12,7 +14,12 @@ import { PluralPipe } from '@shared/pipes/plural.pipe';
   templateUrl: './deliveries-count.html',
   styleUrl: './deliveries-count.css',
 })
-export class DeliveriesCount {
+export class DeliveriesCount implements OnInit, OnDestroy {
+  // services
+  private readonly deliveriesService: DeliveriesService = inject(DeliveriesService);
+
+  // vars
+  private unsubscribe$: Subject<void> = new Subject<void>();
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected counts: WritableSignal<DeliveryCount> = signal({
     deliveryCount: 0,
@@ -22,4 +29,24 @@ export class DeliveriesCount {
       cancelled: 0
     }
   });
+
+  ngOnInit(): void {
+    this.isLoading.set(true);
+    this.loadData();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  loadData(): void {
+    this.deliveriesService.getDeliveryCount().pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.isLoading.set(false))
+    ).subscribe(counts => {
+      this.counts.set(counts);
+      this.isLoading.set(false);
+    });
+  }
 }

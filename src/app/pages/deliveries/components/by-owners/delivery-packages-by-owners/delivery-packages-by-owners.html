@@ -15,11 +15,11 @@
         </div>
         <div class="flex justify-end gap-3">
             <p-button icon="pi pi-pencil" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Modifier la livraison" tooltipPosition="top" />
-            <p-button icon="pi pi-filter" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Filtre avancée" tooltipPosition="top" />
-            <p-button (click)="loadData()" icon="pi pi-refresh" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Rafraîchir" tooltipPosition="top" />
+            <p-button icon="pi pi-filter" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || packages().length <= 0" pTooltip="Filtre avancée" tooltipPosition="top" />
+            <p-button (click)="loadData()" icon="pi pi-refresh" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || packages().length <= 0" pTooltip="Rafraîchir" tooltipPosition="top" />
             <p-iconfield>
                 <p-inputicon class="pi pi-search" />
-                <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || !deliveryId()" />
+                <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || packages().length <= 0" />
             </p-iconfield>
         </div>
     </div>
@@ -30,13 +30,14 @@
         } @else {
             @defer (on idle) {
                 @if (deliveryId()) {
-                    <p-table [value]="packages()" [tableStyle]="{ 'min-width': '50rem' }">
+                    <p-table [value]="packages()" [scrollable]="true" scrollHeight="400px" [tableStyle]="{ 'min-width': '50rem' }">
                         <ng-template #header>
                             <tr>
                                 <th>ID</th>
                                 <th>Client</th>
                                 <th>Numéro téléphone</th>
                                 <th>Lieu de livraison</th>
+                                <th>Livreur</th>
                                 <th>Prix et frais de livraison</th>
                                 <th>Fragile</th>
                                 <th>Statut</th>
@@ -56,6 +57,7 @@
                                         <p class="text-gray-400">{{ package.precision }}</p>
                                     </div>
                                 </td>
+                                <td>{{ package.deliveryMan.firstName }}</td>
                                 <td>
                                     <div class="flex flex-col items-end">
                                         <p class="font-bold">{{ package.price.toLocaleString('fr-FR') }} Ar</p>
@@ -74,6 +76,7 @@
                                 </td>
                                 <td>
                                     <div class="flex items-center gap-1">
+                                        <p-button icon="pi pi-sitemap" [rounded]="true" [text]="true" severity="info" [loading]="package.isUpdating" size="small" pTooltip="Voir l'historique" tooltipPosition="top" />
                                         <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" [loading]="package.isUpdating" size="small" pTooltip="Modifier" tooltipPosition="top" />
                                         <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="package.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
                                     </div>

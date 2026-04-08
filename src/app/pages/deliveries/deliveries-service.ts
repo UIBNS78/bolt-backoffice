@@ -35,8 +35,8 @@ export class DeliveriesService {
   }
 
   getDeliveryCount(): Observable<DeliveryCount> {
-    return this.http.get<{ count: DeliveryCount }>(`${environment.apiURL}/deliveries/count`).pipe(
-      map(data => data.count)
+    return this.http.get<{ counts: DeliveryCount }>(`${environment.apiURL}/deliveries/count`).pipe(
+      map(data => data.counts)
     );
   }
 
