@@ -19,7 +19,7 @@
             <p-button (click)="loadData()" icon="pi pi-refresh" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || packages().length <= 0" pTooltip="Rafraîchir" tooltipPosition="top" />
             <p-iconfield>
                 <p-inputicon class="pi pi-search" />
-                <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || packages().length <= 0" />
+                <input type="text" pInputText [formControl]="searchControl" pSize="small" placeholder="Recherche" />
             </p-iconfield>
         </div>
     </div>
@@ -30,7 +30,7 @@
         } @else {
             @defer (on idle) {
                 @if (deliveryId()) {
-                    <p-table [value]="packages()" [scrollable]="true" scrollHeight="400px" [tableStyle]="{ 'min-width': '50rem' }">
+                    <p-table [value]="filteredPackages()" [scrollable]="true" scrollHeight="580px" [tableStyle]="{ 'min-width': '50rem' }">
                         <ng-template #header>
                             <tr>
                                 <th>ID</th>
