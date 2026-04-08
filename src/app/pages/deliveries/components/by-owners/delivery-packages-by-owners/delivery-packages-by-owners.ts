@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, input, InputSignal, OnDestroy, Signal, signal, WritableSignal } from '@angular/core';
-import { Package } from '@shared/types/package';
+import { Package, PackageStatus } from '@shared/types/package';
 import { DeliveriesService } from 'app/pages/deliveries/deliveries-service';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -16,6 +16,8 @@ import { PackageStatusSeverityPipe } from '@shared/pipes/package-status-severity
 import { PackageStatusIconPipe } from '@shared/pipes/package-status-icon-pipe';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { DeliveryPackageFilterButton } from '../../delivery-package-filter-button/delivery-package-filter-button';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-delivery-packages-by-owners',
@@ -32,7 +34,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
     PackageStatusPipe,
     PackageStatusSeverityPipe,
     PackageStatusIconPipe,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DeliveryPackageFilterButton,
   ],
   templateUrl: './delivery-packages-by-owners.html',
   styleUrl: './delivery-packages-by-owners.css',
@@ -40,10 +43,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class DeliveryPackagesByOwners implements OnDestroy {
   // services
   private readonly deliveriesService: DeliveriesService = inject(DeliveriesService);
+  private messageService: MessageService = inject(MessageService);
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
+  protected hasFilter: WritableSignal<boolean> = signal(false);
   deliveryId: InputSignal<number | null> = input<number | null>(null);
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected packages: WritableSignal<Package[]> = signal([]);
@@ -91,7 +96,42 @@ export class DeliveryPackagesByOwners implements OnDestroy {
       if (packages.length > 0) this.searchControl.enable();
       else this.searchControl.disable();
 
+      this.hasFilter.set(false);
       this.packages.set(packages);
     });
+  }
+
+  handleFilterByStatus(status: PackageStatus): void {
+    const packages: Package[] = this.packages().filter(p => p.status === status);
+    if (packages.length <= 0) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Aucun colis',
+        detail: 'Aucun colis ne correspond à ce statut.',
+        life: 5000
+      });
+      this.hasFilter.set(false);
+      return;
+    }
+
+      this.hasFilter.set(true);
+    this.packages.set(packages);
+  }
+
+  handleFilterByFragility(fragility: number): void {
+    const packages: Package[] = this.packages().filter(p => p.isFragile === !!fragility);
+    if (packages.length <= 0) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Aucun colis',
+        detail: 'Aucun colis ne correspond à ce critère de fragilité.',
+        life: 5000
+      });
+      this.hasFilter.set(false);
+      return;
+    }
+
+    this.hasFilter.set(true);
+    this.packages.set(packages);
   }
 }

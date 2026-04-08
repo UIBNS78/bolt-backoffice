@@ -15,7 +15,15 @@
         </div>
         <div class="flex justify-end gap-3">
             <p-button icon="pi pi-pencil" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Modifier la livraison" tooltipPosition="top" />
-            <p-button icon="pi pi-filter" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || packages().length <= 0" pTooltip="Filtre avancée" tooltipPosition="top" />
+            <p-button icon="pi pi-window-maximize" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Agrandir la vue" tooltipPosition="top" />
+            <app-delivery-package-filter-button 
+                [loading]="isLoading()" 
+                [hasPackages]="packages().length > 0"
+                [hasFilter]="hasFilter()"
+                (clearFilterEmitter)="loadData()"
+                (filterStatusEmitter)="handleFilterByStatus($event)"
+                (filterFragilityEmitter)="handleFilterByFragility($event)"
+            ></app-delivery-package-filter-button>
             <p-button (click)="loadData()" icon="pi pi-refresh" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || packages().length <= 0" pTooltip="Rafraîchir" tooltipPosition="top" />
             <p-iconfield>
                 <p-inputicon class="pi pi-search" />

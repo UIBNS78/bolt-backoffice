@@ -1,0 +1,14 @@
+<p-menu #menu [model]="items" [popup]="true" />
+
+<p-overlaybadge [badgeDisabled]="!hasFilter()" severity="danger">
+    <p-button 
+        (click)="handleClick(menu)" 
+        [icon]="'pi pi-' + (hasFilter() ? 'times' : 'filter')" 
+        size="small" 
+        severity="secondary" 
+        variant="outlined" 
+        [disabled]="loading() || !hasPackages()" 
+        [pTooltip]="hasFilter() ? 'Supprimer le filtre' : 'Filtre avancée'" 
+        tooltipPosition="top" 
+    />
+</p-overlaybadge>
