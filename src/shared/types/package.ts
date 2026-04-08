@@ -1,4 +1,5 @@
 import { DeliveryMan } from "./delivery-men";
+import { LoadingState } from "./loading-state";
 import { ValueOf } from "./owner-plan";
 
 export const PACKAGE_STATUS: {
@@ -27,4 +28,4 @@ export type Package = {
     description?: string;
     status: PackageStatus;
     deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName">;
-}
+} & Pick<LoadingState, "isDeleting">

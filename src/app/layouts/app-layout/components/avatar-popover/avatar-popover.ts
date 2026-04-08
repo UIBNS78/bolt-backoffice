@@ -34,6 +34,7 @@ export class AvatarPopover {
         icon: "pi pi-sign-out",
         acceptLabel: "Oui, se déconnecter",
       },
+      showHeader: false,
       modal: true,
       draggable: false,
       resizable: false

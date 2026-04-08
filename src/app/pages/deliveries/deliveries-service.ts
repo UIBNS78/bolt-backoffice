@@ -40,6 +40,10 @@ export class DeliveriesService {
     );
   }
 
+  deletePackage(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiURL}/deliveries/package/${id}`);
+  }
+
   create(data: DeliveryForm): Observable<void> {
     return this.http.post<void>(`${environment.apiURL}/deliveries`, data);
   }

@@ -6,7 +6,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
-import { debounceTime, distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, Subject, take, takeUntil } from 'rxjs';
 import { DeliveryPackagesPlaceholder } from '../../delivery-packages-placeholder/delivery-packages-placeholder';
 import { TableModule } from 'primeng/table';
 import { NgxMaskPipe } from 'ngx-mask';
@@ -18,6 +18,9 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DeliveryPackageFilterButton } from '../../delivery-package-filter-button/delivery-package-filter-button';
 import { MessageService } from 'primeng/api';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
+import { fi } from 'date-fns/locale';
 
 @Component({
   selector: 'app-delivery-packages-by-owners',
@@ -43,6 +46,7 @@ import { MessageService } from 'primeng/api';
 export class DeliveryPackagesByOwners implements OnDestroy {
   // services
   private readonly deliveriesService: DeliveriesService = inject(DeliveriesService);
+  protected dialogService: DialogService = inject(DialogService);
   private messageService: MessageService = inject(MessageService);
 
   // vars
@@ -78,6 +82,7 @@ export class DeliveryPackagesByOwners implements OnDestroy {
         return;
       }
 
+      this.isLoading.set(true);
       this.loadData();
     });
   }
@@ -88,7 +93,6 @@ export class DeliveryPackagesByOwners implements OnDestroy {
   }
 
   loadData(): void {
-    this.isLoading.set(true);
     this.deliveriesService.getPackagesByOwnersByDeliveryId(this.deliveryId()!).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
@@ -133,5 +137,42 @@ export class DeliveryPackagesByOwners implements OnDestroy {
 
     this.hasFilter.set(true);
     this.packages.set(packages);
+  }
+
+  handleDelete(pkg: Package): void {
+    const modalRef: DynamicDialogRef<DialogConfirm> | null = this.dialogService.open(DialogConfirm, {
+      inputValues: {
+        title: "Suppression",
+        message: "Êtes-vous sûr de vouloir supprimer ce colis de cette livraison ? cette action est irreversible.",
+        icon: "pi pi-trash",
+        acceptLabel: "Oui, supprimer",
+      },
+      showHeader: false,
+      modal: true,
+      draggable: false,
+      resizable: false
+    });
+
+    modalRef?.onClose.pipe(
+      take(1),
+      takeUntil(this.unsubscribe$),
+    ).subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        pkg.isDeleting = true;
+        this.deliveriesService.deletePackage(pkg.id).pipe(
+          take(1),
+          takeUntil(this.unsubscribe$),
+          finalize(() => pkg.isDeleting = false)
+        ).subscribe(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Suppression réussie',
+            detail: 'Le colis a été supprimé avec succès.'
+          });
+          
+          this.loadData();
+        });
+      }
+    });
   }
 }

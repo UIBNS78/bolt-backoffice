@@ -86,7 +86,7 @@
                                     <div class="flex items-center gap-1">
                                         <p-button icon="pi pi-sitemap" [rounded]="true" [text]="true" severity="info" [loading]="package.isUpdating" size="small" pTooltip="Voir l'historique" tooltipPosition="top" />
                                         <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" [loading]="package.isUpdating" size="small" pTooltip="Modifier" tooltipPosition="top" />
-                                        <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="package.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
+                                        <p-button (click)="handleDelete(package)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="package.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
                                     </div>
                                 </td>
                             </tr>
