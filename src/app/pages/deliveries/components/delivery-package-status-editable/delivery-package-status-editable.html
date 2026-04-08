@@ -1,0 +1,17 @@
+<p-menu #menu [model]="statuses()" [popup]="true" appendTo="body" />
+
+<p-tag (click)="menu.toggle($event)" [severity]="package().status | packageStatusSeverity" [rounded]="true">
+    <div class="flex items-center justify-between gap-2 cursor-pointer">
+        <div class="flex items-center gap-1">
+            @if (package().isStatusChanging) {
+                <p-progress-spinner [style]="{ width: '15px', height: '15px' }" />
+            } @else {
+                <i [ngClass]="[package().status | packageStatusIcon]" style="font-size: 0.7rem;"></i>
+            }
+            <small>{{ package().status | packageStatus }}</small>
+        </div>
+        <div class="flex items-center justify-center">
+            <i class="pi pi-sort-down-fill" style="font-size: 0.6rem;"></i>
+        </div>
+    </div>
+</p-tag>

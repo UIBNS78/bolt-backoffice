@@ -11,16 +11,14 @@ import { DeliveryPackagesPlaceholder } from '../../delivery-packages-placeholder
 import { TableModule } from 'primeng/table';
 import { NgxMaskPipe } from 'ngx-mask';
 import { TagModule } from 'primeng/tag';
-import { PackageStatusPipe } from '@shared/pipes/package-status-pipe';
-import { PackageStatusSeverityPipe } from '@shared/pipes/package-status-severity-pipe';
-import { PackageStatusIconPipe } from '@shared/pipes/package-status-icon-pipe';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DeliveryPackageFilterButton } from '../../delivery-package-filter-button/delivery-package-filter-button';
 import { MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
-import { fi } from 'date-fns/locale';
+import { DeliveryPackageStatusEditable } from '../../delivery-package-status-editable/delivery-package-status-editable';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   selector: 'app-delivery-packages-by-owners',
@@ -34,11 +32,10 @@ import { fi } from 'date-fns/locale';
     TableModule,
     NgxMaskPipe,
     TagModule,
-    PackageStatusPipe,
-    PackageStatusSeverityPipe,
-    PackageStatusIconPipe,
     ReactiveFormsModule,
     DeliveryPackageFilterButton,
+    DeliveryPackageStatusEditable,
+    DividerModule
   ],
   templateUrl: './delivery-packages-by-owners.html',
   styleUrl: './delivery-packages-by-owners.css',
@@ -137,6 +134,23 @@ export class DeliveryPackagesByOwners implements OnDestroy {
 
     this.hasFilter.set(true);
     this.packages.set(packages);
+  }
+
+  handlePackageStatus(newStatus: PackageStatus, pkg: Package): void {
+    pkg.isStatusChanging = true;
+    this.deliveriesService.updatePackage(pkg.id, { status: newStatus }).pipe(
+      take(1),
+      takeUntil(this.unsubscribe$),
+      finalize(() => pkg.isStatusChanging = false)
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Statut mis à jour',
+        detail: 'Le statut du colis a été mis à jour avec succès.'
+      });
+
+      this.loadData();
+    });
   }
 
   handleDelete(pkg: Package): void {

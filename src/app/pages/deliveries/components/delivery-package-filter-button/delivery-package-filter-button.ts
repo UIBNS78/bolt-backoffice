@@ -27,7 +27,7 @@ export class DeliveryPackageFilterButton {
   hasFilter: InputSignal<boolean> = input<boolean>(false);
   protected items: MenuItem[] = [
     {
-      label: 'Status',
+      label: 'Statut',
       items: [
         {
           label: 'En cours',

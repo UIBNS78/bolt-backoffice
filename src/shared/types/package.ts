@@ -28,4 +28,4 @@ export type Package = {
     description?: string;
     status: PackageStatus;
     deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName">;
-} & Pick<LoadingState, "isDeleting">
+} & { isStatusChanging?: boolean } & Pick<LoadingState, "isDeleting">

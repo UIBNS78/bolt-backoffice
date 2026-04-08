@@ -15,7 +15,9 @@
         </div>
         <div class="flex justify-end gap-3">
             <p-button icon="pi pi-pencil" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Modifier la livraison" tooltipPosition="top" />
-            <p-button icon="pi pi-window-maximize" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Agrandir la vue" tooltipPosition="top" />
+            <p-button icon="pi pi-plus" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Ajouter un colis" tooltipPosition="top" />
+            <p-divider layout="vertical" />
+            <p-button icon="pi pi-window-maximize" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || packages().length <= 0" pTooltip="Agrandir la vue" tooltipPosition="top" />
             <app-delivery-package-filter-button 
                 [loading]="isLoading()" 
                 [hasPackages]="packages().length > 0"
@@ -80,7 +82,10 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <p-tag [value]="package.status | packageStatus" [severity]="package.status | packageStatusSeverity" [rounded]="true" [icon]="package.status | packageStatusIcon" />
+                                    <app-delivery-package-status-editable 
+                                        [package]="package"
+                                        (onStatusChangeEmitter)="handlePackageStatus($event, package)"
+                                    ></app-delivery-package-status-editable>
                                 </td>
                                 <td>
                                     <div class="flex items-center gap-1">

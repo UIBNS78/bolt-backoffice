@@ -40,6 +40,10 @@ export class DeliveriesService {
     );
   }
 
+  updatePackage(id: number, pkg: Partial<Package>): Observable<void> {
+    return this.http.patch<void>(`${environment.apiURL}/deliveries/package/${id}`, pkg)
+  }
+  
   deletePackage(id: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiURL}/deliveries/package/${id}`);
   }
