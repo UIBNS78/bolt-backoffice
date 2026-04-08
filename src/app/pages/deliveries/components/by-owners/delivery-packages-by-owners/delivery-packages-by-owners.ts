@@ -19,6 +19,8 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
 import { DeliveryPackageStatusEditable } from '../../delivery-package-status-editable/delivery-package-status-editable';
 import { DividerModule } from 'primeng/divider';
+import { DeliveryPackageForm } from '../../delivery-package-form/delivery-package-form';
+import { DeliveryFormDrawer } from '../../delivery-form-drawer/delivery-form-drawer';
 
 @Component({
   selector: 'app-delivery-packages-by-owners',
@@ -35,7 +37,9 @@ import { DividerModule } from 'primeng/divider';
     ReactiveFormsModule,
     DeliveryPackageFilterButton,
     DeliveryPackageStatusEditable,
-    DividerModule
+    DividerModule,
+    DeliveryPackageForm,
+    DeliveryFormDrawer
   ],
   templateUrl: './delivery-packages-by-owners.html',
   styleUrl: './delivery-packages-by-owners.css',
@@ -48,6 +52,9 @@ export class DeliveryPackagesByOwners implements OnDestroy {
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
+  protected showPackageForm: WritableSignal<boolean> = signal(false);
+  protected showDeliveryForm: WritableSignal<boolean> = signal(false);
+  protected selectedPackage: WritableSignal<Package | null> = signal(null);
   protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
   protected hasFilter: WritableSignal<boolean> = signal(false);
   deliveryId: InputSignal<number | null> = input<number | null>(null);
@@ -100,6 +107,15 @@ export class DeliveryPackagesByOwners implements OnDestroy {
       this.hasFilter.set(false);
       this.packages.set(packages);
     });
+  }
+
+  handleOpenDeliveryForm(): void {
+    this.showDeliveryForm.update(prev => !prev);
+  }
+
+  handleOpenPackageForm(pkg: Package | null = null): void {
+    this.selectedPackage.set(pkg);
+    this.showPackageForm.update(prev => !prev);
   }
 
   handleFilterByStatus(status: PackageStatus): void {
