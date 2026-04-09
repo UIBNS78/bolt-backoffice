@@ -3,9 +3,9 @@
         <div class="flex flex-col justify-between gap-2 h-full">
             <div class="flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
                 <div class="flex flex-col gap-1">
-                    <label for="deliveryType">Type de colis</label>
-                    <p-select [options]="deliveryTypeOptions" formControlName="deliveryType" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('deliveryType')?.invalid && (form.get('deliveryType')?.touched || form.get('deliveryType')?.dirty)" required />
-                    @if (form.get('deliveryType')?.invalid && (form.get('deliveryType')?.touched || form.get('deliveryType')?.dirty)) {
+                    <label for="type">Type de colis</label>
+                    <p-select [options]="packageTypeOptions" formControlName="type" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('type')?.invalid && (form.get('type')?.touched || form.get('type')?.dirty)" required />
+                    @if (form.get('type')?.invalid && (form.get('type')?.touched || form.get('type')?.dirty)) {
                         <p-message severity="error" size="small" variant="simple">Type de colis requis.</p-message>
                     }
                 </div>
@@ -34,27 +34,62 @@
                                 <p-message severity="error" size="small" variant="simple">Numéro téléphone requis.</p-message>
                             }
                         </div>
-                        <div class="flex flex-col gap-1">
-                            <label for="place">Lieu de livraison</label>
-                            <p-select [options]="locationOptions()" id="place" formControlName="place" size="small" [invalid]="form.get('place')?.invalid && (form.get('place')?.touched || form.get('place')?.dirty)" required [group]="true" [filter]="true" filterBy="label" [showClear]="true">
-                                <ng-template let-group #group>
-                                    <div class="flex items-center gap-2 border-b border-b-gray-200 pb-2">
-                                        <i class="pi pi-map text-blue-500"></i>
-                                        <p class="text-black" style="font-size: 0.8rem;">{{ group.label }}</p>
+                        
+                        @switch (form.get("type")?.value) {
+                            @case (1) {
+                                <div class="flex flex-col gap-4" formGroupName="location">
+                                    <div class="flex flex-col gap-1">
+                                        <label for="place">Lieu de livraison</label>
+                                        <p-select [options]="locationCityOptions()" id="place" formControlName="place" size="small" [invalid]="form.get('location.place')?.invalid && (form.get('location.place')?.touched || form.get('location.place')?.dirty)" required [group]="true" [filter]="true" filterBy="label" [showClear]="true">
+                                            <ng-template let-group #group>
+                                                <div class="flex items-center gap-2 border-b border-b-gray-200 pb-2">
+                                                    <i class="pi pi-map text-blue-500"></i>
+                                                    <p class="text-black" style="font-size: 0.8rem;">{{ group.label }}</p>
+                                                </div>
+                                            </ng-template>
+                                        </p-select>
+                                        @if (form.get('location.place')?.invalid && (form.get('location.place')?.touched || form.get('location.place')?.dirty)) {
+                                            <p-message severity="error" size="small" variant="simple">Lieu de livraison requise.</p-message>
+                                        }
                                     </div>
-                                </ng-template>
-                            </p-select>
-                            @if (form.get('place')?.invalid && (form.get('place')?.touched || form.get('place')?.dirty)) {
-                                <p-message severity="error" size="small" variant="simple">Lieu de livraison requise.</p-message>
+                                    <div class="flex flex-col gap-1">
+                                        <label for="precision">Repère</label>
+                                        <input type="text" pInputText pSize="small" id="precision" formControlName="precision" [invalid]="form.get('location.precision')?.invalid && (form.get('location.precision')?.touched || form.get('location.precision')?.dirty)">
+                                        @if (form.get('location.precision')?.invalid && (form.get('location.precision')?.touched || form.get('location.precision')?.dirty)) {
+                                            <p-message severity="error" size="small" variant="simple">Repère invalide.</p-message>
+                                        }
+                                    </div>
+                                </div>
                             }
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label for="precision">Repère</label>
-                            <input type="text" pInputText pSize="small" id="precision" formControlName="precision" [invalid]="form.get('precision')?.invalid && (form.get('precision')?.touched || form.get('precision')?.dirty)">
-                            @if (form.get('precision')?.invalid && (form.get('precision')?.touched || form.get('precision')?.dirty)) {
-                                <p-message severity="error" size="small" variant="simple">Repère requis.</p-message>
+                            @case (2) {
+                                <div class="flex flex-col gap-4" formGroupName="location">
+                                    <div class="flex flex-col gap-1">
+                                        <label for="destination">Destination</label>
+                                        <input type="text" pInputText pSize="small" id="destination" formControlName="destination" [invalid]="form.get('location.destination')?.invalid && (form.get('location.destination')?.touched || form.get('location.destination')?.dirty)" required>
+                                        @if (form.get('location.destination')?.invalid && (form.get('location.destination')?.touched || form.get('location.destination')?.dirty)) {
+                                            <p-message severity="error" size="small" variant="simple">Destination requise.</p-message>
+                                        }
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <label for="cooperative">Coopérative</label>
+                                        <p-select [options]="locationCooperativeOptions()" id="cooperative" formControlName="cooperative" size="small" [invalid]="form.get('location.cooperative')?.invalid && (form.get('location.cooperative')?.touched || form.get('location.cooperative')?.dirty)" required [group]="true" [filter]="true" filterBy="label" [showClear]="true">
+                                            <ng-template let-group #group>
+                                                <div class="flex items-center gap-2 border-b border-b-gray-200 pb-2">
+                                                    <i class="pi pi-map text-blue-500"></i>
+                                                    <p class="text-black" style="font-size: 0.8rem;">{{ group.label }}</p>
+                                                </div>
+                                            </ng-template>
+                                        </p-select>
+                                        @if (form.get('location.cooperative')?.invalid && (form.get('location.cooperative')?.touched || form.get('location.cooperative')?.dirty)) {
+                                            <p-message severity="error" size="small" variant="simple">Coopérative requise.</p-message>
+                                        }
+                                    </div>
+                                </div>
                             }
-                        </div>
+                            @default {
+                                <p class="text-center text-gray-400">Veuillez séléctionner un type de colis</p>
+                            }
+                        }
                     </div>
                 </p-fieldset>
                 <p-fieldset legend="A propos du colis">
@@ -116,7 +151,14 @@
             </div>
             <div class="flex items-center justify-end gap-3">
                 <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" [disabled]="loading()" />
-                <p-button type="submit" [label]="isUpdate() ? 'Modifier' : 'Enregistrer'" severity="contrast" size="small" [loading]="loading()" [disabled]="loading()" />
+                <p-button 
+                    type="submit" 
+                    [label]="isUpdate() ? (loading() ? 'Modification' : 'Modifier') : (loading() ? 'Enregistrement' : 'Enregistrer')" 
+                    severity="contrast" 
+                    size="small" 
+                    [loading]="loading()" 
+                    [disabled]="loading()"
+                />
             </div>
         </div>
     </form>

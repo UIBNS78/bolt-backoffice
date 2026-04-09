@@ -62,9 +62,12 @@
                                     <p class="font-bold">{{ '0' + (package.customer.phone | mask:'00 00 000 00') }}</p>
                                 </td>
                                 <td>
-                                    <div class="flex flex-col">
-                                        <p>{{ package.customer.place }}</p>
-                                        <p class="text-gray-400">{{ package.customer.precision }}</p>
+                                    <div class="flex items-center gap-2">
+                                        <i [ngClass]="['pi text-blue-500', package.customer.inCity ? 'pi pi-map-marker' : 'pi pi-truck']"></i>
+                                        <div class="flex flex-col">
+                                            <p>{{ package.customer.inCity ? package.customer.inCity.place.name : (package.customer.outCity?.cooperative.name ?? "Inconnue") }}</p>
+                                            <p class="text-gray-400">{{ package.customer.inCity ? package.customer.inCity.precision : (package.customer.outCity.destination ?? "Inconnue") }}</p>
+                                        </div>
                                     </div>
                                 </td>
                                 <td>{{ package.deliveryMan.firstName }}</td>

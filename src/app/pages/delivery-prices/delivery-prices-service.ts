@@ -28,6 +28,12 @@ export class DeliveryPricesService {
       map(data => data.deliveryPrices)
     );
   }
+
+  getAllCooperativeOptions(): Observable<SelectItemGroup[]> {    
+    return this.http.get<{ deliveryPricesOptions: SelectItemGroup[] }>(`${environment.apiURL}/delivery-prices/cooperative-options`).pipe(
+      map(data => data.deliveryPricesOptions)
+    );
+  }
   
   // create(data: DeliveryPriceUpdateForm): Observable<void> {
   //   return this.http.post<void>(`${environment.apiURL}/delivery-prices`, data);

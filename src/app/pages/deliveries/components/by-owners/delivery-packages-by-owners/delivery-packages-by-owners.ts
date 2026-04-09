@@ -21,6 +21,7 @@ import { DeliveryPackageStatusEditable } from '../../delivery-package-status-edi
 import { DividerModule } from 'primeng/divider';
 import { DeliveryPackageForm } from '../../delivery-package-form/delivery-package-form';
 import { DeliveryFormDrawer } from '../../delivery-form-drawer/delivery-form-drawer';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-delivery-packages-by-owners',
@@ -39,7 +40,8 @@ import { DeliveryFormDrawer } from '../../delivery-form-drawer/delivery-form-dra
     DeliveryPackageStatusEditable,
     DividerModule,
     DeliveryPackageForm,
-    DeliveryFormDrawer
+    DeliveryFormDrawer,
+    NgClass
   ],
   templateUrl: './delivery-packages-by-owners.html',
   styleUrl: './delivery-packages-by-owners.css',
@@ -73,7 +75,7 @@ export class DeliveryPackagesByOwners implements OnDestroy {
     return this.packages().filter(p => {
       return p.customer.name.toLowerCase().includes(this.searchValue().toLowerCase()) 
         || p.deliveryMan.firstName.toLowerCase().includes(this.searchValue().toLowerCase())
-        || p.customer.place.toLowerCase().includes(this.searchValue().toLowerCase())
+        || p.customer.inCity?.place.name.toLowerCase().includes(this.searchValue().toLowerCase())
     });
   });
 

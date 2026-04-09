@@ -1,9 +1,16 @@
-import { DeliveryType } from "@shared/constants/delivery-type";
 import { Customer } from "./customer";
-import { Delivery } from "./delivery";
 import { DeliveryMan } from "./delivery-men";
 import { LoadingState } from "./loading-state";
 import { ValueOf } from "./owner-plan";
+
+export const packageTypeObj: {
+    inCity: 1;
+    outCity: 2;
+} = {
+    inCity: 1,
+    outCity: 2
+};
+export type PackageType = ValueOf<typeof packageTypeObj>;
 
 export const PACKAGE_STATUS: {
     inProgress: 1;
@@ -20,7 +27,7 @@ export type PackageStatus = ValueOf<typeof PACKAGE_STATUS>;
 
 export type Package = {
     id: number;
-    deliveryType: DeliveryType;
+    type: PackageType;
     customer: Customer;
     price: number;
     deliveryPrice: number;
