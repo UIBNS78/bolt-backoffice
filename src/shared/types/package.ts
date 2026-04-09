@@ -1,3 +1,4 @@
+import { Customer } from "./customer";
 import { DeliveryMan } from "./delivery-men";
 import { LoadingState } from "./loading-state";
 import { ValueOf } from "./owner-plan";
@@ -17,10 +18,7 @@ export type PackageStatus = ValueOf<typeof PACKAGE_STATUS>;
 
 export type Package = {
     id: number;
-    customer: string;
-    phone: string;
-    place: string;
-    precision: string;
+    customer: Customer;
     price: number;
     deliveryPrice: number;
     isFragile: 0 | 1;

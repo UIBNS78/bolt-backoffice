@@ -71,9 +71,9 @@ export class DeliveryPackagesByOwners implements OnDestroy {
     if (this.searchValue() === "") return this.packages();
 
     return this.packages().filter(p => {
-      return p.customer.toLowerCase().includes(this.searchValue().toLowerCase()) 
+      return p.customer.name.toLowerCase().includes(this.searchValue().toLowerCase()) 
         || p.deliveryMan.firstName.toLowerCase().includes(this.searchValue().toLowerCase())
-        || p.place.toLowerCase().includes(this.searchValue().toLowerCase())
+        || p.customer.place.toLowerCase().includes(this.searchValue().toLowerCase())
     });
   });
 
