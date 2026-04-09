@@ -1,4 +1,6 @@
+import { DeliveryType } from "@shared/constants/delivery-type";
 import { Customer } from "./customer";
+import { Delivery } from "./delivery";
 import { DeliveryMan } from "./delivery-men";
 import { LoadingState } from "./loading-state";
 import { ValueOf } from "./owner-plan";
@@ -18,6 +20,7 @@ export type PackageStatus = ValueOf<typeof PACKAGE_STATUS>;
 
 export type Package = {
     id: number;
+    deliveryType: DeliveryType;
     customer: Customer;
     price: number;
     deliveryPrice: number;
