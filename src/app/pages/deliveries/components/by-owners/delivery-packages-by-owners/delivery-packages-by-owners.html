@@ -15,7 +15,7 @@
         </div>
         <div class="flex justify-end gap-3">
             <p-button (click)="handleOpenDeliveryForm()" icon="pi pi-pencil" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Modifier la livraison" tooltipPosition="top" />
-            <p-button (click)="handleOpenPackageForm()" icon="pi pi-plus" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Ajouter un colis" tooltipPosition="top" />
+            <p-button (click)="handleOpenPackageForm()" icon="pi pi-plus" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !deliveryId()" pTooltip="Ajouter un colis" tooltipPosition="top" />
             <p-divider layout="vertical" />
             <p-button icon="pi pi-window-maximize" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || packages().length <= 0" pTooltip="Agrandir la vue" tooltipPosition="top" />
             <app-delivery-package-filter-button 
@@ -59,7 +59,7 @@
                                 <td>{{ package.id }}</td>
                                 <td>{{ package.customer.name }}</td>
                                 <td>
-                                    <p class="font-bold">{{ '0' + (package.customer.phone | mask:'00 00 000 00') }}</p>
+                                    <p class="font-bold">{{ package.customer.phone | mask:'+999 99 99 999 99' }}</p>
                                 </td>
                                 <td>
                                     <div class="flex items-center gap-2">
@@ -118,5 +118,5 @@
     </div>
 </div>
 
-<app-delivery-package-form [open]="showPackageForm()" [pkg]="selectedPackage()" (onCloseEmitter)="handleOpenPackageForm()"></app-delivery-package-form>
+<app-delivery-package-form [open]="showPackageForm()" [deliveryId]="deliveryId()" [pkg]="selectedPackage()" (onCloseEmitter)="handleOpenPackageForm()"></app-delivery-package-form>
 <app-delivery-form-drawer [open]="showDeliveryForm()" (onCloseEmitter)="handleOpenDeliveryForm()"></app-delivery-form-drawer>

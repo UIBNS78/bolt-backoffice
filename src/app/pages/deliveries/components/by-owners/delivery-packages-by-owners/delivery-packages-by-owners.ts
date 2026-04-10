@@ -117,7 +117,13 @@ export class DeliveryPackagesByOwners implements OnDestroy {
 
   handleOpenPackageForm(pkg: Package | null = null): void {
     this.selectedPackage.set(pkg);
-    this.showPackageForm.update(prev => !prev);
+    this.showPackageForm.update(prev => {
+      if (prev) {
+        this.loadData();
+      };
+      
+      return !prev;
+    });
   }
 
   handleFilterByStatus(status: PackageStatus): void {

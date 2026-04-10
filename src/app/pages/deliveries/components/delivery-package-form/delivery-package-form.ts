@@ -4,7 +4,7 @@ import { MessageService, SelectItemGroup } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
 import { combineLatest, distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveriesService } from '../../deliveries-service';
-import { PackageType, packageTypeObj, Package, PACKAGE_STATUS } from '@shared/types/package';
+import { PackageType, packageTypeObj, Package, PACKAGE_STATUS, PackageForm } from '@shared/types/package';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
@@ -62,6 +62,7 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
 
   @Output() onCloseEmitter: EventEmitter<void> = new EventEmitter<void>();
   @Input() open: boolean = false;
+  @Input() deliveryId: number | null = null;
   @Input() 
   set pkg(data: Package | null) {
     this.isUpdate.set(data !== null);
@@ -76,9 +77,9 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
         (data && data.type === packageTypeObj.outCity) ? 
           this.formBuilder.group({
             destination: [{ value: data?.customer.outCity?.destination ?? '', disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required, Validators.minLength(3)]],
-            cooperative: [{ value: data?.customer.outCity?.cooperative.id ?? '', disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required]]
+            cooperativeId: [{ value: data?.customer.outCity?.cooperative.id ?? '', disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required]]
           }) : this.formBuilder.group({
-            place: [{ value: data?.customer.inCity?.place.id ?? '', disabled: this.locationCityOptions().length <= 0 }, [Validators.required]],
+            placeId: [{ value: data?.customer.inCity?.place.id ?? '', disabled: this.locationCityOptions().length <= 0 }, [Validators.required]],
             precision: data?.customer.inCity?.precision ?? '',
           }),
       price: [data?.price ?? 0, [Validators.required, Validators.min(0)]],
@@ -89,6 +90,8 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
 
     
     this.packageTypeListener();
+    this.locationInCityListener();
+    this.locationOutCityListener();
 
     this.packageTypeSignal.set(data?.type ?? packageTypeObj.inCity);
     this.initialFormValues.set(this._form.getRawValue());
@@ -118,9 +121,9 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
     ).subscribe(([inCityOptions, outCityOptions]) => {
       this.locationCityOptions.set(inCityOptions);
       this.locationCooperativeOptions.set(outCityOptions);
-      this.form.get('location.place')?.enable();
+      this.form.get('location.placeId')?.enable();
       this.form.get('location.destination')?.enable();
-      this.form.get('location.cooperative')?.enable();
+      this.form.get('location.cooperativeId')?.enable();
     });
   }
 
@@ -131,8 +134,59 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
     }
 
     this.loading.set(true);
-    console.log(this.form.getRawValue());
-    this.loading.set(false);
+    const values = this.form.getRawValue();
+    const rawValue: PackageForm = {
+      deliveryId: this.deliveryId,
+      type: values.type,
+      gender: values.gender,
+      customer: values.customer,
+      phone: values.phone,
+      placeId: values.location.placeId,
+      precision: values.location.precision,
+      destination: values.location.destination,
+      cooperativeId: values.location.cooperativeId,
+      price: values.price,
+      deliveryPrice: values.deliveryPrice,
+      isFragile: values.isFragile,
+      status: values.status,
+    } as PackageForm;
+
+    if (this.isUpdate()) {
+      this.update(rawValue);
+      return;
+    }
+
+    this.create(rawValue);
+  }
+
+  create(data: PackageForm): void {
+    this.deliveriesService.createPackage(data).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.loading.set(false))
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Création réussie',
+        detail: 'Le colis a été créé avec succès.'
+      });
+      
+      this.handleClose();
+    });
+  }
+
+  update(data: PackageForm): void {
+    this.deliveriesService.updatePackage(this._data()!.id, data).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.loading.set(false))
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Mise à jour réussie',
+        detail: 'Le colis a été mis à jour avec succès.'
+      });
+
+      this.handleClose();
+    });
   }
 
   handleClose(): void {
@@ -156,14 +210,14 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
     switch (packageType) {
       case packageTypeObj.inCity:
         locationControl = this.formBuilder.group({
-          place: [{ value: this._data()?.customer.inCity?.place.id ?? '', disabled: this.locationCityOptions().length <= 0 }, [Validators.required]],
+          placeId: [{ value: this._data()?.customer.inCity?.place.id ?? '', disabled: this.locationCityOptions().length <= 0 }, [Validators.required]],
           precision: this._data()?.customer.inCity?.precision ?? '',
         });
         break;
       case packageTypeObj.outCity:
         locationControl = this.formBuilder.group({
           destination: [{ value: this._data()?.customer.outCity?.destination ?? '', disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required, Validators.minLength(3)]],
-          cooperative: [{ value: this._data()?.customer.outCity?.cooperative.id ?? '', disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required]]
+          cooperativeId: [{ value: this._data()?.customer.outCity?.cooperative.id ?? '', disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required]]
         });
         break;
     }
@@ -171,21 +225,24 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
     this.form.setControl("location", locationControl);
 
     this.packageTypeSignal.set(packageType);
-    this.locationListener();
+    this.locationInCityListener();
+    this.locationOutCityListener();
   }
 
-  private locationListener(): void {
+  private locationInCityListener(): void {
     // in city
-    this.form.get('location.place')?.valueChanges.pipe(
+    this.form.get('location.placeId')?.valueChanges.pipe(
       takeUntil(this.unsubscribe$),
       distinctUntilChanged()
     ).subscribe((value: number) => {
       const locationCity: SelectItemGroup | undefined = this.locationCityOptions().find(lco => lco.items.find(i => i.value === value))
       this.form.get("deliveryPrice")?.setValue(locationCity ? locationCity.value : 0);
     });
+  }
 
+  private locationOutCityListener(): void {
     // out city
-    this.form.get('location.cooperative')?.valueChanges.pipe(
+    this.form.get('location.cooperativeId')?.valueChanges.pipe(
       takeUntil(this.unsubscribe$),
       distinctUntilChanged()
     ).subscribe((value: number) => {

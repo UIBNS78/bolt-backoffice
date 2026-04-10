@@ -5,7 +5,7 @@ import { DeliveryList } from './types/delivery-list';
 import { environment } from 'environments/environment';
 import { DeliveryCount } from './types/delivery-count';
 import { DeliveryForm } from './types/delivery-form';
-import { Package } from '@shared/types/package';
+import { Package, PackageForm } from '@shared/types/package';
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +40,11 @@ export class DeliveriesService {
     );
   }
 
-  updatePackage(id: number, pkg: Partial<Package>): Observable<void> {
+  createPackage(pkg: PackageForm): Observable<void> {
+    return this.http.post<void>(`${environment.apiURL}/deliveries/package`, pkg);
+  }
+
+  updatePackage(id: number, pkg: Partial<PackageForm>): Observable<void> {
     return this.http.patch<void>(`${environment.apiURL}/deliveries/package/${id}`, pkg)
   }
   

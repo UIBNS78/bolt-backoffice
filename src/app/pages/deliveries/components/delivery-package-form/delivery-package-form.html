@@ -39,8 +39,8 @@
                             @case (1) {
                                 <div class="flex flex-col gap-4" formGroupName="location">
                                     <div class="flex flex-col gap-1">
-                                        <label for="place">Lieu de livraison</label>
-                                        <p-select [options]="locationCityOptions()" id="place" formControlName="place" size="small" [invalid]="form.get('location.place')?.invalid && (form.get('location.place')?.touched || form.get('location.place')?.dirty)" required [group]="true" [filter]="true" filterBy="label" [showClear]="true">
+                                        <label for="placeId">Lieu de livraison</label>
+                                        <p-select [options]="locationCityOptions()" id="placeId" formControlName="placeId" size="small" [invalid]="form.get('location.placeId')?.invalid && (form.get('location.placeId')?.touched || form.get('location.placeId')?.dirty)" required [group]="true" [filter]="true" filterBy="label" [showClear]="true">
                                             <ng-template let-group #group>
                                                 <div class="flex items-center gap-2 border-b border-b-gray-200 pb-2">
                                                     <i class="pi pi-map text-blue-500"></i>
@@ -48,7 +48,7 @@
                                                 </div>
                                             </ng-template>
                                         </p-select>
-                                        @if (form.get('location.place')?.invalid && (form.get('location.place')?.touched || form.get('location.place')?.dirty)) {
+                                        @if (form.get('location.placeId')?.invalid && (form.get('location.placeId')?.touched || form.get('location.placeId')?.dirty)) {
                                             <p-message severity="error" size="small" variant="simple">Lieu de livraison requise.</p-message>
                                         }
                                     </div>
@@ -71,8 +71,8 @@
                                         }
                                     </div>
                                     <div class="flex flex-col gap-1">
-                                        <label for="cooperative">Coopérative</label>
-                                        <p-select [options]="locationCooperativeOptions()" id="cooperative" formControlName="cooperative" size="small" [invalid]="form.get('location.cooperative')?.invalid && (form.get('location.cooperative')?.touched || form.get('location.cooperative')?.dirty)" required [group]="true" [filter]="true" filterBy="label" [showClear]="true">
+                                        <label for="cooperativeId">Coopérative</label>
+                                        <p-select [options]="locationCooperativeOptions()" id="cooperativeId" formControlName="cooperativeId" size="small" [invalid]="form.get('location.cooperativeId')?.invalid && (form.get('location.cooperativeId')?.touched || form.get('location.cooperativeId')?.dirty)" required [group]="true" [filter]="true" filterBy="label" [showClear]="true">
                                             <ng-template let-group #group>
                                                 <div class="flex items-center gap-2 border-b border-b-gray-200 pb-2">
                                                     <i class="pi pi-map text-blue-500"></i>
@@ -80,7 +80,7 @@
                                                 </div>
                                             </ng-template>
                                         </p-select>
-                                        @if (form.get('location.cooperative')?.invalid && (form.get('location.cooperative')?.touched || form.get('location.cooperative')?.dirty)) {
+                                        @if (form.get('location.cooperativeId')?.invalid && (form.get('location.cooperativeId')?.touched || form.get('location.cooperativeId')?.dirty)) {
                                             <p-message severity="error" size="small" variant="simple">Coopérative requise.</p-message>
                                         }
                                     </div>

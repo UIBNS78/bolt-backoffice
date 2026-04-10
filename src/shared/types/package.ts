@@ -2,6 +2,7 @@ import { Customer } from "./customer";
 import { DeliveryMan } from "./delivery-men";
 import { LoadingState } from "./loading-state";
 import { ValueOf } from "./owner-plan";
+import { Gender } from "./user";
 
 export const packageTypeObj: {
     inCity: 1;
@@ -37,3 +38,19 @@ export type Package = {
     status: PackageStatus;
     deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName">;
 } & { isStatusChanging?: boolean } & Pick<LoadingState, "isDeleting">
+
+export type PackageForm = {
+    deliveryId: number;
+    type: PackageType;
+    gender: Gender;
+    customer: string;
+    phone: string;
+    placeId?: number;
+    precision?: string;
+    destination?: string;
+    cooperativeId?: number;
+    price: number;
+    deliveryPrice: number;
+    isFragile: 0 | 1;
+    status: PackageStatus;
+}
