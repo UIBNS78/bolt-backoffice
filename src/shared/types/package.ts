@@ -32,7 +32,7 @@ export type Package = {
     customer: Customer;
     price: number;
     deliveryPrice: number;
-    isFragile: 0 | 1;
+    isFragile: boolean;
     fixedTime?: string;
     description?: string;
     status: PackageStatus;

@@ -19,7 +19,7 @@ import { TooltipModule } from 'primeng/tooltip';
 })
 export class DeliveryPackageFilterButton {
   @Output() filterStatusEmitter: EventEmitter<PackageStatus> = new EventEmitter<PackageStatus>();
-  @Output() filterFragilityEmitter: EventEmitter<number> = new EventEmitter<number>();
+  @Output() filterFragilityEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() clearFilterEmitter: EventEmitter<void> = new EventEmitter<void>();
   
   loading: InputSignal<boolean> = input<boolean>(false);
@@ -66,14 +66,14 @@ export class DeliveryPackageFilterButton {
           label: 'Oui',
           icon: 'pi pi-exclamation-triangle',
           command: () => {
-            this.filterFragilityEmitter.emit(1);
+            this.filterFragilityEmitter.emit(true);
           }
         },
         {
           label: 'Non',
           icon: 'pi pi-times-circle',
           command: () => {
-            this.filterFragilityEmitter.emit(0);
+            this.filterFragilityEmitter.emit(false);
           }
         }
       ]
