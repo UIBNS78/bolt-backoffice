@@ -13,7 +13,7 @@
                     <div class="flex flex-col gap-4">
                         <div class="flex items-baseline gap-3">
                             <div class="flex flex-col gap-1">
-                                <label for="gender">Sexe</label>
+                                <label for="gender">Civilité</label>
                                 <p-select [options]="genderOptions" formControlName="gender" size="small" optionLabel="label" optionValue="value" [invalid]="form.get('gender')?.invalid && (form.get('gender')?.touched || form.get('gender')?.dirty)" required />
                                 @if (form.get('gender')?.invalid && (form.get('gender')?.touched || form.get('gender')?.dirty)) {
                                     <p-message severity="error" size="small" variant="simple">Sexe requis.</p-message>
@@ -21,7 +21,7 @@
                             </div>
                             <div class="flex flex-col gap-1 flex-1">
                                 <label for="customer">Nom</label>
-                                <input type="text" pInputText pSize="small" id="customer" formControlName="customer" [invalid]="form.get('customer')?.invalid && (form.get('customer')?.touched || form.get('customer')?.dirty)" required>
+                                <input type="text" pInputText pSize="small" [autocomplete]="false" id="customer" formControlName="customer" [invalid]="form.get('customer')?.invalid && (form.get('customer')?.touched || form.get('customer')?.dirty)" required>
                                 @if (form.get('customer')?.invalid && (form.get('customer')?.touched || form.get('customer')?.dirty)) {
                                     <p-message severity="error" size="small" variant="simple">Nom du client requis.</p-message>
                                 }
@@ -29,13 +29,13 @@
                         </div>
                         <div class="flex flex-col gap-1">
                             <label for="phone">Numéro téléphone</label>
-                            <input pInputText pInputMask="+261 99 99 999 99" pSize="small" id="phone" formControlName="phone" [invalid]="form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)" required />
+                            <input pInputText pInputMask="+261 99 99 999 99" pSize="small" [autocomplete]="false" id="phone" formControlName="phone" [invalid]="form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)" required />
                             @if (form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)) {
                                 <p-message severity="error" size="small" variant="simple">Numéro téléphone requis.</p-message>
                             }
                         </div>
                         
-                        @switch (form.get("type")?.value) {
+                        @switch (packageTypeSignal()) {
                             @case (1) {
                                 <div class="flex flex-col gap-4" formGroupName="location">
                                     <div class="flex flex-col gap-1">
@@ -54,7 +54,7 @@
                                     </div>
                                     <div class="flex flex-col gap-1">
                                         <label for="precision">Repère</label>
-                                        <input type="text" pInputText pSize="small" id="precision" formControlName="precision" [invalid]="form.get('location.precision')?.invalid && (form.get('location.precision')?.touched || form.get('location.precision')?.dirty)">
+                                        <input type="text" pInputText pSize="small" id="precision" [autocomplete]="false" formControlName="precision" [invalid]="form.get('location.precision')?.invalid && (form.get('location.precision')?.touched || form.get('location.precision')?.dirty)">
                                         @if (form.get('location.precision')?.invalid && (form.get('location.precision')?.touched || form.get('location.precision')?.dirty)) {
                                             <p-message severity="error" size="small" variant="simple">Repère invalide.</p-message>
                                         }
@@ -65,7 +65,7 @@
                                 <div class="flex flex-col gap-4" formGroupName="location">
                                     <div class="flex flex-col gap-1">
                                         <label for="destination">Destination</label>
-                                        <input type="text" pInputText pSize="small" id="destination" formControlName="destination" [invalid]="form.get('location.destination')?.invalid && (form.get('location.destination')?.touched || form.get('location.destination')?.dirty)" required>
+                                        <input type="text" pInputText pSize="small" id="destination" [autocomplete]="false" formControlName="destination" [invalid]="form.get('location.destination')?.invalid && (form.get('location.destination')?.touched || form.get('location.destination')?.dirty)" required>
                                         @if (form.get('location.destination')?.invalid && (form.get('location.destination')?.touched || form.get('location.destination')?.dirty)) {
                                             <p-message severity="error" size="small" variant="simple">Destination requise.</p-message>
                                         }

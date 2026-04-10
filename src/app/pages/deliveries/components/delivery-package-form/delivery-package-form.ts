@@ -2,7 +2,7 @@ import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, sign
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService, SelectItemGroup } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
-import { distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
+import { combineLatest, distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveriesService } from '../../deliveries-service';
 import { PackageType, packageTypeObj, Package, PACKAGE_STATUS } from '@shared/types/package';
 import { ButtonModule } from 'primeng/button';
@@ -56,6 +56,7 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
   protected genderOptions: { value: string; label: string }[] = genderOpts;
   protected isUpdate: WritableSignal<boolean> = signal(false);
   protected loading: WritableSignal<boolean> = signal(false);
+  protected packageTypeSignal: WritableSignal<PackageType> = signal(packageTypeObj.inCity);
   protected locationCityOptions: WritableSignal<SelectItemGroup[]> = signal([]);
   protected locationCooperativeOptions: WritableSignal<SelectItemGroup[]> = signal([]);
 
@@ -86,6 +87,10 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
       status: [data?.status ?? PACKAGE_STATUS.inProgress, [Validators.required, Validators.min(1), Validators.max(4)]],
     });
 
+    
+    this.packageTypeListener();
+
+    this.packageTypeSignal.set(data?.type ?? packageTypeObj.inCity);
     this.initialFormValues.set(this._form.getRawValue());
     this._data.set(data);
   }
@@ -94,8 +99,7 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadCityOptions();
-    this.packageTypeListener();
+    this.loadOptions();
   }
 
   ngOnDestroy(): void {
@@ -103,24 +107,18 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  loadCityOptions(): void {
+  loadOptions(): void {
     this.loading.set(true);
-    this.deliveryPricesService.getAllCityOptions().pipe(
+    combineLatest([
+      this.deliveryPricesService.getAllCityOptions(),
+      this.deliveryPricesService.getAllCooperativeOptions()
+    ]).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
-    ).subscribe(locations => {
-      this.locationCityOptions.set(locations);
+    ).subscribe(([inCityOptions, outCityOptions]) => {
+      this.locationCityOptions.set(inCityOptions);
+      this.locationCooperativeOptions.set(outCityOptions);
       this.form.get('location.place')?.enable();
-    });
-  }
-
-  loadCooperativeOptions(): void {
-    this.loading.set(true);
-    this.deliveryPricesService.getAllCooperativeOptions().pipe(
-      takeUntil(this.unsubscribe$),
-      finalize(() => this.loading.set(false))
-    ).subscribe(locations => {
-      this.locationCooperativeOptions.set(locations);
       this.form.get('location.destination')?.enable();
       this.form.get('location.cooperative')?.enable();
     });
@@ -147,10 +145,7 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$),
       distinctUntilChanged()
     ).subscribe((value: PackageType) => {
-      if (value === packageTypeObj.outCity) {
-        this.loadCooperativeOptions();
-      }
-      
+      this.form.get("deliveryPrice")?.setValue(0);
       this.rebuildForm(value);
     });
   }
@@ -161,7 +156,7 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
     switch (packageType) {
       case packageTypeObj.inCity:
         locationControl = this.formBuilder.group({
-          place: [{ value: this._data()?.customer.inCity?.place ?? '', disabled: this.locationCityOptions().length <= 0 }, [Validators.required]],
+          place: [{ value: this._data()?.customer.inCity?.place.id ?? '', disabled: this.locationCityOptions().length <= 0 }, [Validators.required]],
           precision: this._data()?.customer.inCity?.precision ?? '',
         });
         break;
@@ -173,6 +168,29 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
         break;
     }
 
-    this.form.setControl("location", locationControl)
+    this.form.setControl("location", locationControl);
+
+    this.packageTypeSignal.set(packageType);
+    this.locationListener();
+  }
+
+  private locationListener(): void {
+    // in city
+    this.form.get('location.place')?.valueChanges.pipe(
+      takeUntil(this.unsubscribe$),
+      distinctUntilChanged()
+    ).subscribe((value: number) => {
+      const locationCity: SelectItemGroup | undefined = this.locationCityOptions().find(lco => lco.items.find(i => i.value === value))
+      this.form.get("deliveryPrice")?.setValue(locationCity ? locationCity.value : 0);
+    });
+
+    // out city
+    this.form.get('location.cooperative')?.valueChanges.pipe(
+      takeUntil(this.unsubscribe$),
+      distinctUntilChanged()
+    ).subscribe((value: number) => {
+      const locationCity: SelectItemGroup | undefined = this.locationCooperativeOptions().find(lco => lco.items.find(i => i.value === value))
+      this.form.get("deliveryPrice")?.setValue(locationCity ? locationCity.value : 0);
+    });
   }
 }
