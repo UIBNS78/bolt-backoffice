@@ -22,6 +22,7 @@ import { DividerModule } from 'primeng/divider';
 import { DeliveryPackageForm } from '../../delivery-package-form/delivery-package-form';
 import { DeliveryFormDrawer } from '../../delivery-form-drawer/delivery-form-drawer';
 import { NgClass } from '@angular/common';
+import { CivilityPipe } from '@shared/pipes/civility-pipe';
 
 @Component({
   selector: 'app-delivery-packages-by-owners',
@@ -41,7 +42,8 @@ import { NgClass } from '@angular/common';
     DividerModule,
     DeliveryPackageForm,
     DeliveryFormDrawer,
-    NgClass
+    NgClass,
+    CivilityPipe
   ],
   templateUrl: './delivery-packages-by-owners.html',
   styleUrl: './delivery-packages-by-owners.css',
@@ -121,7 +123,7 @@ export class DeliveryPackagesByOwners implements OnDestroy {
       if (prev) {
         this.loadData();
       };
-      
+
       return !prev;
     });
   }

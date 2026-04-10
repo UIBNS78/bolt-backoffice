@@ -57,7 +57,7 @@
                         <ng-template #body let-package>
                             <tr>
                                 <td>{{ package.id }}</td>
-                                <td>{{ package.customer.name }}</td>
+                                <td>{{ package.customer.gender | civility }} {{ package.customer.name }}</td>
                                 <td>
                                     <p class="font-bold">{{ package.customer.phone | mask:'+999 99 99 999 99' }}</p>
                                 </td>
