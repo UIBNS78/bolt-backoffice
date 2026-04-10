@@ -1,0 +1,122 @@
+<div class="flex flex-col gap-2">
+    <div class="flex justify-between items-center">
+        <div class="flex flex-col gap-1">
+            <h1 class="text-gray-400">
+                Liste des colis
+            </h1>
+            @if (deliveryId()) {
+                <div class="flex items-center gap-2">
+                    <p-tag [value]="packages().filter(p => p.status === 1).length + ' colis en cours'" severity="secondary" [rounded]="true" icon="pi pi-bullseye" />
+                    <p-tag [value]="packages().filter(p => p.status === 2).length + ' colis livrés'" severity="secondary" [rounded]="true" icon="pi pi-check" />
+                    <p-tag [value]="packages().filter(p => p.status === 3).length + ' colis reporté'" severity="secondary" [rounded]="true" icon="pi pi-refresh" />
+                    <p-tag [value]="packages().filter(p => p.status === 4).length + ' colis annulés'" severity="secondary" [rounded]="true" icon="pi pi-times" />
+                </div>
+            }
+        </div>
+        <div class="flex justify-end gap-3">
+            <p-button (click)="handleOpenDeliveryForm()" icon="pi pi-pencil" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Modifier la livraison" tooltipPosition="top" />
+            <p-button (click)="handleOpenPackageForm()" icon="pi pi-plus" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !deliveryId()" pTooltip="Ajouter un colis" tooltipPosition="top" />
+            <p-divider layout="vertical" />
+            <p-button icon="pi pi-window-maximize" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || packages().length <= 0" pTooltip="Agrandir la vue" tooltipPosition="top" />
+            <app-delivery-package-filter-button 
+                [loading]="isLoading()" 
+                [hasPackages]="packages().length > 0"
+                [hasFilter]="hasFilter()"
+                (clearFilterEmitter)="loadData()"
+                (filterStatusEmitter)="handleFilterByStatus($event)"
+                (filterFragilityEmitter)="handleFilterByFragility($event)"
+            ></app-delivery-package-filter-button>
+            <p-button (click)="loadData()" icon="pi pi-refresh" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || packages().length <= 0" pTooltip="Rafraîchir" tooltipPosition="top" />
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input type="text" pInputText [formControl]="searchControl" pSize="small" placeholder="Recherche" />
+            </p-iconfield>
+        </div>
+    </div>
+
+    <div class="flex-1">
+        @if (isLoading()) {
+            <span></span>
+        } @else {
+            @defer (on idle) {
+                @if (deliveryId()) {
+                    <p-table [value]="filteredPackages()" [scrollable]="true" scrollHeight="580px" [tableStyle]="{ 'min-width': '50rem' }">
+                        <ng-template #header>
+                            <tr>
+                                <th>ID</th>
+                                <th>Client</th>
+                                <th>Numéro téléphone</th>
+                                <th>Lieu de livraison</th>
+                                <th>Livreur</th>
+                                <th>Prix et frais de livraison</th>
+                                <th>Fragile</th>
+                                <th>Statut</th>
+                                <th>Action</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-package>
+                            <tr>
+                                <td>{{ package.id }}</td>
+                                <td>{{ package.customer.gender | civility }} {{ package.customer.name }}</td>
+                                <td>
+                                    <p class="font-bold">{{ package.customer.phone | mask:'+999 99 99 999 99' }}</p>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <i [ngClass]="['pi text-blue-500', package.customer.inCity ? 'pi pi-map-marker' : 'pi pi-truck']"></i>
+                                        <div class="flex flex-col">
+                                            <p>{{ package.customer.inCity ? package.customer.inCity.place.name : (package.customer.outCity?.cooperative.name ?? "Inconnue") }}</p>
+                                            <p class="text-gray-400">{{ package.customer.inCity ? package.customer.inCity.precision : (package.customer.outCity.destination ?? "Inconnue") }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ package.deliveryMan.firstName }}</td>
+                                <td>
+                                    <div class="flex flex-col items-end">
+                                        <p class="font-bold">{{ package.price.toLocaleString('fr-FR') }} Ar</p>
+                                        <p class="text-gray-400">+ {{ package.deliveryPrice.toLocaleString('fr-FR') }} Ar</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex justify-center">
+                                        @if (package.isFragile) {
+                                            <i class="pi pi-exclamation-triangle text-orange-400" pTooltip="Ce colis est fragile" tooltipPosition="top"></i>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <app-delivery-package-status-editable 
+                                        [package]="package"
+                                        (onStatusChangeEmitter)="handlePackageStatus($event, package)"
+                                    ></app-delivery-package-status-editable>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-1">
+                                        <p-button icon="pi pi-history" [rounded]="true" [text]="true" severity="info" [loading]="package.isUpdating" size="small" pTooltip="Voir l'historique" tooltipPosition="top" />
+                                        <p-button (click)="handleOpenPackageForm(package)" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" [loading]="package.isUpdating" size="small" pTooltip="Modifier" tooltipPosition="top" />
+                                        <p-button (click)="handleDelete(package)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="package.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                } @else {
+                    <div class="flex justify-center items-center h-[calc(100vh-200px)]">
+                        <div class="flex flex-col justify-center items-center gap-2 w-80">
+                            <i class="pi pi-box"></i>
+                            <div class="flex flex-col items-center">
+                                <p class="text-center">Aucun colis trouvé</p>
+                                <p class="text-gray-400 text-center">Merci de séléctionner une livraison dans la liste afin de voir ses colis</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            } @placeholder (minimum 600ms) {
+                <app-delivery-packages-placeholder></app-delivery-packages-placeholder>
+            }
+        }
+    </div>
+</div>
+
+<app-delivery-package-form [open]="showPackageForm()" [deliveryId]="deliveryId()" [pkg]="selectedPackage()" (onCloseEmitter)="handleOpenPackageForm()"></app-delivery-package-form>
+<app-delivery-form-drawer [open]="showDeliveryForm()" (onCloseEmitter)="handleOpenDeliveryForm()"></app-delivery-form-drawer>

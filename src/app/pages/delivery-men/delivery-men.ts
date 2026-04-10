@@ -25,6 +25,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DeliveryManDetails } from './components/delivery-man-details/delivery-man-details';
 import { DeliveryManForm } from './components/delivery-man-form/delivery-man-form';
 import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-delivery-men',
@@ -44,7 +45,7 @@ import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-
     AgePipe,
     SeniorityPipe,
     AvatarModule,
-    BadgeModule,
+    TagModule,
     TooltipModule,
     NgClass,
     DeliveryManDetails,

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { DeliveryPriceCity, DeliveryPriceCityUpdateForm, DeliveryPriceProvince, DeliveryPriceProvinceUpdateForm } from '@shared/types/delivery-price';
 import { environment } from 'environments/environment';
+import { SelectItemGroup } from 'primeng/api';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -10,15 +11,27 @@ import { map, Observable } from 'rxjs';
 export class DeliveryPricesService {
   private http: HttpClient = inject(HttpClient);
 
-  getAllTana(): Observable<DeliveryPriceCity[]> {    
-    return this.http.get<{ deliveryPrices: DeliveryPriceCity[] }>(`${environment.apiURL}/delivery-prices/tana`).pipe(
+  getAllCity(): Observable<DeliveryPriceCity[]> {    
+    return this.http.get<{ deliveryPrices: DeliveryPriceCity[] }>(`${environment.apiURL}/delivery-prices/city`).pipe(
       map(data => data.deliveryPrices)
+    );
+  }
+
+  getAllCityOptions(): Observable<SelectItemGroup[]> {    
+    return this.http.get<{ deliveryPricesOptions: SelectItemGroup[] }>(`${environment.apiURL}/delivery-prices/city-options`).pipe(
+      map(data => data.deliveryPricesOptions)
     );
   }
 
   getAllCooperative(): Observable<DeliveryPriceProvince[]> {    
     return this.http.get<{ deliveryPrices: DeliveryPriceProvince[] }>(`${environment.apiURL}/delivery-prices/cooperative`).pipe(
       map(data => data.deliveryPrices)
+    );
+  }
+
+  getAllCooperativeOptions(): Observable<SelectItemGroup[]> {    
+    return this.http.get<{ deliveryPricesOptions: SelectItemGroup[] }>(`${environment.apiURL}/delivery-prices/cooperative-options`).pipe(
+      map(data => data.deliveryPricesOptions)
     );
   }
   

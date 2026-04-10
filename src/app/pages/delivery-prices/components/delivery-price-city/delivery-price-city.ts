@@ -55,7 +55,7 @@ export class DeliveryPriceCity implements OnInit, OnDestroy {
   }
 
   loadData(): void {
-    this.deliveryPricesService.getAllTana().pipe(
+    this.deliveryPricesService.getAllCity().pipe(
       first(),
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))

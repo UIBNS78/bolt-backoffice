@@ -1,19 +1,16 @@
 <div class="flex justify-end items-center gap-3">
     @defer (when !loading) {
         <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
-            <i class="pi pi-users" style="color: green"></i>
-            <p>{{ counts.ownersCount }}</p>
-            <p class="text-gray-500">{{ 'Propriétaire' | plural:counts.ownersCount }}</p>
+            <i class="pi pi-users text-green-500"></i>
+            <p class="text-gray-500">{{ counts.ownersCount }} {{ 'Propriétaire' | plural:counts.ownersCount }}</p>
         </div>
         <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
-            <i class="pi pi-star-fill" style="color: orange"></i>
-            <p>{{ counts.premiumCount }}</p>
-            <p class="text-gray-500">{{ 'Premium' | plural:counts.premiumCount }}</p>
+            <i class="pi pi-star text-amber-400"></i>
+            <p class="text-gray-500">{{ counts.premiumCount }} {{ 'Premium' | plural:counts.premiumCount }}</p>
         </div>
         <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
             <i class="pi pi-users"></i>
-            <p>{{ counts.simpleCount }}</p>
-            <p class="text-gray-500">{{ 'Simple' | plural:counts.simpleCount }}</p>
+            <p class="text-gray-500">{{ counts.simpleCount }} {{ 'Simple' | plural:counts.simpleCount }}</p>
         </div>
     } @placeholder (minimum 600ms) {
         <p-skeleton width="8rem" height="2.1rem"/>

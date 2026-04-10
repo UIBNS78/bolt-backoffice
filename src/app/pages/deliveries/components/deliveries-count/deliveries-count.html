@@ -1,0 +1,20 @@
+<div class="flex justify-end items-center gap-3">
+    @defer (when !isLoading()) {
+        <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
+            <i class="pi pi-truck text-blue-500"></i>
+            <p class="text-gray-500">{{ counts().deliveryCount }} {{ 'Livraison' | plural:counts().deliveryCount }}</p>
+        </div>
+        <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
+            <i class="pi pi-box text-gray-700"></i>
+            <p class="text-gray-500">{{ counts().package.total }} Colis</p>
+        </div>
+        <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
+            <i class="pi pi-check text-green-500"></i>
+            <p class="text-gray-500">{{ counts().package.delivered }} {{ 'Colis délivré' | plural:counts().package.delivered }}</p>
+        </div>
+    } @placeholder (minimum 600ms) {
+        <p-skeleton width="8rem" height="2.1rem"/>
+        <p-skeleton width="8rem" height="2.1rem"/>
+        <p-skeleton width="8rem" height="2.1rem"/>
+    }
+</div>
