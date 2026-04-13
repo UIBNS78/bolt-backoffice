@@ -90,3 +90,8 @@ body,
   scrollbar-width: thin;
   scrollbar-color: #c1c1c1 #f1f1f1;
 }
+
+.p-image {
+  --p-image-preview-mask-background: 'transparent'; 
+  --p-image-preview-mask-color: 'transparent';
+}

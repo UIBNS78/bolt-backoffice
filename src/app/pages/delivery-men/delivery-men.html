@@ -42,8 +42,21 @@
                         <td>{{ man.id }}</td>
                         <td>
                             <div class="flex items-center gap-2">
-                                <p-avatar image="images/delivery-man-1.jpg" shape="circle" style="font-size: 12px; width: 30px; height: 30px" />
-                                <p>{{ man.name + ' ' + man.firstName }}</p>
+                                <p-image src="images/delivery-man-1.jpg" [preview]="true" alt="Image" width="30">
+                                    <ng-template #indicator>
+                                        <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
+                                    </ng-template>
+                                    <ng-template #image>
+                                        <p-avatar image="images/delivery-man-1.jpg" shape="circle" style="font-size: 12px; width: 30px; height: 30px" />
+                                    </ng-template>
+                                    <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                                        <img src="images/delivery-man-1.jpg" alt="image" [style]="style" (click)="previewCallback()" />
+                                    </ng-template>
+                                </p-image>
+                                <div class="flex flex-col">
+                                    <p class="font-bold">{{ man.name }}</p>
+                                    <p>{{ man.firstName }}</p>
+                                </div>
                             </div>
                         </td>
                         <td>
@@ -65,7 +78,7 @@
                             <div class="flex items-center gap-2">
                                 <p-image src="images/CIN.jpg" [preview]="true" alt="Image" width="50" style="border-radius: 5px;">
                                     <ng-template #indicator>
-                                        <i class="pi pi-eye" style="font-size: 0.8rem;"></i>
+                                        <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
                                     </ng-template>
                                     <ng-template #image>
                                         <img src="images/CIN.jpg" alt="image" width="50" style="border-radius: 5px;" />
@@ -76,7 +89,7 @@
                                 </p-image>
                                 <p-image src="images/certificat-residence.png" [preview]="true" alt="Image" width="50" style="border-radius: 5px;">
                                     <ng-template #indicator>
-                                        <i class="pi pi-eye" style="font-size: 0.8rem;"></i>
+                                        <i class="pi pi-eye text-black" style="font-size: 0.8rem;"></i>
                                     </ng-template>
                                     <ng-template #image>
                                         <img src="images/certificat-residence.png" alt="image" width="50" style="border-radius: 5px;" />
