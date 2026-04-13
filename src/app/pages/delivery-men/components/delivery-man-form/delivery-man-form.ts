@@ -13,20 +13,31 @@ import { type InputSelectOptions } from '@shared/components/types/input-select-o
 import { SelectModule } from 'primeng/select';
 import { MessageService } from 'primeng/api';
 import { DeliveryMenService } from '../../delivery-men-service';
-import { finalize, Subject, take, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { genderOptions as genderOpts } from '@shared/constants/user';
+import { GENDER } from '@shared/types/user';
+import { InputMaskModule } from 'primeng/inputmask';
+import { FieldsetModule } from 'primeng/fieldset';
+import { FileUploadEvent, FileUploadModule } from 'primeng/fileupload';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-delivery-man-form',
   imports: [
     DrawerModule,
     ButtonModule,
+    IconFieldModule,
+    InputIconModule,
     InputTextModule,
     MessageModule,
     DatePickerModule,
     IconFieldModule,
     InputIconModule,
     SelectModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    InputMaskModule,
+    FieldsetModule,
+    FileUploadModule
   ],
   templateUrl: './delivery-man-form.html',
   styleUrl: './delivery-man-form.css',
@@ -41,6 +52,8 @@ export class DeliveryManForm implements OnDestroy {
   protected messageService: MessageService = inject(MessageService);
 
   // vars
+  protected genderOptions: { value: string; label: string }[] = genderOpts;
+  private _initialValues: WritableSignal<Partial<DeliveryMan>> = signal({});
   protected isUpdate: WritableSignal<boolean> = signal(false);
   protected loading: WritableSignal<boolean> = signal(false);
   protected transportOptions: InputSelectOptions[] = tOptions;
@@ -55,13 +68,16 @@ export class DeliveryManForm implements OnDestroy {
       id: data?.id ?? null,
       name: [data?.name ?? '', [Validators.required, Validators.minLength(3)]],
       firstName: [data?.firstName ?? '', [Validators.required, Validators.minLength(3)]],
-      birthday: [data?.birthday ?? '', [Validators.required]],
+      gender: [data?.gender ?? GENDER.MAN, [Validators.required, Validators.minLength(4), Validators.maxLength(6)]],
+			email: [data?.email ?? '', [Validators.email]],
+      birthday: [data && data.birthday ? format(data.birthday, "dd MMMM yyyy") : new Date(), [Validators.required]],
       phone: [data?.phone ?? '', [Validators.required]],
       address: [data?.address ?? '', [Validators.required, Validators.minLength(3)]],
       password: [{ value: data !== null ? '' : DEFAULT_USER_PASSWORD, disabled: true }, [Validators.minLength(8)]],
       totalPackages: [data?.totalPackages ?? 0, [Validators.pattern("[0-9]*"), Validators.min(0)]],
       transport: [data?.transport ?? 1, [Validators.required, Validators.max(3)]]
     });
+    this._initialValues.set(this._form.getRawValue());
   };
   get form(): FormGroup {
     return this._form;
@@ -79,24 +95,28 @@ export class DeliveryManForm implements OnDestroy {
     }
 
     this.loading.set(true);
-    this.deliveryManService[this.isUpdate() ? 'update' : 'create'](this.form.getRawValue() as DeliveryMan).pipe(
+    this.deliveryManService[this.isUpdate() ? 'update' : 'create']({
+      ...this.form.getRawValue(),
+      birthday: new Date(this.form.get('birthday')?.value),
+    } as DeliveryMan).pipe(
       takeUntil(this.unsubscribe$),
-      finalize(() => {
-        this.form.reset();
-        this.loading.set(false);
-      })
+      finalize(() => this.loading.set(false))
     ).subscribe(() => {
       this.messageService.add({
         severity: 'success',
         summary: this.isUpdate() ? 'Mise à jour réussie' : 'Création réussie',
         detail: `Le livreur a été ${this.isUpdate() ? 'mis à jour' : 'créé'} avec succès.`
       });
-      this.onCloseEmitter.emit();
+      this.handleClose();
     });
   }
 
+  onUpload(file: FileUploadEvent): void {
+
+  }
+
   handleClose(): void {
-    this.form.reset();
+    this.form.reset(this._initialValues());
     this.onCloseEmitter.emit();
   }
 }

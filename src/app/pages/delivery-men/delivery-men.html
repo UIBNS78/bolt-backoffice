@@ -54,7 +54,7 @@
                                     </ng-template>
                                 </p-image>
                                 <div class="flex flex-col">
-                                    <p class="font-bold">{{ man.name }}</p>
+                                    <p class="font-bold">{{ man.gender | civility }} {{ man.name }}</p>
                                     <p>{{ man.firstName }}</p>
                                 </div>
                             </div>
@@ -68,7 +68,9 @@
                                 </div>
                             </div>
                         </td>
-                        <td><p-chip [label]="'0' + (man.phone | mask:'00 00 000 00')" icon="pi pi-phone" /></td>
+                        <td>
+                            <p-chip [label]="man.phone | mask:'+999 99 99 999 99'" icon="pi pi-phone" />
+                        </td>
                         <td>{{ man.totalPackages }}</td>
                         <td>
                             <p-tag severity="success" value="actif" [rounded]="true" />

@@ -25,7 +25,7 @@ export type DeliveryMan =
     {
         id: number;
         userId: number;
-        birthday: string;
+        birthday: Date;
         address: string;
         totalPackages: number;
         transport: DeliveryManTransport;

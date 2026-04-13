@@ -52,7 +52,7 @@
                         <label for="phone">Numéro téléphone</label>
                         <p-iconfield>
                             <p-inputicon class="pi pi-phone" />
-                            <input pInputText pInputMask="+261 99 99 999 99" pSize="small" [autocomplete]="false" id="phone" formControlName="phone" [invalid]="form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)" required />
+                            <input pInputText pInputMask="+261 99 99 999 99" pSize="small" [autocomplete]="false" id="phone" formControlName="phone" fluid [invalid]="form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)" required />
                         </p-iconfield>
                         @if (form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)) {
                             <p-message severity="error" size="small" variant="simple">Numéro téléphone requis.</p-message>
