@@ -4,12 +4,14 @@ import { AvatarModule } from 'primeng/avatar';
 import { Authentication } from 'app/pages/authentication/authentication';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
+import { ImageModule } from 'primeng/image';
 
 @Component({
   selector: 'app-avatar-popover',
   imports: [
     AvatarModule,
-    PopoverModule
+    PopoverModule,
+    ImageModule
   ],
   providers: [
     Authentication

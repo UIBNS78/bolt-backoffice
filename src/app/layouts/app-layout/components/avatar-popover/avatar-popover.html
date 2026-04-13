@@ -3,7 +3,17 @@
 <p-popover #profilePopover>
     <div class="flex flex-col gap-3">
         <div class="flex justify-center items-center gap-2">
-            <p-avatar image="images/pdp.jpg" shape="circle" size="normal" />
+            <p-image src="images/pdp.jpg" [preview]="true" alt="Image" appendTo="body">
+                <ng-template #indicator>
+                    <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
+                </ng-template>
+                <ng-template #image>
+                    <p-avatar image="images/pdp.jpg" shape="circle" size="normal" />
+                </ng-template>
+                <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                    <img src="images/pdp.jpg" alt="image" [style]="style" (click)="previewCallback()" />
+                </ng-template>
+            </p-image>
             <div class="flex flex-col">
                 <p>D. Faniry Andriamihaja</p>
                 <p class="text-gray-400">davidsonfaniry@gmail.com</p>
