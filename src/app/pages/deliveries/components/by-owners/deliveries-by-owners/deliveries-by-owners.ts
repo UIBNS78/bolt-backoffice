@@ -14,6 +14,7 @@ import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveriesPlaceholder } from '../../deliveries-placeholder/deliveries-placeholder';
+import { CivilityPipe } from '@shared/pipes/civility-pipe';
 
 @Component({
   selector: 'app-deliveries-by-owners',
@@ -29,7 +30,8 @@ import { DeliveriesPlaceholder } from '../../deliveries-placeholder/deliveries-p
     ButtonModule,
     TooltipModule,
     TodayYesterdayTomorrowPipe,
-    DeliveriesPlaceholder
+    DeliveriesPlaceholder,
+    CivilityPipe
   ],
   templateUrl: './deliveries-by-owners.html',
   styleUrl: './deliveries-by-owners.css',

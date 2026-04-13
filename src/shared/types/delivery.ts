@@ -16,7 +16,7 @@ export const deliveryStatusObj: {
 }
 export type DeliveryStatus = ValueOf<typeof deliveryStatusObj>;
 
-export type DeliveryOwner = Pick<Owner, "id" | "name" | "firstName" | "commercialName" | "profilePicture">
+export type DeliveryOwner = Pick<Owner, "id" | "name" | "firstName" | "gender" | "commercialName" | "profilePicture">
 
 export type DeiveryRecuperator = Pick<DeliveryMan, "id" | "name" | "firstName">;
 
