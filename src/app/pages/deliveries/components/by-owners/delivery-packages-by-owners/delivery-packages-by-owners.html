@@ -70,7 +70,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{ package.deliveryMan.firstName }}</td>
+                                <td>{{ package.deliveryMan.gender | civility }} {{ package.deliveryMan.firstName }}</td>
                                 <td>
                                     <div class="flex flex-col items-end">
                                         <p class="font-bold">{{ package.price.toLocaleString('fr-FR') }} Ar</p>

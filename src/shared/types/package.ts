@@ -36,7 +36,7 @@ export type Package = {
     fixedTime?: string;
     description?: string;
     status: PackageStatus;
-    deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName">;
+    deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName" | "gender">;
 } & { isStatusChanging?: boolean } & Pick<LoadingState, "isDeleting">
 
 export type PackageForm = {
