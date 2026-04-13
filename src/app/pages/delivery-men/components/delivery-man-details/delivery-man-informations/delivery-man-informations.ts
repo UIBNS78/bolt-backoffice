@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
+import { ImageModule } from 'primeng/image';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
@@ -8,7 +9,8 @@ import { TooltipModule } from 'primeng/tooltip';
   imports: [
     ButtonModule,
     DividerModule,
-    TooltipModule
+    TooltipModule,
+    ImageModule
   ],
   templateUrl: './delivery-man-informations.html',
   styleUrl: './delivery-man-informations.css',

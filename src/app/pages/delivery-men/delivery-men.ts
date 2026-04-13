@@ -19,7 +19,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { DatePipe, NgClass } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { AgePipe } from '@shared/pipes/age.pipe';
-import { BadgeModule } from 'primeng/badge';
+import { ImageModule } from 'primeng/image';
 import { SeniorityPipe } from '@shared/pipes/seniority.pipe';
 import { TooltipModule } from 'primeng/tooltip';
 import { DeliveryManDetails } from './components/delivery-man-details/delivery-man-details';
@@ -49,7 +49,8 @@ import { TagModule } from 'primeng/tag';
     TooltipModule,
     NgClass,
     DeliveryManDetails,
-    DeliveryManForm
+    DeliveryManForm,
+    ImageModule
 ],
   templateUrl: './delivery-men.html',
   styleUrl: './delivery-men.css',
