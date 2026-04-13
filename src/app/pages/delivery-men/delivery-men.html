@@ -62,9 +62,29 @@
                         </td>
                         <td>{{ man.createdAt | seniority }}</td>
                         <td>
-                            <div class="flex flex-col">
-                                <p-button label="CIN" link icon="pi pi-id-card" size="small" severity="info" pTooltip="Voir la copie du CIN" tooltipPosition="left" />
-                                <p-button label="Cert. Résidence" link icon="pi pi-file" size="small" severity="info" pTooltip="Voir le certificat de résidence" tooltipPosition="left" />
+                            <div class="flex items-center gap-2">
+                                <p-image src="images/CIN.jpg" [preview]="true" alt="Image" width="50" style="border-radius: 5px;">
+                                    <ng-template #indicator>
+                                        <i class="pi pi-eye" style="font-size: 0.8rem;"></i>
+                                    </ng-template>
+                                    <ng-template #image>
+                                        <img src="images/CIN.jpg" alt="image" width="50" style="border-radius: 5px;" />
+                                    </ng-template>
+                                    <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                                        <img src="images/CIN.jpg" alt="image" [style]="style" (click)="previewCallback()" />
+                                    </ng-template>
+                                </p-image>
+                                <p-image src="images/certificat-residence.png" [preview]="true" alt="Image" width="50" style="border-radius: 5px;">
+                                    <ng-template #indicator>
+                                        <i class="pi pi-eye" style="font-size: 0.8rem;"></i>
+                                    </ng-template>
+                                    <ng-template #image>
+                                        <img src="images/certificat-residence.png" alt="image" width="50" style="border-radius: 5px;" />
+                                    </ng-template>
+                                    <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                                        <img src="images/certificat-residence.png" alt="image" [style]="style" (click)="previewCallback()" />
+                                    </ng-template>
+                                </p-image>
                             </div>
                         </td>
                         <td>

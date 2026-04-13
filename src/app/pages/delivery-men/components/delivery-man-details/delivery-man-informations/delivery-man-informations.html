@@ -48,9 +48,29 @@
         <p-divider align="left">
             <p class="text-gray-400">Documents</p>
         </p-divider>
-        <div class="flex flex-col gap-1">
-            <p-button label="Copie du CIN" icon="pi pi-id-card" size="small" link severity="info" pTooltip="Voir la copie du CIN" tooltipPosition="right" />
-            <p-button label="Certificat de résidence" icon="pi pi-file" size="small" link severity="info" pTooltip="Voir le certificat de résidence" tooltipPosition="right" />
+        <div class="flex items-center gap-2">
+            <p-image src="images/CIN.jpg" [preview]="true" alt="Image" width="100" style="border-radius: 5px;" pTooltip="Voir la copie du CIN" tooltipPosition="top" appendTo="body">
+                <ng-template #indicator>
+                    <i class="pi pi-eye" style="font-size: 0.8rem;"></i>
+                </ng-template>
+                <ng-template #image>
+                    <img src="images/CIN.jpg" alt="image" width="100" style="border-radius: 5px;" />
+                </ng-template>
+                <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                    <img src="images/CIN.jpg" alt="image" [style]="style" (click)="previewCallback()" />
+                </ng-template>
+            </p-image>
+            <p-image src="images/certificat-residence.png" [preview]="true" alt="Image" width="100" style="border-radius: 5px;" pTooltip="Voir le certicat de résidence" tooltipPosition="top" appendTo="body">
+                <ng-template #indicator>
+                    <i class="pi pi-eye" style="font-size: 0.8rem;"></i>
+                </ng-template>
+                <ng-template #image>
+                    <img src="images/certificat-residence.png" alt="image" width="100" style="border-radius: 5px;" />
+                </ng-template>
+                <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                    <img src="images/certificat-residence.png" alt="image" [style]="style" (click)="previewCallback()" />
+                </ng-template>
+            </p-image>
         </div>
     </div>
 </div>
