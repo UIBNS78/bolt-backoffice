@@ -6,7 +6,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { DeliveryMenList } from './types/delivery-men-list';
-import { animationFrameScheduler, finalize, Subject, take, takeUntil } from 'rxjs';
+import { finalize, Subject, take, takeUntil } from 'rxjs';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { DeliveryMenService } from './delivery-men-service';
@@ -26,6 +26,7 @@ import { DeliveryManDetails } from './components/delivery-man-details/delivery-m
 import { DeliveryManForm } from './components/delivery-man-form/delivery-man-form';
 import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
 import { TagModule } from 'primeng/tag';
+import { CivilityPipe } from '@shared/pipes/civility-pipe';
 
 @Component({
   selector: 'app-delivery-men',
@@ -50,7 +51,8 @@ import { TagModule } from 'primeng/tag';
     NgClass,
     DeliveryManDetails,
     DeliveryManForm,
-    ImageModule
+    ImageModule,
+    CivilityPipe
 ],
   templateUrl: './delivery-men.html',
   styleUrl: './delivery-men.css',
@@ -98,7 +100,13 @@ export class DeliveryMen implements OnInit, OnDestroy {
   
   handleOpenForm(deliveryMan: DeliveryMan | null = null): void {
     this.selectedDeliveryManEdit.set(deliveryMan);
-    this.showForm.update(prev => !prev);
+    this.showForm.update(prev => {
+      if (prev) {
+        this.loadData();
+      }
+
+      return !prev;
+    });
   }
 
   handleOpenDetails(deliveryManId: number | null = null): void {

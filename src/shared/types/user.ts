@@ -13,6 +13,7 @@ export type User = {
     id: number;
     name: string;
     firstName: string;
+    gender: Gender;
     email: string;
     phone: string;
     profilePicture?: string;

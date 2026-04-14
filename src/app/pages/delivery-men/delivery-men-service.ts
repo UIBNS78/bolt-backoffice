@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import type { DeliveryMan } from '@shared/types/delivery-men';
+import type { DeliveryMan, DeliveryManDetails } from '@shared/types/delivery-men';
 import { environment } from 'environments/environment';
 import { map, Observable } from 'rxjs';
 import type { DeliveryMenList } from './types/delivery-men-list';
@@ -32,6 +32,12 @@ export class DeliveryMenService {
   getAllAsOptions(): Observable<DeliveryMenOptionsResponse[]> {
     return this.http.get<{ deliveryMen: DeliveryMenOptionsResponse[] }>(`${environment.apiURL}/delivery-men/all-options`).pipe(
       map(data => data.deliveryMen)
+    );
+  }
+
+  getDetails(id: number): Observable<DeliveryManDetails> {
+    return this.http.get<{ deliveryMan: DeliveryManDetails }>(`${environment.apiURL}/${id}`).pipe(
+      map(data => data.deliveryMan)
     );
   }
   

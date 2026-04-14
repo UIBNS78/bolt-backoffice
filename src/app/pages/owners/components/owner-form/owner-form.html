@@ -1,8 +1,15 @@
-<p-drawer [(visible)]="open" [dismissible]="false" position="right" header="Nouveau propriétaire" (onHide)="handleClose()" styleClass="!w-[30rem]">
+<p-drawer [(visible)]="open" [dismissible]="false" position="right" header="Nouveau propriétaire" (onHide)="handleClose()" styleClass="!w-[35rem]">
     <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="h-full">
         <div class="flex flex-col justify-between h-full">
             <div class="flex flex-col gap-4">
-                <div class="flex items-center gap-3 w-full">
+                <div class="flex items-baseline gap-3 w-full">
+                    <div class="flex flex-col gap-1">
+                        <label for="gender">Civilité</label>
+                        <p-select [options]="genderOptions" formControlName="gender" size="small" optionLabel="label" optionValue="value" [invalid]="form.get('gender')?.invalid && (form.get('gender')?.touched || form.get('gender')?.dirty)" required />
+                        @if (form.get('gender')?.invalid && (form.get('gender')?.touched || form.get('gender')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Sexe requis.</p-message>
+                        }
+                    </div>
                     <div class="flex flex-col gap-1 w-full">
                         <label for="name">Nom</label>
                         <input type="text" pInputText pSize="small" id="name" formControlName="name" [invalid]="form.get('name')?.invalid && (form.get('name')?.touched || form.get('name')?.dirty)" required>
@@ -30,8 +37,8 @@
                     }
                 </div>
 
-                <div class="flex items-center gap-3">
-                    <div class="flex flex-col gap-1">
+                <div class="flex items-baseline gap-3">
+                    <div class="flex flex-col gap-1 w-full">
                         <label for="email">Email</label>
                         <p-iconfield>
                             <p-inputicon class="pi pi-envelope" />
@@ -41,11 +48,11 @@
                             <p-message severity="error" size="small" variant="simple">Email requis.</p-message>
                         }
                     </div>
-                    <div class="flex flex-col gap-1">
+                    <div class="flex flex-col gap-1 w-full">
                         <label for="phone">Numéro téléphone</label>
                         <p-iconfield>
                             <p-inputicon class="pi pi-phone" />
-                            <input type="text" pInputText pSize="small" id="phone" formControlName="phone" class="w-full" [invalid]="form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)" required />
+                            <input pInputText pInputMask="+261 99 99 999 99" pSize="small" [autocomplete]="false" id="phone" formControlName="phone" fluid [invalid]="form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)" required />
                         </p-iconfield>
                         @if (form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)) {
                             <p-message severity="error" size="small" variant="simple">Numéro téléphone requis.</p-message>

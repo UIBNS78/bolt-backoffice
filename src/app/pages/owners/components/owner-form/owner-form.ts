@@ -13,7 +13,10 @@ import { SelectModule } from 'primeng/select';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { planObj } from '@shared/types/owner-plan';
 import { ButtonModule } from 'primeng/button';
-import { finalize, Subject, take, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { genderOptions as genderOpts } from '@shared/constants/user';
+import { GENDER } from '@shared/types/user';
+import { InputMaskModule } from 'primeng/inputmask';
 
 @Component({
   selector: 'app-owner-form',
@@ -25,7 +28,8 @@ import { finalize, Subject, take, takeUntil } from 'rxjs';
     IconFieldModule,
     InputIconModule,
     SelectModule,
-    ButtonModule
+    ButtonModule,
+    InputMaskModule
   ],
   templateUrl: './owner-form.html',
   styleUrl: './owner-form.css',
@@ -40,6 +44,8 @@ export class OwnerForm implements OnDestroy {
   private messageService: MessageService = inject(MessageService);
 
   // vars
+  protected genderOptions: { value: string; label: string }[] = genderOpts;
+  private _initialValues: WritableSignal<Partial<Owner>> = signal({});
   protected loading: WritableSignal<boolean> = signal(false);
   protected ownerPlanOptions: InputSelectOptions[] = [
     { id: planObj.premium, label: "Premium" },
@@ -55,11 +61,13 @@ export class OwnerForm implements OnDestroy {
       commercialName: [data?.commercialName ?? '', [Validators.required, Validators.minLength(3)]],
       name: [data?.name ?? '', [Validators.required, Validators.minLength(3)]],
       firstName: [data?.firstName ?? '', [Validators.required, Validators.minLength(3)]],
+      gender: [data?.gender ?? GENDER.MAN, [Validators.required, Validators.minLength(4), Validators.maxLength(6)]],
 			email: [data?.email ?? '', [Validators.required, Validators.email]],
       phone: [data?.phone ?? '', [Validators.required]],
 			password: [{ value: this.isUpdate ? '' : DEFAULT_USER_PASSWORD, disabled: true }, [Validators.minLength(8)]],
       planId: [data?.planId ?? 1, [Validators.required, Validators.max(3)]]
     });
+    this._initialValues.set(this._form.getRawValue());
   }  
   get form(): FormGroup {
     return this._form;
@@ -79,22 +87,19 @@ export class OwnerForm implements OnDestroy {
     this.loading.set(true);
     this.ownerService.create(this.form.getRawValue() as Owner).pipe(
       takeUntil(this.unsubscribe$),
-      finalize(() => {
-        this.form.reset();
-        this.loading.set(false);
-      })
+      finalize(() => this.loading.set(false))
     ).subscribe(() => {
       this.messageService.add({
         severity: 'success',
         summary: 'Création réussie',
         detail: 'Le propriétaire a été créé avec succès.'
       });
-      this.onCloseEmitter.emit();
+      this.handleClose();
     });
   }
 
   handleClose(): void {
-    this.form.reset();
+    this.form.reset(this._initialValues());
     this.onCloseEmitter.emit();
   }
 }

@@ -1,56 +1,116 @@
-<p-drawer [(visible)]="open" [dismissible]="false" position="right" [header]="isUpdate() ? 'Modification' : 'Nouveau livreur'" (onHide)="handleClose()" styleClass="!w-[30rem]">
+<p-drawer [(visible)]="open" [dismissible]="false" position="right" [header]="isUpdate() ? 'Modification' : 'Nouveau livreur'" (onHide)="handleClose()" styleClass="!w-[35rem]">
     <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="h-full">
-        <div class="flex flex-col justify-between h-full">
-            <div class="flex flex-col gap-4">
-                <div class="flex items-center gap-3 w-full">
-                    <div class="flex flex-col gap-1 w-full">
-                        <label for="name">Nom</label>
-                        <input type="text" pInputText pSize="small" id="name" formControlName="name" [invalid]="form.get('name')?.invalid && (form.get('name')?.touched || form.get('name')?.dirty)" required>
-                        @if (form.get('name')?.invalid && (form.get('name')?.touched || form.get('name')?.dirty)) {
-                            <p-message severity="error" size="small" variant="simple">Nom requis.</p-message>
+        <div class="flex flex-col justify-between gap-2 h-full">
+            <div class="flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
+                <p-fieldset legend="Informations générales">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-baseline gap-3">
+                            <div class="flex flex-col gap-1">
+                                <label for="gender">Civilité</label>
+                                <p-select [options]="genderOptions" formControlName="gender" size="small" optionLabel="label" optionValue="value" [invalid]="form.get('gender')?.invalid && (form.get('gender')?.touched || form.get('gender')?.dirty)" required />
+                                @if (form.get('gender')?.invalid && (form.get('gender')?.touched || form.get('gender')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Sexe requis.</p-message>
+                                }
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label for="name">Nom</label>
+                                <input type="text" pInputText pSize="small" id="name" formControlName="name" fluid [invalid]="form.get('name')?.invalid && (form.get('name')?.touched || form.get('name')?.dirty)" required>
+                                @if (form.get('name')?.invalid && (form.get('name')?.touched || form.get('name')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Nom requis.</p-message>
+                                }
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label for="firstName">Prénom</label>
+                                <input type="text" pInputText pSize="small" id="firstName" formControlName="firstName" fluid [invalid]="form.get('firstName')?.invalid && (form.get('firstName')?.touched || form.get('firstName')?.dirty)" required>
+                                @if (form.get('firstName')?.invalid && (form.get('firstName')?.touched || form.get('firstName')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Prénom requis.</p-message>
+                                }
+                            </div>
+                        </div>
+                        <div class="flex items-baseline gap-3">
+                            <div class="flex flex-col gap-1 w-full">
+                                <label for="birthday">Date de naissance</label>
+                                <p-datepicker 
+                                    formControlName="birthday" 
+                                    size="small" 
+                                    dateFormat="dd MM yy"
+                                    [showClear]="true" 
+                                    [iconDisplay]="'input'" 
+                                    [showIcon]="true" 
+                                    inputId="birthday" 
+                                    [invalid]="form.get('birthday')?.invalid && (form.get('birthday')?.touched || form.get('birthday')?.dirty)"
+                                />
+                                @if (form.get('birthday')?.invalid && (form.get('birthday')?.touched || form.get('birthday')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Date de naissance requise.</p-message>
+                                }
+                            </div>
+                            <div class="flex flex-col gap-1 w-full">
+                                <label for="address">Adresse</label>
+                                <input type="text" pInputText pSize="small" id="address" formControlName="address" [invalid]="form.get('address')?.invalid && (form.get('address')?.touched || form.get('address')?.dirty)" required>
+                                @if (form.get('address')?.invalid && (form.get('address')?.touched || form.get('address')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Adresse requis.</p-message>
+                                }
+                            </div>
+                        </div>
+                        <div class="flex items-baseline gap-3">
+                            <div class="flex flex-col gap-1 w-full">
+                                <label for="email">Email</label>
+                                <p-iconfield>
+                                    <p-inputicon class="pi pi-envelope" />
+                                    <input type="text" pInputText pSize="small" id="email" formControlName="email" fluid [invalid]="form.get('email')?.invalid && (form.get('email')?.touched || form.get('email')?.dirty)" />
+                                </p-iconfield>
+                                @if (form.get('email')?.invalid && (form.get('email')?.touched || form.get('email')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Email requis.</p-message>
+                                }
+                            </div>
+                            <div class="flex flex-col gap-1 w-full">
+                                <label for="phone">Numéro téléphone</label>
+                                <p-iconfield>
+                                    <p-inputicon class="pi pi-phone" />
+                                    <input pInputText pInputMask="+261 99 99 999 99" pSize="small" [autocomplete]="false" id="phone" formControlName="phone" fluid [invalid]="form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)" required />
+                                </p-iconfield>
+                                @if (form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Numéro téléphone requis.</p-message>
+                                }
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label for="transport">Moyen de transport</label>
+                            <p-select [options]="transportOptions" formControlName="transport" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('transport')?.invalid && (form.get('transport')?.touched || form.get('transport')?.dirty)" required />
+                            @if (form.get('transport')?.invalid && (form.get('transport')?.touched || form.get('transport')?.dirty)) {
+                                <p-message severity="error" size="small" variant="simple">Moyen de transport requis.</p-message>
+                            }
+                        </div>
+                    </div>
+                </p-fieldset>
+                <p-fieldset legend="Documents">
+                    <div class="flex flex-col gap-4">
+                        <p-fileupload name="documents" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onUpload($event)" [multiple]="true" accept="image/*" maxFileSize="1000000" mode="advanced">
+                            <ng-template #header let-chooseCallback="chooseCallback">
+                                <div class="flex items-center justify-center w-full gap-2">
+                                    <p-button label="Ajouter des fichiers" (onClick)="chooseCallback($event, chooseCallback)" icon="pi pi-plus" size="small" severity="secondary" />
+                                </div>
+                            </ng-template>
+                            <ng-template #empty>
+                                <div class="h-10 flex items-center justify-center w-full">
+                                    <p class="text-gray-400">Glissez-déposez vos documents ici ou cliquez sur ajouter.</p>
+                                </div>
+                            </ng-template>
+                        </p-fileupload>
+                    </div>
+                </p-fieldset>
+                <p-fieldset legend="Compte">
+                    <div class="flex flex-col gap-1">
+                        <label for="password">Mot de passe <small class="text-gray-500">(par défaut)</small></label>
+                        <p-iconfield>
+                            <p-inputicon class="pi pi-lock" />
+                            <input type="text" pInputText pSize="small" id="password" class="w-full" formControlName="password" [invalid]="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)" required />
+                        </p-iconfield>
+                        @if (form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Mot de passe requis.</p-message>
                         }
                     </div>
-                    <div class="flex flex-col gap-1 w-full">
-                        <label for="firstName">Prénom</label>
-                        <input type="text" pInputText pSize="small" id="firstName" formControlName="firstName" [invalid]="form.get('firstName')?.invalid && (form.get('firstName')?.touched || form.get('firstName')?.dirty)" required>
-                        @if (form.get('firstName')?.invalid && (form.get('firstName')?.touched || form.get('firstName')?.dirty)) {
-                            <p-message severity="error" size="small" variant="simple">Prénom requis.</p-message>
-                        }
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 w-full">
-                    <div class="flex flex-col gap-1 w-full">
-                        <label for="birthday">Date de naissance</label>
-                        <p-datepicker formControlName="selectedDate" size="small" [invalid]="form.get('birthday')?.invalid && (form.get('birthday')?.touched || form.get('birthday')?.dirty)" />
-                        @if (form.get('birthday')?.invalid && (form.get('birthday')?.touched || form.get('birthday')?.dirty)) {
-                            <p-message severity="error" size="small" variant="simple">Date de naissance requise.</p-message>
-                        }
-                    </div>
-                    <div class="flex flex-col gap-1 w-full">
-                        <label for="address">Adresse</label>
-                        <input type="text" pInputText pSize="small" id="address" formControlName="address" [invalid]="form.get('address')?.invalid && (form.get('address')?.touched || form.get('address')?.dirty)" required>
-                        @if (form.get('address')?.invalid && (form.get('address')?.touched || form.get('address')?.dirty)) {
-                            <p-message severity="error" size="small" variant="simple">Adresse requis.</p-message>
-                        }
-                    </div>
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label for="password">Mot de passe <small class="text-gray-500">(par défaut)</small></label>
-                    <p-iconfield>
-                        <p-inputicon class="pi pi-lock" />
-                        <input type="text" pInputText pSize="small" id="password" class="w-full" formControlName="password" [invalid]="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)" required />
-                    </p-iconfield>
-                    @if (form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)) {
-                        <p-message severity="error" size="small" variant="simple">Mot de passe requis.</p-message>
-                    }
-                </div>
-                <div class="flex flex-col gap-1">
-                    <label for="planId">Moyen de transport</label>
-                    <p-select [options]="transportOptions" formControlName="planId" size="small" optionLabel="label" optionValue="id"[invalid]="form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)" required />
-                    @if (form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)) {
-                        <p-message severity="error" size="small" variant="simple">Mot de passe requis.</p-message>
-                    }
-                </div>
+                </p-fieldset>
             </div>
 
             <div class="flex items-center justify-end gap-3">

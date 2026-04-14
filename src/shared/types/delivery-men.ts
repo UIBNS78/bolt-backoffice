@@ -25,10 +25,26 @@ export type DeliveryMan =
     {
         id: number;
         userId: number;
-        birthday: string;
+        birthday: Date;
         address: string;
         totalPackages: number;
         transport: DeliveryManTransport;
         isActive: boolean;
     } &
     Pick<LoadingState, "isUpdating" | "isDeleting">
+
+export type DeliveryManDetailsData = {
+    delivered: {
+        total: number;
+        totalPercent: number;
+        price: number;
+        pricePercent: number;
+    };
+    chart: any;
+}
+    
+export type DeliveryManDetails = {
+    about: DeliveryMan;
+    data: DeliveryManDetailsData;
+    history: any;
+}

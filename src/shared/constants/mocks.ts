@@ -4,6 +4,7 @@ export const mockUser: User = {
     id: 1,
     name: "RAZAFINDRAIBE",
     firstName: "Lova",
+    gender: "male",
     email: "lova.razaf@example.mg",
     phone: "+261 34 00 000 00",
     profilePicture: "https://api.boltmg.mg/uploads/profiles/lova_1.jpg", // Optionnel

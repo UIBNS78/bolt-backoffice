@@ -70,7 +70,7 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
     this._form = this.formBuilder.group({
       id: data?.id ?? null,
       type: [data?.type ?? packageTypeObj.inCity, [Validators.required, Validators.min(1), Validators.max(2)]],
-      gender: [data?.customer.gender ?? GENDER.MAN, [Validators.required, Validators.min(1), Validators.max(2)]],
+      gender: [data?.customer.gender ?? GENDER.MAN, [Validators.required, Validators.minLength(4), Validators.maxLength(6)]],
       customer: [data?.customer.name ?? '', [Validators.required, Validators.minLength(3)]],
       phone: [data?.customer.phone ?? '', [Validators.required]],
       location: 

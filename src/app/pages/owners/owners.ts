@@ -22,6 +22,7 @@ import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-
 import { MessageService } from 'primeng/api';
 import { OwnerForm } from './components/owner-form/owner-form';
 import { OwnerCounts } from './components/owner-counts/owner-counts';
+import { CivilityPipe } from '@shared/pipes/civility-pipe';
 
 @Component({
   selector: 'app-owners',
@@ -40,7 +41,8 @@ import { OwnerCounts } from './components/owner-counts/owner-counts';
     OwnersPlaceholder,
     OwnerForm,
     OwnerCounts,
-    TooltipModule
+    TooltipModule,
+    CivilityPipe
   ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',
