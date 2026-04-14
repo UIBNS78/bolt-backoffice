@@ -1,8 +1,8 @@
 import { NgClass } from '@angular/common';
 import { Component, computed, EventEmitter, input, InputSignal, Output, Signal } from '@angular/core';
-import { PackageStatusIconPipe } from '@shared/pipes/package-status-icon-pipe';
-import { PackageStatusPipe } from '@shared/pipes/package-status-pipe';
-import { PackageStatusSeverityPipe } from '@shared/pipes/package-status-severity-pipe';
+import { PackageStatusIconPipe } from '@shared/pipes/package-pipes/package-status-icon-pipe';
+import { PackageStatusPipe } from '@shared/pipes/package-pipes/package-status-pipe';
+import { PackageStatusSeverityPipe } from '@shared/pipes/package-pipes/package-status-severity-pipe';
 import { Package, PACKAGE_STATUS, PackageStatus } from '@shared/types/package';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';

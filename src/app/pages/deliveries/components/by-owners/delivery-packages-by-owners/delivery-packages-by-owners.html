@@ -4,7 +4,7 @@
             <h1 class="text-gray-400">
                 Liste des colis
             </h1>
-            @if (deliveryId()) {
+            @if (delivery()) {
                 <div class="flex items-center gap-2">
                     <p-tag [value]="packages().filter(p => p.status === 1).length + ' colis en cours'" severity="secondary" [rounded]="true" icon="pi pi-bullseye" />
                     <p-tag [value]="packages().filter(p => p.status === 2).length + ' colis livrés'" severity="secondary" [rounded]="true" icon="pi pi-check" />
@@ -14,8 +14,8 @@
             }
         </div>
         <div class="flex justify-end gap-3">
-            <p-button (click)="handleOpenDeliveryForm()" icon="pi pi-pencil" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Modifier la livraison" tooltipPosition="top" />
-            <p-button (click)="handleOpenPackageForm()" icon="pi pi-plus" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !deliveryId()" pTooltip="Ajouter un colis" tooltipPosition="top" />
+            <p-button (click)="handleOpenDeliveryForm()" icon="pi pi-pencil" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Modifier la livraison" tooltipPosition="top" />
+            <p-button (click)="handleOpenPackageForm()" icon="pi pi-plus" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Ajouter un colis" tooltipPosition="top" />
             <p-divider layout="vertical" />
             <p-button icon="pi pi-window-maximize" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || packages().length <= 0" pTooltip="Agrandir la vue" tooltipPosition="top" />
             <app-delivery-package-filter-button 
@@ -39,7 +39,7 @@
             <span></span>
         } @else {
             @defer (on idle) {
-                @if (deliveryId()) {
+                @if (delivery()?.id) {
                     <p-table [value]="filteredPackages()" [scrollable]="true" scrollHeight="580px" [tableStyle]="{ 'min-width': '50rem' }">
                         <ng-template #header>
                             <tr>
@@ -118,5 +118,5 @@
     </div>
 </div>
 
-<app-delivery-package-form [open]="showPackageForm()" [deliveryId]="deliveryId()" [pkg]="selectedPackage()" (onCloseEmitter)="handleOpenPackageForm()"></app-delivery-package-form>
-<app-delivery-form-drawer [open]="showDeliveryForm()" (onCloseEmitter)="handleOpenDeliveryForm()"></app-delivery-form-drawer>
+<app-delivery-package-form [open]="showPackageForm()" [deliveryId]="delivery()?.id" [pkg]="selectedPackage()" (onCloseEmitter)="handleOpenPackageForm()"></app-delivery-package-form>
+<app-delivery-form-drawer [open]="showDeliveryForm()" [delivery]="delivery()" (onCloseEmitter)="handleOpenDeliveryForm()"></app-delivery-form-drawer>

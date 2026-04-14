@@ -2,26 +2,25 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { PackageStatus } from '@shared/types/package';
 
 @Pipe({
-  name: 'packageStatusIcon',
+  name: 'packageStatus',
 })
-export class PackageStatusIconPipe implements PipeTransform {
+export class PackageStatusPipe implements PipeTransform {
   transform(value: PackageStatus): string {
     switch(value) {
       case 1:
-        return "pi pi-bullseye";
+        return "En cours";
 
       case 2:
-        return "pi pi-check";
+        return "Livré";
 
       case 3:
-        return "pi pi-refresh";
+        return "Reporté";
 
       case 4:
-        return "pi pi-times";
+        return "Annulé";
 
       default:
-        return "pi pi-question";
-
+        return "Inconnue";
     }
   }
 }

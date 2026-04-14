@@ -1,3 +1,100 @@
 <p-drawer [(visible)]="open" [dismissible]="false" position="right" header="Modification" (onHide)="handleClose()" styleClass="!w-[30rem]">
-    
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="h-full">
+        <div class="flex flex-col justify-between gap-2 h-full">
+            <div class="flex flex-col gap-2 overflow-y-auto overflow-x-hidden flex-1">
+                <p-fieldset legend="A propos du propriétaire">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex flex-col gap-1">
+                            <label for="ownerId">Propriétaire</label>
+                            <p-select [options]="ownersOptions()" formControlName="ownerId" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('ownerId')?.invalid && (form.get('ownerId')?.touched || form.get('ownerId')?.dirty)" required />
+                            @if (form.get('ownerId')?.invalid && (form.get('ownerId')?.touched || form.get('ownerId')?.dirty)) {
+                                <p-message severity="error" size="small" variant="simple">Propriétaire requis.</p-message>
+                            }
+                        </div>
+                        <div class="flex items-baseline gap-3">
+                            <div class="flex flex-col gap-1">
+                                <label for="payment">Versement (Ariary)</label>
+                                <p-inputnumber inputId="integeronly" id="payment" size="small" formControlName="payment" [invalid]="form.get('payment')?.invalid && (form.get('payment')?.touched || form.get('payment')?.dirty)" required />
+                                @if (form.get('payment')?.invalid && (form.get('payment')?.touched || form.get('payment')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Versement requis.</p-message>
+                                }
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label for="packageNumber">Nombre de colis</label>
+                                <p-inputnumber inputId="integeronly" id="packageNumber" size="small" formControlName="packageNumber" [invalid]="form.get('packageNumber')?.invalid && (form.get('packageNumber')?.touched || form.get('packageNumber')?.dirty)" required />
+                                @if (form.get('packageNumber')?.invalid && (form.get('packageNumber')?.touched || form.get('packageNumber')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Nombre de colis requis.</p-message>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </p-fieldset>
+                <p-fieldset legend="A propos de la livraison">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex flex-col gap-1">
+                            <label for="deliveryManId">Récupérateur (Livreur)</label>
+                            <p-select [options]="menOptions()" formControlName="deliveryManId" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('deliveryManId')?.invalid && (form.get('deliveryManId')?.touched || form.get('deliveryManId')?.dirty)" required />
+                            @if (form.get('deliveryManId')?.invalid && (form.get('deliveryManId')?.touched || form.get('deliveryManId')?.dirty)) {
+                                <p-message severity="error" size="small" variant="simple">Récupérateur requis.</p-message>
+                            }
+                        </div>
+                        <div class="flex flex-col gap-1 w-full">
+                            <label for="deliveryDate">Date de livraison</label>
+                            <p-datepicker 
+                                formControlName="deliveryDate" 
+                                size="small" 
+                                dateFormat="dd MM yy"
+                                [showClear]="true" 
+                                [iconDisplay]="'input'" 
+                                [showIcon]="true" 
+                                inputId="deliveryDate" 
+                                [invalid]="form.get('deliveryDate')?.invalid && (form.get('deliveryDate')?.touched || form.get('deliveryDate')?.dirty)"
+                            />
+                            @if (form.get('deliveryDate')?.invalid && (form.get('deliveryDate')?.touched || form.get('deliveryDate')?.dirty)) {
+                                <p-message severity="error" size="small" variant="simple">Date de livraison requise.</p-message>
+                            }
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex flex-col">
+                                <p class="font-bold">Statut de la livraison</p>
+                                <p class="text-gray-400">Choisissez le statut da livraison.</p>
+                            </div>
+                            <div>
+                                <p-select [options]="deliveryStatusOptions" formControlName="status" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('status')?.invalid && (form.get('status')?.touched || form.get('status')?.dirty)" required>
+                                    <ng-template #selectedItem let-selectedStatus>
+                                        @if (selectedStatus) {
+                                            <div class="flex items-center gap-2">
+                                                <i [ngClass]="selectedStatus.icon" style="font-size: 0.8rem;"></i>
+                                                <p style="font-size: 0.8rem;">{{ selectedStatus.label }}</p>
+                                            </div>
+                                        }
+                                    </ng-template>
+                                    <ng-template let-status #item>
+                                        <div class="flex items-center gap-2">
+                                            <i [ngClass]="status.icon"></i>
+                                            <p>{{ status.label }}</p>
+                                        </div>
+                                    </ng-template>
+                                </p-select>
+                                @if (form.get('status')?.invalid && (form.get('status')?.touched || form.get('status')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Statut requis.</p-message>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </p-fieldset>
+            </div>
+            <div class="flex items-center justify-end gap-3">
+                <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" [disabled]="loading()" />
+                <p-button 
+                    type="submit" 
+                    [label]="loading() ? 'Modification' : 'Modifier'" 
+                    severity="contrast" 
+                    size="small" 
+                    [loading]="loading()" 
+                    [disabled]="loading()"
+                />
+            </div>
+        </div>
+    </form>
 </p-drawer>

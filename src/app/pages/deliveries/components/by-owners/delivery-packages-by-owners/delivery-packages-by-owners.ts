@@ -23,6 +23,7 @@ import { DeliveryPackageForm } from '../../delivery-package-form/delivery-packag
 import { DeliveryFormDrawer } from '../../delivery-form-drawer/delivery-form-drawer';
 import { NgClass } from '@angular/common';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
+import { Delivery } from '@shared/types/delivery';
 
 @Component({
   selector: 'app-delivery-packages-by-owners',
@@ -61,7 +62,7 @@ export class DeliveryPackagesByOwners implements OnDestroy {
   protected selectedPackage: WritableSignal<Package | null> = signal(null);
   protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
   protected hasFilter: WritableSignal<boolean> = signal(false);
-  deliveryId: InputSignal<number | null> = input<number | null>(null);
+  delivery: InputSignal<Delivery | null> = input<Delivery | null>(null);
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected packages: WritableSignal<Package[]> = signal([]);
   protected searchValue: Signal<string> = toSignal(
@@ -83,7 +84,7 @@ export class DeliveryPackagesByOwners implements OnDestroy {
 
   constructor() {
     effect(() => {
-      if (!this.deliveryId()) {
+      if (!this.delivery()?.id) {
         this.isLoading.set(false);
         this.packages.set([]);
         this.searchControl.disable();
@@ -101,7 +102,7 @@ export class DeliveryPackagesByOwners implements OnDestroy {
   }
 
   loadData(): void {
-    this.deliveriesService.getPackagesByOwnersByDeliveryId(this.deliveryId()!).pipe(
+    this.deliveriesService.getPackagesByOwnersByDeliveryId(this.delivery()!.id).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe(packages => {

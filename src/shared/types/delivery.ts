@@ -35,3 +35,10 @@ export type DeliveryByDate = {
     date: Date;
     deliveries: Delivery[];
 }
+
+export type DeliveryForm = 
+    Omit<Delivery, "owner" | "deliveryMan" | "createdAt"> & {
+        id: number;
+        ownerId: number;
+        deliveryManId: number;
+    }
