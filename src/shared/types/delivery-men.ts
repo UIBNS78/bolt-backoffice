@@ -32,3 +32,19 @@ export type DeliveryMan =
         isActive: boolean;
     } &
     Pick<LoadingState, "isUpdating" | "isDeleting">
+
+export type DeliveryManDetailsData = {
+    delivered: {
+        total: number;
+        totalPercent: number;
+        price: number;
+        pricePercent: number;
+    };
+    chart: any;
+}
+    
+export type DeliveryManDetails = {
+    about: DeliveryMan;
+    data: DeliveryManDetailsData;
+    history: any;
+}

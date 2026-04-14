@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AvatarModule } from 'primeng/avatar';
 import { DrawerModule } from 'primeng/drawer';
@@ -6,6 +6,8 @@ import { TabsModule } from 'primeng/tabs';
 import { DeliveryManInformations } from './delivery-man-informations/delivery-man-informations';
 import { DeliveryManData } from './delivery-man-data/delivery-man-data';
 import { DeliveryManHistory } from './delivery-man-history/delivery-man-history';
+import { Subject } from 'rxjs';
+import { DeliveryMenService } from '../../delivery-men-service';
 
 @Component({
   selector: 'app-delivery-man-details',
@@ -21,18 +23,34 @@ import { DeliveryManHistory } from './delivery-man-history/delivery-man-history'
   templateUrl: './delivery-man-details.html',
   styleUrl: './delivery-man-details.css',
 })
-export class DeliveryManDetails {
-  
+export class DeliveryManDetails implements OnInit, OnDestroy {
   @Output() onCloseEmitter: EventEmitter<void> = new EventEmitter<void>();
   @Input() open: boolean = false;
   @Input() deliveryManId: number | null = null;
   
+  // services
+  private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  // vars
+  private unsubscribe$: Subject<void> = new Subject<void>();
   protected currentTab: WritableSignal<number> = signal(0);
   protected tabs: { id: number; label: string; icon: string }[] = [
     { id: 0, label: "A propos", icon: "pi pi-info-circle" },
     { id: 1, label: "Données", icon: "pi pi-chart-line" },
     { id: 2, label: "Historique", icon: "pi pi-history" },
   ];
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+  
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  loadData(): void {
+    
+  }
     
   handleClose(): void {
     this.onCloseEmitter.emit();
