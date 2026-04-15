@@ -40,7 +40,7 @@
         </div>
         <div class="flex flex-col gap-2 border rounded-xl border-gray-200 py-3 px-4 flex-3">
             @if (firstTab.active()) {
-                <app-delivery-packages-by-owners [deliveryId]="selectedDeliveryId()"></app-delivery-packages-by-owners>
+                <app-delivery-packages-by-owners [delivery]="selectedDelivery()" (loadDeliveryEmitter)="handleReloadDeliveries()"></app-delivery-packages-by-owners>
             }
             @if (secondTab.active()) {
                 <app-delivery-packages-by-men></app-delivery-packages-by-men>

@@ -8,7 +8,7 @@
             } @else {
                 <i [ngClass]="[package().status | packageStatusIcon]" style="font-size: 0.7rem;"></i>
             }
-            <small>{{ package().status | packageStatus }}</small>
+            <small style="font-size: 0.6rem;">{{ package().status | packageStatus }}</small>
         </div>
         <div class="flex items-center justify-center">
             <i class="pi pi-sort-down-fill" style="font-size: 0.6rem;"></i>

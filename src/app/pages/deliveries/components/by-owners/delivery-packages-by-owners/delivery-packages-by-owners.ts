@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, InputSignal, OnDestroy, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, input, InputSignal, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { Package, PackageStatus } from '@shared/types/package';
 import { DeliveriesService } from 'app/pages/deliveries/deliveries-service';
 import { ButtonModule } from 'primeng/button';
@@ -23,6 +23,7 @@ import { DeliveryPackageForm } from '../../delivery-package-form/delivery-packag
 import { DeliveryFormDrawer } from '../../delivery-form-drawer/delivery-form-drawer';
 import { NgClass } from '@angular/common';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
+import { Delivery } from '@shared/types/delivery';
 
 @Component({
   selector: 'app-delivery-packages-by-owners',
@@ -55,13 +56,14 @@ export class DeliveryPackagesByOwners implements OnDestroy {
   private messageService: MessageService = inject(MessageService);
 
   // vars
+  @Output() loadDeliveryEmitter: EventEmitter<void> = new EventEmitter<void>();
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   protected showPackageForm: WritableSignal<boolean> = signal(false);
   protected showDeliveryForm: WritableSignal<boolean> = signal(false);
   protected selectedPackage: WritableSignal<Package | null> = signal(null);
   protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
   protected hasFilter: WritableSignal<boolean> = signal(false);
-  deliveryId: InputSignal<number | null> = input<number | null>(null);
+  delivery: InputSignal<Delivery | null> = input<Delivery | null>(null);
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected packages: WritableSignal<Package[]> = signal([]);
   protected searchValue: Signal<string> = toSignal(
@@ -83,7 +85,7 @@ export class DeliveryPackagesByOwners implements OnDestroy {
 
   constructor() {
     effect(() => {
-      if (!this.deliveryId()) {
+      if (!this.delivery()?.id) {
         this.isLoading.set(false);
         this.packages.set([]);
         this.searchControl.disable();
@@ -101,7 +103,7 @@ export class DeliveryPackagesByOwners implements OnDestroy {
   }
 
   loadData(): void {
-    this.deliveriesService.getPackagesByOwnersByDeliveryId(this.deliveryId()!).pipe(
+    this.deliveriesService.getPackagesByOwnersByDeliveryId(this.delivery()!.id).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe(packages => {
@@ -113,15 +115,22 @@ export class DeliveryPackagesByOwners implements OnDestroy {
     });
   }
 
-  handleOpenDeliveryForm(): void {
-    this.showDeliveryForm.update(prev => !prev);
+  handleOpenDeliveryForm(isCancel: boolean = false): void {
+    this.showDeliveryForm.update(prev => {
+      if (prev && !isCancel) {
+        this.loadDeliveryEmitter.emit();
+      }
+      
+      return !prev;
+    });
   }
 
-  handleOpenPackageForm(pkg: Package | null = null): void {
+  handleOpenPackageForm(pkg: Package | null = null, isCancel: boolean = false): void {
     this.selectedPackage.set(pkg);
     this.showPackageForm.update(prev => {
-      if (prev) {
+      if (prev && !isCancel) {
         this.loadData();
+        this.loadDeliveryEmitter.emit();
       };
 
       return !prev;

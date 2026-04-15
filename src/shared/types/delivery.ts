@@ -18,11 +18,12 @@ export type DeliveryStatus = ValueOf<typeof deliveryStatusObj>;
 
 export type DeliveryOwner = Pick<Owner, "id" | "name" | "firstName" | "gender" | "commercialName" | "profilePicture">
 
-export type DeiveryRecuperator = Pick<DeliveryMan, "id" | "name" | "firstName">;
+export type DeiveryRecuperator = Pick<DeliveryMan, "id" | "name" | "firstName" | "gender">;
 
 export type Delivery = {
     id: number;
     owner: DeliveryOwner;
+    recuperationPlace: string;
     packageNumber: number;
     payment: number;
     deliveryMan: DeiveryRecuperator;
@@ -35,3 +36,10 @@ export type DeliveryByDate = {
     date: Date;
     deliveries: Delivery[];
 }
+
+export type DeliveryDrawerForm = 
+    Omit<Delivery, "owner" | "deliveryMan" | "createdAt"> & {
+        id: number;
+        ownerId: number;
+        deliveryManId: number;
+    }

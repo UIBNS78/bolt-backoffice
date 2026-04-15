@@ -1,10 +1,9 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, Signal, signal, viewChild, WritableSignal } from '@angular/core';
 import { DeliveriesCount } from '../../components/deliveries-count/deliveries-count';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { DeliveryList as DeliveryListType } from '../../types/delivery-list';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { DeliveriesByOwners } from '../../components/by-owners/deliveries-by-owners/deliveries-by-owners';
@@ -12,6 +11,7 @@ import { DeliveriesByMen } from '../../components/by-men/deliveries-by-men/deliv
 import { TabsModule } from 'primeng/tabs';
 import { DeliveryPackagesByOwners } from '../../components/by-owners/delivery-packages-by-owners/delivery-packages-by-owners';
 import { DeliveryPackagesByMen } from '../../components/by-men/delivery-packages-by-men/delivery-packages-by-men';
+import { Delivery } from '@shared/types/delivery';
 
 @Component({
   selector: 'app-delivery-list',
@@ -33,19 +33,26 @@ import { DeliveryPackagesByMen } from '../../components/by-men/delivery-packages
   styleUrl: './delivery-list.css',
 })
 export class DeliveryList {
-  protected selectedDeliveryId: WritableSignal<number | null> = signal(null); 
+  private readonly deliveryByOwnerChild: Signal<DeliveriesByOwners | undefined> = viewChild(DeliveriesByOwners);
+  private readonly deliveryByMenChild: Signal<DeliveriesByMen | undefined> = viewChild(DeliveriesByMen);
+
+  protected selectedDelivery: WritableSignal<Delivery | null> = signal(null); 
   protected tabs: { id: number; label: string; icon: string }[] = [
     { id: 0, label: "Propriétaires", icon: "pi pi-users" },
     { id: 1, label: "Livreurs", icon: "pi pi-truck" }
   ];
 
-  handleOnSelectDelivery(deliveryId: number): void {
-    this.selectedDeliveryId.set(deliveryId);
+  handleOnSelectDelivery(delivery: Delivery): void {
+    this.selectedDelivery.set(delivery);
+  }
+
+  handleReloadDeliveries(): void {
+    this.deliveryByOwnerChild()!.loadData();
   }
   
   handleOpenForm(): void {}
 
   onTabChange(): void {
-    this.selectedDeliveryId.set(null);
+    this.selectedDelivery.set(null);
   }
 }

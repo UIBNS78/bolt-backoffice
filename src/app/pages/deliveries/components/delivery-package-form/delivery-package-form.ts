@@ -15,9 +15,9 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { GENDER } from '@shared/types/user';
 import { DeliveryPricesService } from 'app/pages/delivery-prices/delivery-prices-service';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { packageTypeOptions as packageTypeOpt } from '@shared/constants/delivery-type';
+import { packageTypeOptions as packageTypeOpt } from '@shared/constants/package';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
-import { packageStatusOptions as packageStatusOpt } from '@shared/constants/package-status';
+import { packageStatusOptions as packageStatusOpt } from '@shared/constants/package';
 import { NgClass } from '@angular/common';
 import { InputMaskModule } from 'primeng/inputmask';
 
@@ -60,9 +60,9 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
   protected locationCityOptions: WritableSignal<SelectItemGroup[]> = signal([]);
   protected locationCooperativeOptions: WritableSignal<SelectItemGroup[]> = signal([]);
 
-  @Output() onCloseEmitter: EventEmitter<void> = new EventEmitter<void>();
+  @Output() onCloseEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() open: boolean = false;
-  @Input() deliveryId: number | null = null;
+  @Input() deliveryId?: number;
   @Input() 
   set pkg(data: Package | null) {
     this.isUpdate.set(data !== null);
@@ -189,9 +189,9 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
     });
   }
 
-  handleClose(): void {
+  handleClose(isCancel: boolean = false): void {
     this.form.reset(this.initialFormValues());
-    this.onCloseEmitter.emit();
+    this.onCloseEmitter.emit(isCancel);
   }
 
   private packageTypeListener(): void {

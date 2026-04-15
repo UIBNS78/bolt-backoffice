@@ -23,9 +23,9 @@
                         <th>Nom commercial</th>
                         <th>Email</th>
                         <th>Phone</th>
-                        <th>Nombre de colis</th>
+                        <th style="text-align: center;">Nombre de colis</th>
                         <th>Date de création</th>
-                        <th class="text-center">Action</th>
+                        <th style="text-align: center;">Action</th>
                     </tr>
                 </ng-template>
                 <ng-template #body let-owner>
@@ -42,10 +42,12 @@
                         </td>
                         <td>{{ owner.email }}</td>
                         <td><p-chip [label]="'0' + (owner.phone | mask:'00 00 000 00')" icon="pi pi-phone" /></td>
-                        <td>{{ owner.totalPackages }}</td>
+                        <td style="text-align: center;">{{ owner.totalPackages }}</td>
                         <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
                         <td>
-                            <p-button (click)="handleDelete(owner)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="owner.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
+                            <div class="flex items-center justify-center">
+                                <p-button (click)="handleDelete(owner)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="owner.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
+                            </div>
                         </td>
                     </tr>
                 </ng-template>

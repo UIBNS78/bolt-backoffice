@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, inject, OnDestroy, OnInit, Output, signal, WritableSignal } from '@angular/core';
-import { DeliveryStatusSeverityPipe } from '@shared/pipes/delivery-status-severity-pipe';
-import { DeliveryStatusPipe } from '@shared/pipes/delivery-status.pipe';
+import { Component, effect, EventEmitter, inject, OnDestroy, OnInit, Output, signal, WritableSignal } from '@angular/core';
+import { DeliveryStatusSeverityPipe } from '@shared/pipes/delivery-pipes/delivery-status-severity-pipe';
+import { DeliveryStatusPipe } from '@shared/pipes/delivery-pipes/delivery-status.pipe';
 import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
 import { DeliveriesService } from 'app/pages/deliveries/deliveries-service';
 import { DeliveryList } from 'app/pages/deliveries/types/delivery-list';
@@ -15,6 +15,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveriesPlaceholder } from '../../deliveries-placeholder/deliveries-placeholder';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
+import { Delivery } from '@shared/types/delivery';
+import { DeliveryStatusIconPipe } from '@shared/pipes/delivery-pipes/delivery-status-icon-pipe';
 
 @Component({
   selector: 'app-deliveries-by-owners',
@@ -24,6 +26,7 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
     InputTextModule,
     TagModule,
     DeliveryStatusPipe,
+    DeliveryStatusIconPipe,
     DeliveryStatusSeverityPipe,
     NgClass,
     DividerModule,
@@ -43,8 +46,8 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
   private readonly deliviverisService: DeliveriesService = inject(DeliveriesService);
 
   // vars
-  @Output() onSelectEmitter: EventEmitter<number> = new EventEmitter<number>();
-  protected selectedDelivery: WritableSignal<number | null> = signal(null);
+  @Output() onSelectEmitter: EventEmitter<Delivery> = new EventEmitter<Delivery>();
+  protected selectedDelivery: WritableSignal<Delivery | null> = signal(null);
   protected first: WritableSignal<number> = signal(0);
   protected rows: WritableSignal<number> = signal(10);
   protected isLoading: WritableSignal<boolean> = signal(false);
@@ -53,14 +56,22 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
     totalItems: 0
   });
 
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+  constructor() {
+    effect(() => {
+      const newData: DeliveryList = this.data();
+      const newSelectedDelivery: Delivery | undefined = newData.deliveries.flatMap(d => d.deliveries).find(d => d.id === this.selectedDelivery()?.id);
+      if (newSelectedDelivery) this.handleSelectDelivery(newSelectedDelivery);
+    });
   }
 
   ngOnInit(): void {
     this.isLoading.set(true);
     this.loadData();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   loadData(): void {
@@ -72,8 +83,8 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
     });
   }
 
-  handleSelectDelivery(deliveryId: number): void {
-    this.selectedDelivery.set(deliveryId);
-    this.onSelectEmitter.emit(deliveryId);
+  handleSelectDelivery(delivery: Delivery): void {
+    this.selectedDelivery.set(delivery);
+    this.onSelectEmitter.emit(delivery);
   }
 }

@@ -16,28 +16,38 @@
                 </p-divider>
                 <div class="flex flex-col gap-2">
                     @for (delivery of d.deliveries; track $index) {
-                        <div (click)="handleSelectDelivery(delivery.id)" [ngClass]="['flex justify-between items-center p-2 rounded-md cursor-pointer', selectedDelivery() === delivery.id ? 'bg-blue-500' : 'bg-gray-100']">
-                            <div class="flex items-center gap-4">
-                                <i [ngClass]="['pi pi-shop', selectedDelivery() === delivery.id ? 'text-white' : 'text-blue-500']"></i>
-                                <div class="flex flex-col">
-                                    <p [ngClass]="['font-bold', selectedDelivery() === delivery.id ? 'text-white' : '']">{{ delivery.owner.commercialName }}</p>
-                                    <div class="flex items-center gap-2">
-                                        <i [ngClass]="['pi pi-user', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
-                                        <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.owner.gender | civility}} {{ delivery.owner.name }}</p>
+                        <div (click)="handleSelectDelivery(delivery)" [ngClass]="['flex justify-between items-center py-3 px-4 rounded-xl cursor-pointer', selectedDelivery()?.id === delivery.id ? 'bg-linear-to-t from-sky-500 to-indigo-500' : 'bg-gray-100']">
+                            <div class="flex flex-col gap-1 flex-1">
+                                <div class="flex items-center justify-between flex-1">
+                                    <p [ngClass]="['font-bold', selectedDelivery()?.id === delivery.id ? 'text-white' : '']" style="font-size: 0.9rem;">{{ delivery.owner.commercialName }}</p>
+                                    <div class="flex items-center gap-1">
+                                        <i [ngClass]="['pi pi-box', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
+                                        <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.packageNumber }}</p>
                                     </div>
-                                    <div class="flex items-center gap-3">
+                                </div>
+                                <div>
+                                    <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : '']">Récup. {{ delivery.deliveryMan.gender | civility}} {{ delivery.deliveryMan.firstName }}</p>
+                                    <div class="flex items-center gap-2">
+                                        <i [ngClass]="['pi pi-map-marker', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
+                                        <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']">Mandroseza</p>
+                                    </div>
+                                    <div class="flex items-center justify-between flex-1">
                                         <div class="flex items-center gap-2">
-                                            <i [ngClass]="['pi pi-wallet', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-blue-500']" style="font-size: 0.6rem;"></i>
-                                            <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-blue-500']">{{ delivery.payment.toLocaleString('fr-FR') }} Ar</p>
+                                            <i [ngClass]="['pi pi-wallet', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-blue-500']" style="font-size: 0.6rem;"></i>
+                                            <p [ngClass]="['font-bold', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-blue-500']">{{ delivery.payment.toLocaleString('fr-FR') }} Ar</p>
                                         </div>
-                                        <div class="flex items-center gap-1">
-                                            <i [ngClass]="['pi pi-box', selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
-                                            <p [ngClass]="[selectedDelivery() === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.packageNumber }}</p>
-                                        </div>
+                                        <p-tag 
+                                            [severity]="selectedDelivery()?.id === delivery.id ? 'secondary' : delivery.status | deliveryStatusSeverity" 
+                                            [rounded]="true"
+                                        >
+                                            <div class="flex items-center justify-between gap-1 cursor-pointer">
+                                                <i [ngClass]="[delivery.status | deliveryStatusIcon]" style="font-size: 0.7rem;"></i>
+                                                <small style="font-size: 0.6rem;">{{ delivery.status | deliveryStatus }}</small>
+                                            </div>
+                                        </p-tag>
                                     </div>
                                 </div>
                             </div>
-                            <p-tag [severity]="selectedDelivery() === delivery.id ? 'secondary' : delivery.status | deliveryStatusSeverity" [value]="delivery.status | deliveryStatus" [rounded]="true" />
                         </div>
                     }
                 </div>

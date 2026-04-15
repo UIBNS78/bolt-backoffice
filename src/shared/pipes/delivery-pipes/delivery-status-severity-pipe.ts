@@ -21,7 +21,6 @@ export class DeliveryStatusSeverityPipe implements PipeTransform {
 
       default:
         return "secondary";
-
     }
   }
 }
