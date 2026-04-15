@@ -49,10 +49,10 @@
                                 <th>Numéro téléphone</th>
                                 <th>Lieu de livraison</th>
                                 <th>Livreur</th>
-                                <th>Prix et frais de livraison</th>
-                                <th>Fragile</th>
-                                <th>Statut</th>
-                                <th>Action</th>
+                                <th style="text-align: end;">Prix et frais de livraison</th>
+                                <th style="text-align: center;">Fragile</th>
+                                <th style="text-align: center; min-width: 8rem;">Statut</th>
+                                <th style="text-align: center;">Action</th>
                             </tr>
                         </ng-template>
                         <ng-template #body let-package>
@@ -86,10 +86,12 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <app-delivery-package-status-editable 
-                                        [package]="package"
-                                        (onStatusChangeEmitter)="handlePackageStatus($event, package)"
-                                    ></app-delivery-package-status-editable>
+                                    <div class="flex items-center justify-center">
+                                        <app-delivery-package-status-editable 
+                                            [package]="package"
+                                            (onStatusChangeEmitter)="handlePackageStatus($event, package)"
+                                        ></app-delivery-package-status-editable>
+                                    </div>
                                 </td>
                                 <td>
                                     <div class="flex items-center gap-1">
