@@ -52,7 +52,7 @@
                                 <th style="text-align: end;">Prix et frais de livraison</th>
                                 <th style="text-align: center;">Fragile</th>
                                 <th style="text-align: center; min-width: 8rem;">Statut</th>
-                                <th style="text-align: center;">Action</th>
+                                <th style="text-align: center;">Actions</th>
                             </tr>
                         </ng-template>
                         <ng-template #body let-package>
@@ -121,5 +121,5 @@
     </div>
 </div>
 
-<app-delivery-package-form [open]="showPackageForm()" [deliveryId]="delivery()?.id" [pkg]="selectedPackage()" (onCloseEmitter)="handleOpenPackageForm()"></app-delivery-package-form>
+<app-delivery-package-form [open]="showPackageForm()" [deliveryId]="delivery()?.id" [pkg]="selectedPackage()" (onCloseEmitter)="handleOpenPackageForm(null, $event)"></app-delivery-package-form>
 <app-delivery-form-drawer [open]="showDeliveryForm()" [delivery]="delivery()" (onCloseEmitter)="handleOpenDeliveryForm($event)"></app-delivery-form-drawer>

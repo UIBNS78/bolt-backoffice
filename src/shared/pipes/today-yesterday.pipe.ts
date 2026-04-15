@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { format, isToday, isTomorrow, isValid, isYesterday } from 'date-fns';
+import { format, isToday, isTomorrow, isValid, isYesterday, toDate } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 @Pipe({
@@ -9,7 +9,7 @@ import { fr } from 'date-fns/locale';
 export class TodayYesterdayTomorrowPipe implements PipeTransform {
 
   transform(value: string | Date, dateFormat: string, time?: "H:mm:ss" | "H:mm"): string {
-    const date: Date = typeof value === 'string' ? new Date(value) : value;
+    const date: Date = typeof value === 'string' ? toDate(value) : value;
     if (typeof value === 'string' && !isValid(date)) {
       return value;
     }

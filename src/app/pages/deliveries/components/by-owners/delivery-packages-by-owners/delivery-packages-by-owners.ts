@@ -125,11 +125,12 @@ export class DeliveryPackagesByOwners implements OnDestroy {
     });
   }
 
-  handleOpenPackageForm(pkg: Package | null = null): void {
+  handleOpenPackageForm(pkg: Package | null = null, isCancel: boolean = false): void {
     this.selectedPackage.set(pkg);
     this.showPackageForm.update(prev => {
-      if (prev) {
+      if (prev && !isCancel) {
         this.loadData();
+        this.loadDeliveryEmitter.emit();
       };
 
       return !prev;

@@ -60,7 +60,7 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
   protected locationCityOptions: WritableSignal<SelectItemGroup[]> = signal([]);
   protected locationCooperativeOptions: WritableSignal<SelectItemGroup[]> = signal([]);
 
-  @Output() onCloseEmitter: EventEmitter<void> = new EventEmitter<void>();
+  @Output() onCloseEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() open: boolean = false;
   @Input() deliveryId?: number;
   @Input() 
@@ -189,9 +189,9 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
     });
   }
 
-  handleClose(): void {
+  handleClose(isCancel: boolean = false): void {
     this.form.reset(this.initialFormValues());
-    this.onCloseEmitter.emit();
+    this.onCloseEmitter.emit(isCancel);
   }
 
   private packageTypeListener(): void {
