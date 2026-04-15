@@ -18,6 +18,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { deliveryStatusOptions as deliveryStatusOpt } from '@shared/constants/delivery';
 import { NgClass } from '@angular/common';
 import { format } from 'date-fns';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-delivery-form-drawer',
@@ -29,6 +30,7 @@ import { format } from 'date-fns';
     MessageModule,
     SelectModule,
     InputNumberModule,
+    InputTextModule,
     DatePickerModule,
     NgClass
   ],
@@ -48,6 +50,7 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
   private _form: FormGroup = this.formBuilder.group({
     id: null,
     ownerId: [{ value: null, disabled: true }, [Validators.required, Validators.min(0)]],
+    recuperationPlace: [null, [Validators.required]],
     packageNumber: [{ value: null, disabled: true }, [Validators.required, Validators.min(1)]],
     payment: [null, [Validators.required, Validators.min(0)]],
     deliveryManId: [{ value: null, disabled: true }, [Validators.required, Validators.min(0)]],
@@ -71,6 +74,7 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
     this._form.patchValue({
       id: data.id,
       ownerId: data.owner.id,
+      recuperationPlace: data.recuperationPlace,
       packageNumber: data.packageNumber,
       payment: data.payment,
       deliveryManId: data.deliveryMan.id,
@@ -116,7 +120,10 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
     }
 
     this.loading.set(true);
-    this.deliveriesService.update(this.form.getRawValue() as DeliveryDrawerForm).pipe(
+    this.deliveriesService.update({
+      ...this.form.getRawValue(),
+      deliveryDate: new Date(this.form.get('deliveryDate')!.value)
+    } as DeliveryDrawerForm).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(() => {

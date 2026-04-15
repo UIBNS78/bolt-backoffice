@@ -11,6 +11,13 @@
                                 <p-message severity="error" size="small" variant="simple">Propriétaire requis.</p-message>
                             }
                         </div>
+                        <div class="flex flex-col gap-1">
+                                <label for="recuperationPlace">Lieu de récupération</label>
+                                <input type="text" pInputText pSize="small" id="recuperationPlace" formControlName="recuperationPlace" fluid [invalid]="form.get('recuperationPlace')?.invalid && (form.get('recuperationPlace')?.touched || form.get('recuperationPlace')?.dirty)" required>
+                                @if (form.get('recuperationPlace')?.invalid && (form.get('recuperationPlace')?.touched || form.get('recuperationPlace')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Lieu de récupération requis.</p-message>
+                                }
+                            </div>
                         <div class="flex items-baseline gap-3">
                             <div class="flex flex-col gap-1">
                                 <label for="payment">Versement (Ariary)</label>
