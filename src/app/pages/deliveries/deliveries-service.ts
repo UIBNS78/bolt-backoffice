@@ -6,6 +6,7 @@ import { environment } from 'environments/environment';
 import { DeliveryCount } from './types/delivery-count';
 import { DeliveryForm } from './types/delivery-form';
 import { Package, PackageForm } from '@shared/types/package';
+import { DeliveryDrawerForm } from '@shared/types/delivery';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,7 @@ import { Package, PackageForm } from '@shared/types/package';
 export class DeliveriesService {
   private readonly http: HttpClient = inject(HttpClient);
 
+  // DELIVERIES
   getDeliveriesByOwners(pagination?: {
     itemsPerPage: number;
     page: number;
@@ -27,16 +29,24 @@ export class DeliveriesService {
     return this.http.get<DeliveryList>(`${environment.apiURL}/deliveries/all-by-owners`, { params });
   }
 
-  getPackagesByOwnersByDeliveryId(deliveryId: number): Observable<Package[]> {
-    return this.http.get<{ packages: Package[] }>(`${environment.apiURL}/deliveries/packages/${deliveryId}`).pipe(
-      map(data => data.packages)
-    );
+  create(data: DeliveryForm): Observable<void> {
+    return this.http.post<void>(`${environment.apiURL}/deliveries`, data);
+  }
 
+  update(data: DeliveryDrawerForm): Observable<void> {
+    return this.http.patch<void>(`${environment.apiURL}/deliveries/${data.id}`, data);
   }
 
   getDeliveryCount(): Observable<DeliveryCount> {
     return this.http.get<{ counts: DeliveryCount }>(`${environment.apiURL}/deliveries/count`).pipe(
       map(data => data.counts)
+    );
+  }
+
+  // PACKAGES
+  getPackagesByOwnersByDeliveryId(deliveryId: number): Observable<Package[]> {
+    return this.http.get<{ packages: Package[] }>(`${environment.apiURL}/deliveries/packages/${deliveryId}`).pipe(
+      map(data => data.packages)
     );
   }
 
@@ -50,9 +60,5 @@ export class DeliveriesService {
   
   deletePackage(id: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiURL}/deliveries/package/${id}`);
-  }
-
-  create(data: DeliveryForm): Observable<void> {
-    return this.http.post<void>(`${environment.apiURL}/deliveries`, data);
   }
 }

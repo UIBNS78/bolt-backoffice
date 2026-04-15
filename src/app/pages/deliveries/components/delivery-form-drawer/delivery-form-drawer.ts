@@ -4,7 +4,7 @@ import { DrawerModule } from 'primeng/drawer';
 import { DeliveriesService } from '../../deliveries-service';
 import { MessageService } from 'primeng/api';
 import { combineLatest, finalize, Subject, takeUntil } from 'rxjs';
-import { Delivery } from '@shared/types/delivery';
+import { Delivery, DeliveryDrawerForm } from '@shared/types/delivery';
 import { OwnersService } from 'app/pages/owners/owners-service';
 import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
@@ -116,8 +116,18 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
     }
 
     this.loading.set(true);
-    console.log(this.form.getRawValue());
-    this.loading.set(false);
+    this.deliveriesService.update(this.form.getRawValue() as DeliveryDrawerForm).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.loading.set(false))
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'La livraison a été mise à jour avec succès'
+      })
+      
+      this.handleClose();
+    });
   }
   
   handleClose(): void {
