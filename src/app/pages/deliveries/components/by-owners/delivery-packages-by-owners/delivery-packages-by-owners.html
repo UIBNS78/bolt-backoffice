@@ -122,4 +122,4 @@
 </div>
 
 <app-delivery-package-form [open]="showPackageForm()" [deliveryId]="delivery()?.id" [pkg]="selectedPackage()" (onCloseEmitter)="handleOpenPackageForm()"></app-delivery-package-form>
-<app-delivery-form-drawer [open]="showDeliveryForm()" [delivery]="delivery()" (onCloseEmitter)="handleOpenDeliveryForm()"></app-delivery-form-drawer>
+<app-delivery-form-drawer [open]="showDeliveryForm()" [delivery]="delivery()" (onCloseEmitter)="handleOpenDeliveryForm($event)"></app-delivery-form-drawer>

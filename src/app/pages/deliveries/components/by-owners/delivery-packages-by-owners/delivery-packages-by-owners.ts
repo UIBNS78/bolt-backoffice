@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, InputSignal, OnDestroy, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, input, InputSignal, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { Package, PackageStatus } from '@shared/types/package';
 import { DeliveriesService } from 'app/pages/deliveries/deliveries-service';
 import { ButtonModule } from 'primeng/button';
@@ -56,6 +56,7 @@ export class DeliveryPackagesByOwners implements OnDestroy {
   private messageService: MessageService = inject(MessageService);
 
   // vars
+  @Output() loadDeliveryEmitter: EventEmitter<void> = new EventEmitter<void>();
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   protected showPackageForm: WritableSignal<boolean> = signal(false);
   protected showDeliveryForm: WritableSignal<boolean> = signal(false);
@@ -114,8 +115,14 @@ export class DeliveryPackagesByOwners implements OnDestroy {
     });
   }
 
-  handleOpenDeliveryForm(): void {
-    this.showDeliveryForm.update(prev => !prev);
+  handleOpenDeliveryForm(isCancel: boolean = false): void {
+    this.showDeliveryForm.update(prev => {
+      if (prev && !isCancel) {
+        this.loadDeliveryEmitter.emit();
+      }
+      
+      return !prev;
+    });
   }
 
   handleOpenPackageForm(pkg: Package | null = null): void {

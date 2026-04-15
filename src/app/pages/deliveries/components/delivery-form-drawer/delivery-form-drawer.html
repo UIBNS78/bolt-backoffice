@@ -1,4 +1,4 @@
-<p-drawer [(visible)]="open" [dismissible]="false" position="right" header="Modification de la livraison" (onHide)="handleClose()" styleClass="!w-[30rem]">
+<p-drawer [(visible)]="open" [dismissible]="false" position="right" header="Modification de la livraison" (onHide)="handleClose(true)" styleClass="!w-[30rem]">
     <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="h-full">
         <div class="flex flex-col justify-between gap-2 h-full">
             <div class="flex flex-col gap-2 overflow-y-auto overflow-x-hidden flex-1">
@@ -92,7 +92,7 @@
                 </p-fieldset>
             </div>
             <div class="flex items-center justify-end gap-3">
-                <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" [disabled]="loading()" />
+                <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose(true)" [disabled]="loading()" />
                 <p-button 
                     type="submit" 
                     [label]="loading() ? 'Modification' : 'Modifier'" 

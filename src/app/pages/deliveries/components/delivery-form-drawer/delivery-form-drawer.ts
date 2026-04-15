@@ -63,7 +63,7 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
   protected menOptions: WritableSignal<InputSelectOptions[]> = signal([]);
   protected deliveryStatusOptions: InputSelectOptions[] = deliveryStatusOpt;
 
-  @Output() onCloseEmitter: EventEmitter<void> = new EventEmitter<void>();
+  @Output() onCloseEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() open: boolean = false;
   @Input()
   set delivery(data: Delivery | null) {
@@ -137,8 +137,8 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
     });
   }
   
-  handleClose(): void {
+  handleClose(isCancel: boolean = false): void {
     this.form.reset(this._initialValues());
-    this.onCloseEmitter.emit();
+    this.onCloseEmitter.emit(isCancel);
   }
 }

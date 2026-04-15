@@ -1,4 +1,4 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, Signal, signal, viewChild, WritableSignal } from '@angular/core';
 import { DeliveriesCount } from '../../components/deliveries-count/deliveries-count';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -33,6 +33,9 @@ import { Delivery } from '@shared/types/delivery';
   styleUrl: './delivery-list.css',
 })
 export class DeliveryList {
+  private readonly deliveryByOwnerChild: Signal<DeliveriesByOwners | undefined> = viewChild(DeliveriesByOwners);
+  private readonly deliveryByMenChild: Signal<DeliveriesByMen | undefined> = viewChild(DeliveriesByMen);
+
   protected selectedDelivery: WritableSignal<Delivery | null> = signal(null); 
   protected tabs: { id: number; label: string; icon: string }[] = [
     { id: 0, label: "Propriétaires", icon: "pi pi-users" },
@@ -41,6 +44,10 @@ export class DeliveryList {
 
   handleOnSelectDelivery(delivery: Delivery): void {
     this.selectedDelivery.set(delivery);
+  }
+
+  handleReloadDeliveries(): void {
+    this.deliveryByOwnerChild()!.loadData();
   }
   
   handleOpenForm(): void {}
