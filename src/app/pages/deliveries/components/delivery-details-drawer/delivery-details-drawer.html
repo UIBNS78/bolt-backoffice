@@ -1,3 +1,158 @@
 <p-drawer [(visible)]="open" position="right" header="Détails de la livraison" (onHide)="handleClose()" styleClass="!w-[30rem]">
-    <h1>{{ deliveryId() }}</h1>
+    <div class="flex flex-col gap-3">
+        <p-panel>
+            <ng-template #header>
+                <div class="flex items-center gap-2">
+                    <p-avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" />
+                    <div class="flex flex-col">
+                        <p class="font-bold">UIBNS78 Shop</p>
+                        <small class="text-gray-400">Propriétaire</small>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #icons>
+                <i class="pi pi-star-fill text-orange-300" pTooltip="Propriétaire premium"></i>
+            </ng-template>
+            <table class="w-full">
+                <tr class="h-8">
+                    <td class="font-bold">Responsable</td>
+                    <td>
+                        <div class="flex items-center gap-1">
+                            <p>Mr Liva</p>
+                            <p class="text-gray-400">#15</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="h-8">                            
+                    <td class="font-bold">Nom commercial</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-shop" style="font-size: 0.8rem;"></i>
+                            <p>UIBNS78 Shop</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="h-8">                            
+                    <td class="font-bold">Email</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-envelope" style="font-size: 0.8rem;"></i>
+                            <p>uibn78@gmail.com</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="h-8">
+                    <td class="font-bold">Numéro de téléphone</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-phone" style="font-size: 0.8rem;"></i>
+                            <p>+261 23 64 760 64</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="h-8">
+                    <td class="font-bold">Membre depuis</td>
+                    <td>09 Mars 2023 (il y a 3 ans)</td>
+                </tr>
+            </table>
+        </p-panel>
+        <p-panel header="Livraison">
+            <table class="w-full">
+                <tr class="h-8">
+                    <td class="font-bold">Nom de la livraison</td>
+                    <td>
+                        <div class="flex items-center gap-1">
+                            <p>Vente Flash de Noël</p>
+                            <p class="text-gray-400">#150</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="h-8">                            
+                    <td class="font-bold">Date de livraison</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-calendar" style="font-size: 0.8rem;"></i>
+                            <p>31 Avril 2025</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="h-8">                            
+                    <td class="font-bold">Lieu de récupération</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-map-marker" style="font-size: 0.8rem;"></i>
+                            <p>Antaninarenina</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="h-8">                            
+                    <td class="font-bold">Nombre de colis</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-box" style="font-size: 0.8rem;"></i>
+                            <p>31 colis</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="h-8">
+                    <td class="font-bold">Versement</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-wallet" style="font-size: 0.8rem;"></i>
+                            <p>460 000 Ar</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="h-8">
+                    <td class="font-bold">Créé le</td>
+                    <td>30 Avril 2025 à 10:30</td>
+                </tr>
+            </table>
+        </p-panel>
+        <p-panel>
+            <ng-template #header>
+                <div class="flex items-center gap-2">
+                    <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/xuxuefeng.png" shape="circle" />
+                    <div class="flex flex-col">
+                        <p class="font-bold">Mr Toky</p>
+                        <small class="text-gray-400">Livreur</small>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #icons>
+                <div class="flex items-center">
+                    <p-tag severity="success" value="Actif" [rounded]="true" />
+                </div>
+            </ng-template>
+            <table class="w-full">
+                <tr class="h-8">
+                    <td class="font-bold">Nom complet</td>
+                    <td>
+                        <div class="flex items-center gap-1">
+                            <p>Mr RAKOTOZAFY Toky</p>
+                            <p class="text-gray-400">#2</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="h-8">                            
+                    <td class="font-bold">Email</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-envelope" style="font-size: 0.8rem;"></i>
+                            <p>uibn78@gmail.com</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="h-8">
+                    <td class="font-bold">Numéro de téléphone</td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-phone" style="font-size: 0.8rem;"></i>
+                            <p>+261 38 64 760 64</p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </p-panel>
+    </div>
 </p-drawer>

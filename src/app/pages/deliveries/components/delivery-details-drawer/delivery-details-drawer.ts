@@ -1,13 +1,19 @@
 import { Component, EventEmitter, input, Input, InputSignal, OnDestroy, OnInit, Output, signal, WritableSignal } from '@angular/core';
-import { CardModule } from 'primeng/card';
+import { AvatarModule } from 'primeng/avatar';
 import { DrawerModule } from 'primeng/drawer';
+import { PanelModule } from 'primeng/panel';
+import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-delivery-details-drawer',
   imports: [
     DrawerModule,
-    CardModule
+    PanelModule,
+    AvatarModule,
+    TooltipModule,
+    TagModule
   ],
   templateUrl: './delivery-details-drawer.html',
   styleUrl: './delivery-details-drawer.css',
@@ -35,7 +41,7 @@ export class DeliveryDetailsDrawer implements OnInit, OnDestroy {
       return;
     }
 
-    
+
   }
   
   handleClose(): void {
