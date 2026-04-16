@@ -6,7 +6,8 @@ import { environment } from 'environments/environment';
 import { DeliveryCount } from './types/delivery-count';
 import { DeliveryForm } from './types/delivery-form';
 import { Package, PackageForm } from '@shared/types/package';
-import { DeliveryDrawerForm } from '@shared/types/delivery';
+import { DeliveryDrawerForm } from './types/delivery-drawer-form';
+import { DeliveryDetails } from './types/delivery-details';
 
 @Injectable({
   providedIn: 'root',
@@ -29,18 +30,24 @@ export class DeliveriesService {
     return this.http.get<DeliveryList>(`${environment.apiURL}/deliveries/all-by-owners`, { params });
   }
 
+  getDeliveryCount(): Observable<DeliveryCount> {
+    return this.http.get<{ counts: DeliveryCount }>(`${environment.apiURL}/deliveries/count`).pipe(
+      map(data => data.counts)
+    );
+  }
+
+  getDeliveryDetails(id: number): Observable<DeliveryDetails | null> {
+    return this.http.get<{ details: DeliveryDetails | null }>(`${environment.apiURL}/deliveries/details/${id}`).pipe(
+      map(data => data.details)
+    );
+  }
+
   create(data: DeliveryForm): Observable<void> {
     return this.http.post<void>(`${environment.apiURL}/deliveries`, data);
   }
 
   update(data: DeliveryDrawerForm): Observable<void> {
     return this.http.patch<void>(`${environment.apiURL}/deliveries/${data.id}`, data);
-  }
-
-  getDeliveryCount(): Observable<DeliveryCount> {
-    return this.http.get<{ counts: DeliveryCount }>(`${environment.apiURL}/deliveries/count`).pipe(
-      map(data => data.counts)
-    );
   }
 
   // PACKAGES
