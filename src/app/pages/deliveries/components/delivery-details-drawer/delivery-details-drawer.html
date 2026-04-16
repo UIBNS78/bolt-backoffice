@@ -1,0 +1,191 @@
+<p-drawer [visible]="open()" position="right" header="Détails de la livraison" (onHide)="handleClose()" styleClass="!w-[30rem]">
+    <div class="flex flex-col gap-3">
+        @if (isLoading()) {
+            <span></span>
+        } @else {
+            @defer (on idle) {
+                @if (data()) {
+                    <p-panel>
+                        <ng-template #header>
+                            <div class="flex items-center gap-2">
+                                <p-avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" />
+                                <div class="flex flex-col">
+                                    <p class="font-bold">{{ data()!.owner.commercialName }}</p>
+                                    <small class="text-gray-400">Propriétaire</small>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template #icons>
+                            @if (data()!.owner.planId === 2) {
+                                <i class="pi pi-star-fill text-orange-300" pTooltip="Propriétaire premium"></i>
+                            }
+                        </ng-template>
+                        <table class="w-full">
+                            <tr class="h-8">
+                                <td class="font-bold">Responsable</td>
+                                <td>
+                                    <div class="flex items-center gap-1">
+                                        <p>{{ data()!.owner.gender | civility }} {{ data()!.owner.name + ' ' + data()!.owner.firstName }}</p>
+                                        <p class="text-gray-400">#{{ data()!.owner.id }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="h-8">                            
+                                <td class="font-bold">Nom commercial</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <i class="pi pi-shop" style="font-size: 0.8rem;"></i>
+                                        <p>{{ data()!.owner.commercialName }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="h-8">                            
+                                <td class="font-bold">Email</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <i class="pi pi-envelope" style="font-size: 0.8rem;"></i>
+                                        <p>{{ data()!.owner.email }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="h-8">
+                                <td class="font-bold">Numéro de téléphone</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <i class="pi pi-phone" style="font-size: 0.8rem;"></i>
+                                        <p>{{ data()!.owner.phone }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="h-8">
+                                <td class="font-bold">Membre depuis</td>
+                                <td>{{ data()!.owner.createdAt | date:"dd MMMM yyyy"}}</td>
+                            </tr>
+                        </table>
+                    </p-panel>
+                    <p-panel header="Livraison">
+                        <ng-template #icons>
+                            <p-tag 
+                                [severity]="data()!.status | deliveryStatusSeverity" 
+                                [rounded]="true"
+                            >
+                                <div class="flex items-center justify-between gap-1 cursor-pointer">
+                                    <i [ngClass]="[data()!.status | deliveryStatusIcon]" style="font-size: 0.7rem;"></i>
+                                    <small style="font-size: 0.6rem;">{{ data()!.status | deliveryStatus }}</small>
+                                </div>
+                            </p-tag>
+                        </ng-template>
+                        <table class="w-full">
+                            <tr class="h-8">
+                                <td class="font-bold">Nom de la livraison</td>
+                                <td>
+                                    <div class="flex items-center gap-1">
+                                        <p>Vente Flash de Noël</p>
+                                        <p class="text-gray-400">#{{ data()!.id }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="h-8">                            
+                                <td class="font-bold">Date de livraison</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <i class="pi pi-calendar" style="font-size: 0.8rem;"></i>
+                                        <p>{{ data()!.deliveryDate | todayYesterdayTomorrow:"dd MMMM yyyy" }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="h-8">                            
+                                <td class="font-bold">Lieu de récupération</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <i class="pi pi-map-marker" style="font-size: 0.8rem;"></i>
+                                        <p>{{ data()!.recuperationPlace }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="h-8">                            
+                                <td class="font-bold">Nombre de colis</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <i class="pi pi-box" style="font-size: 0.8rem;"></i>
+                                        <p>{{ data()!.packageNumber }} colis</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="h-8">
+                                <td class="font-bold">Versement</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <i class="pi pi-wallet" style="font-size: 0.8rem;"></i>
+                                        <p>{{  data()!.payment.toLocaleString('fr-FR') }} Ar</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="h-8">
+                                <td class="font-bold">Créé le</td>
+                                <td>{{  data()!.createdAt | date:"dd MMMM yyyy à HH:mm" }}</td>
+                            </tr>
+                        </table>
+                    </p-panel>
+                    <p-panel>
+                        <ng-template #header>
+                            <div class="flex items-center gap-2">
+                                <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/xuxuefeng.png" shape="circle" />
+                                <div class="flex flex-col">
+                                    <p class="font-bold">Mr Toky</p>
+                                    <small class="text-gray-400">Livreur</small>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template #icons>
+                            <div class="flex items-center">
+                                <p-tag severity="success" value="Actif" [rounded]="true" />
+                            </div>
+                        </ng-template>
+                        <table class="w-full">
+                            <tr class="h-8">
+                                <td class="font-bold">Nom complet</td>
+                                <td>
+                                    <div class="flex items-center gap-1">
+                                        <p>{{ data()!.deliveryMan.gender | civility }} {{ data()!.deliveryMan.name }} {{ data()!.deliveryMan.firstName }}</p>
+                                        <p class="text-gray-400">#{{ data()!.deliveryMan.id }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="h-8">                            
+                                <td class="font-bold">Email</td>
+                                <td>
+                                    @if (data()!.deliveryMan.email) {
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-envelope" style="font-size: 0.8rem;"></i>
+                                            <p>{{ data()!.deliveryMan.email }}</p>
+                                        </div>
+                                    } @else {
+                                        <p class="text-gray-400">Aucun</p>
+                                    }
+                                </td>
+                            </tr>
+                            <tr class="h-8">
+                                <td class="font-bold">Numéro de téléphone</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <i class="pi pi-phone" style="font-size: 0.8rem;"></i>
+                                        <p>{{  data()!.deliveryMan.phone }}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </p-panel>
+                } @else {
+                    <div class="flex items-center justify-center">
+                        <p class="tet-gray-400">Livraison introuvable</p>
+                    </div>
+                }
+            } @placeholder (minimum 600ms) {
+                <p-skeleton height="16rem" />
+                <p-skeleton height="16rem" />
+                <p-skeleton height="8rem" />
+            }
+        }
+    </div>
+</p-drawer>
