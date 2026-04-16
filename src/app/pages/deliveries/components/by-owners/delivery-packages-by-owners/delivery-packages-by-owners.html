@@ -14,7 +14,7 @@
             }
         </div>
         <div class="flex justify-end gap-3">
-            <p-button icon="pi pi-eye" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Détails de la livraison" tooltipPosition="top" />
+            <p-button (click)="handleOpenDeliveryDetails()" icon="pi pi-eye" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Détails de la livraison" tooltipPosition="top" />
             <p-button (click)="handleOpenDeliveryForm()" icon="pi pi-pencil" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Modifier la livraison" tooltipPosition="top" />
             <p-button (click)="handleOpenPackageForm()" icon="pi pi-plus" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Ajouter un colis" tooltipPosition="top" />
             <p-divider layout="vertical" />
@@ -124,3 +124,4 @@
 <app-delivery-package-form [open]="showPackageForm()" [deliveryId]="delivery()?.id" [pkg]="selectedPackage()" (onCloseEmitter)="handleOpenPackageForm(null, $event)"></app-delivery-package-form>
 <app-delivery-form-drawer [open]="showDeliveryForm()" [delivery]="delivery()" (onCloseEmitter)="handleOpenDeliveryForm($event)"></app-delivery-form-drawer>
 <app-package-activities [open]="showPackageActivity()" [packageId]="selectedPackage()?.id" (onCloseEmitter)="handleOpenPackageActivity()"></app-package-activities>
+<app-delivery-details-drawer [open]="showDeliveryDetails()" [deliveryId]="delivery()?.id" (onCloseEmitter)="handleOpenDeliveryDetails()"></app-delivery-details-drawer>
