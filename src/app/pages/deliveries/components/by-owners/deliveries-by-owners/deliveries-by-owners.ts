@@ -17,6 +17,8 @@ import { DeliveriesPlaceholder } from '../../deliveries-placeholder/deliveries-p
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { Delivery } from '@shared/types/delivery';
 import { DeliveryStatusIconPipe } from '@shared/pipes/delivery-pipes/delivery-status-icon-pipe';
+import { AvatarModule } from 'primeng/avatar';
+import { BigramPipe } from '@shared/pipes/bigram.pipe';
 
 @Component({
   selector: 'app-deliveries-by-owners',
@@ -34,7 +36,9 @@ import { DeliveryStatusIconPipe } from '@shared/pipes/delivery-pipes/delivery-st
     TooltipModule,
     TodayYesterdayTomorrowPipe,
     DeliveriesPlaceholder,
-    CivilityPipe
+    CivilityPipe,
+    AvatarModule,
+    BigramPipe
   ],
   templateUrl: './deliveries-by-owners.html',
   styleUrl: './deliveries-by-owners.css',
