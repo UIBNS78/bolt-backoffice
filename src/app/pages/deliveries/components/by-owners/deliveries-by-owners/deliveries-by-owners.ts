@@ -1,5 +1,5 @@
-import { NgClass } from '@angular/common';
-import { Component, effect, EventEmitter, inject, OnDestroy, OnInit, Output, signal, WritableSignal } from '@angular/core';
+import { DatePipe, NgClass } from '@angular/common';
+import { Component, effect, EventEmitter, inject, OnDestroy, Output, signal, ViewChild, WritableSignal } from '@angular/core';
 import { DeliveryStatusSeverityPipe } from '@shared/pipes/delivery-pipes/delivery-status-severity-pipe';
 import { DeliveryStatusPipe } from '@shared/pipes/delivery-pipes/delivery-status.pipe';
 import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
@@ -19,6 +19,11 @@ import { Delivery } from '@shared/types/delivery';
 import { DeliveryStatusIconPipe } from '@shared/pipes/delivery-pipes/delivery-status-icon-pipe';
 import { AvatarModule } from 'primeng/avatar';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { DatePickerModule } from 'primeng/datepicker';
+import { FormsModule } from '@angular/forms';
+import { Popover, PopoverModule } from 'primeng/popover';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-deliveries-by-owners',
@@ -38,12 +43,17 @@ import { BigramPipe } from '@shared/pipes/bigram.pipe';
     DeliveriesPlaceholder,
     CivilityPipe,
     AvatarModule,
-    BigramPipe
+    BigramPipe,
+    OverlayBadgeModule,
+    DatePickerModule,
+    FormsModule,
+    PopoverModule,
+    DatePipe
   ],
   templateUrl: './deliveries-by-owners.html',
   styleUrl: './deliveries-by-owners.css',
 })
-export class DeliveriesByOwners implements OnInit, OnDestroy {
+export class DeliveriesByOwners implements OnDestroy {
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
   // servives
@@ -51,6 +61,9 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
 
   // vars
   @Output() onSelectEmitter: EventEmitter<Delivery> = new EventEmitter<Delivery>();
+  @ViewChild("datepicker") datepicker!: Popover;
+  protected today: Date = new Date();
+  protected selectedDate: WritableSignal<Date> = signal(this.today);
   protected showScroll: WritableSignal<boolean> = signal(false);
   protected selectedDelivery: WritableSignal<Delivery | null> = signal(null);
   protected first: WritableSignal<number> = signal(0);
@@ -67,11 +80,10 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
       const newSelectedDelivery: Delivery | undefined = newData.deliveries.flatMap(d => d.deliveries).find(d => d.id === this.selectedDelivery()?.id);
       if (newSelectedDelivery) this.handleSelectDelivery(newSelectedDelivery);
     });
-  }
 
-  ngOnInit(): void {
-    this.isLoading.set(true);
-    this.loadData();
+    effect(() => {
+      this.loadData();
+    });
   }
 
   ngOnDestroy(): void {
@@ -80,7 +92,11 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
   }
 
   loadData(): void {
-    this.deliviverisService.getDeliveriesByOwners({ page: this.first() / this.rows() + 1, itemsPerPage: this.rows()}).pipe(
+    this.isLoading.set(true);
+    this.deliviverisService.getDeliveriesByOwners({ 
+      startDate: format(this.selectedDate(), "yyyy-MM-dd"), 
+      endDate: format(this.selectedDate(), "yyyy-MM-dd") 
+    }).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe(response => {
@@ -91,6 +107,12 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
   handleSelectDelivery(delivery: Delivery): void {
     this.selectedDelivery.set(delivery);
     this.onSelectEmitter.emit(delivery);
+  }
+  
+  handleSelectDate(date: Date): void {
+    this.selectedDate.set(date);
+    this.selectedDelivery.set(null);
+    this.datepicker.hide();
   }
 
   onScroll(event: any) {
