@@ -47,6 +47,7 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
 
   // vars
   @Output() onSelectEmitter: EventEmitter<Delivery> = new EventEmitter<Delivery>();
+  protected showScroll: WritableSignal<boolean> = signal(false);
   protected selectedDelivery: WritableSignal<Delivery | null> = signal(null);
   protected first: WritableSignal<number> = signal(0);
   protected rows: WritableSignal<number> = signal(10);
@@ -86,5 +87,13 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
   handleSelectDelivery(delivery: Delivery): void {
     this.selectedDelivery.set(delivery);
     this.onSelectEmitter.emit(delivery);
+  }
+
+  onScroll(event: any) {
+    this.showScroll.set(event.target.scrollTop > 200);
+  }
+
+  scrollToTop(container: HTMLElement) {
+    container.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

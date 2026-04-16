@@ -9,11 +9,12 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
-import { finalize, Subject, take, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveriesService } from '../../deliveries-service';
 import { DeliveryDetails } from '../../types/delivery-details';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
+import { BigramPipe } from '@shared/pipes/bigram.pipe';
 
 @Component({
   selector: 'app-delivery-details-drawer',
@@ -30,7 +31,8 @@ import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
     NgClass,
     CivilityPipe,
     DatePipe,
-    TodayYesterdayTomorrowPipe
+    TodayYesterdayTomorrowPipe,
+    BigramPipe
   ],
   templateUrl: './delivery-details-drawer.html',
   styleUrl: './delivery-details-drawer.css',

@@ -8,7 +8,11 @@
                     <p-panel>
                         <ng-template #header>
                             <div class="flex items-center gap-2">
-                                <p-avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" />
+                                <p-avatar 
+                                    [label]="!data()!.owner.profilePicture ? (data()!.owner.commercialName | bigram) : undefined"
+                                    [image]="data()!.owner.profilePicture ?? undefined" 
+                                    shape="circle" 
+                                />
                                 <div class="flex flex-col">
                                     <p class="font-bold">{{ data()!.owner.commercialName }}</p>
                                     <small class="text-gray-400">Propriétaire</small>
@@ -17,7 +21,7 @@
                         </ng-template>
                         <ng-template #icons>
                             @if (data()!.owner.planId === 2) {
-                                <i class="pi pi-star-fill text-orange-300" pTooltip="Propriétaire premium"></i>
+                                <i class="pi pi-star-fill text-orange-300" pTooltip="Propriétaire premium" tooltipPosition="left"></i>
                             }
                         </ng-template>
                         <table class="w-full">

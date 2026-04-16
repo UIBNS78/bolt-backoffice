@@ -8,7 +8,7 @@
         </div>
         <p-button icon="pi pi-sliders-h" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || data().totalItems <= 0" pTooltip="Filtre avancée" tooltipPosition="top" />
     </div>
-    <div class="flex flex-col h-[calc(100vh-308px)] overflow-y-auto pr-2">
+    <div #scrollContainer (scroll)="onScroll($event)" class="flex flex-col h-[calc(100vh-308px)] overflow-y-auto pr-2 relative">
         @defer (when !isLoading()) {
             @for (d of data().deliveries; track $index) {
                 <p-divider align="left">
@@ -58,6 +58,19 @@
             }
         } @placeholder (minimum 600ms) {
             <app-deliveries-placeholder></app-deliveries-placeholder>
+        }
+        @if (showScroll()) {
+            <div class="sticky bottom-5 self-end z-50 mr-2">
+                <p-button 
+                    icon="pi pi-arrow-up" 
+                    [rounded]="true" 
+                    severity="contrast"
+                    [raised]="true"
+                    size="small"
+                    (onClick)="scrollToTop(scrollContainer)"
+                    styleClass="animate-fadein animate-duration-300" 
+                />
+            </div>
         }
     </div>
 </div>
