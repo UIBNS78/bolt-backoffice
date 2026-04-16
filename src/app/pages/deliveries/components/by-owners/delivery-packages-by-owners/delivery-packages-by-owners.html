@@ -95,7 +95,7 @@
                                 </td>
                                 <td>
                                     <div class="flex items-center gap-1">
-                                        <p-button icon="pi pi-history" [rounded]="true" [text]="true" severity="info" [loading]="package.isUpdating" size="small" pTooltip="Voir l'historique" tooltipPosition="top" />
+                                        <p-button (click)="handleOpenPackageActivity(package)" icon="pi pi-history" [rounded]="true" [text]="true" severity="info" [loading]="package.isUpdating" size="small" pTooltip="Voir l'historique" tooltipPosition="top" />
                                         <p-button (click)="handleOpenPackageForm(package)" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" [loading]="package.isUpdating" size="small" pTooltip="Modifier" tooltipPosition="top" />
                                         <p-button (click)="handleDelete(package)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="package.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
                                     </div>
@@ -123,3 +123,4 @@
 
 <app-delivery-package-form [open]="showPackageForm()" [deliveryId]="delivery()?.id" [pkg]="selectedPackage()" (onCloseEmitter)="handleOpenPackageForm(null, $event)"></app-delivery-package-form>
 <app-delivery-form-drawer [open]="showDeliveryForm()" [delivery]="delivery()" (onCloseEmitter)="handleOpenDeliveryForm($event)"></app-delivery-form-drawer>
+<app-package-activities [open]="showPackageActivity()" [packageId]="selectedPackage()?.id" (onCloseEmitter)="handleOpenPackageActivity()"></app-package-activities>

@@ -24,6 +24,7 @@ import { DeliveryFormDrawer } from '../../delivery-form-drawer/delivery-form-dra
 import { NgClass } from '@angular/common';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { Delivery } from '@shared/types/delivery';
+import { PackageActivities } from '../../package-activities/package-activities';
 
 @Component({
   selector: 'app-delivery-packages-by-owners',
@@ -44,7 +45,8 @@ import { Delivery } from '@shared/types/delivery';
     DeliveryPackageForm,
     DeliveryFormDrawer,
     NgClass,
-    CivilityPipe
+    CivilityPipe,
+    PackageActivities
   ],
   templateUrl: './delivery-packages-by-owners.html',
   styleUrl: './delivery-packages-by-owners.css',
@@ -59,6 +61,7 @@ export class DeliveryPackagesByOwners implements OnDestroy {
   @Output() loadDeliveryEmitter: EventEmitter<void> = new EventEmitter<void>();
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   protected showPackageForm: WritableSignal<boolean> = signal(false);
+  protected showPackageActivity: WritableSignal<boolean> = signal(false);
   protected showDeliveryForm: WritableSignal<boolean> = signal(false);
   protected selectedPackage: WritableSignal<Package | null> = signal(null);
   protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
@@ -135,6 +138,11 @@ export class DeliveryPackagesByOwners implements OnDestroy {
 
       return !prev;
     });
+  }
+
+  handleOpenPackageActivity(pkg: Package | null = null): void {
+    this.selectedPackage.set(pkg);
+    this.showPackageActivity.update(prev => !prev);
   }
 
   handleFilterByStatus(status: PackageStatus): void {
