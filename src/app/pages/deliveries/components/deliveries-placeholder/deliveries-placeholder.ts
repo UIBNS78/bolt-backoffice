@@ -10,5 +10,5 @@ import { SkeletonModule } from 'primeng/skeleton';
   styleUrl: './deliveries-placeholder.css',
 })
 export class DeliveriesPlaceholder {
-  protected skeletonItems: number[] = Array(5).fill(0);
+  protected skeletonItems: number[] = Array(3).fill(0);
 }

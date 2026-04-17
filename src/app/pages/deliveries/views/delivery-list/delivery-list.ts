@@ -6,12 +6,9 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
-import { DeliveriesByOwners } from '../../components/by-owners/deliveries-by-owners/deliveries-by-owners';
-import { DeliveriesByMen } from '../../components/by-men/deliveries-by-men/deliveries-by-men';
-import { TabsModule } from 'primeng/tabs';
-import { DeliveryPackagesByOwners } from '../../components/by-owners/delivery-packages-by-owners/delivery-packages-by-owners';
-import { DeliveryPackagesByMen } from '../../components/by-men/delivery-packages-by-men/delivery-packages-by-men';
+import { DeliveriesList } from '../../components/deliveries-list/deliveries-list';
 import { Delivery } from '@shared/types/delivery';
+import { DeliveryPackagesList } from '../../components/by-owners/delivery-packages-list/delivery-packages-list';
 
 @Component({
   selector: 'app-delivery-list',
@@ -23,24 +20,16 @@ import { Delivery } from '@shared/types/delivery';
     InputTextModule,
     TooltipModule,
     FormsModule,
-    TabsModule,
-    DeliveriesByOwners,
-    DeliveryPackagesByOwners,
-    DeliveryPackagesByMen,
-    DeliveriesByMen
+    DeliveriesList,
+    DeliveryPackagesList
   ],
   templateUrl: './delivery-list.html',
   styleUrl: './delivery-list.css',
 })
 export class DeliveryList {
-  private readonly deliveryByOwnerChild: Signal<DeliveriesByOwners | undefined> = viewChild(DeliveriesByOwners);
-  private readonly deliveryByMenChild: Signal<DeliveriesByMen | undefined> = viewChild(DeliveriesByMen);
+  private readonly deliveryByOwnerChild: Signal<DeliveriesList | undefined> = viewChild(DeliveriesList);
 
   protected selectedDelivery: WritableSignal<Delivery | null> = signal(null); 
-  protected tabs: { id: number; label: string; icon: string }[] = [
-    { id: 0, label: "Propriétaires", icon: "pi pi-users" },
-    { id: 1, label: "Livreurs", icon: "pi pi-truck" }
-  ];
 
   handleOnSelectDelivery(delivery: Delivery): void {
     this.selectedDelivery.set(delivery);
@@ -51,8 +40,4 @@ export class DeliveryList {
   }
   
   handleOpenForm(): void {}
-
-  onTabChange(): void {
-    this.selectedDelivery.set(null);
-  }
 }

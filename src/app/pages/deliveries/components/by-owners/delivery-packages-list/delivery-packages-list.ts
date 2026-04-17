@@ -28,7 +28,7 @@ import { PackageActivities } from '../../package-activities/package-activities';
 import { DeliveryDetailsDrawer } from '../../delivery-details-drawer/delivery-details-drawer';
 
 @Component({
-  selector: 'app-delivery-packages-by-owners',
+  selector: 'app-delivery-packages-list',
   imports: [
     ButtonModule,
     IconFieldModule,
@@ -50,10 +50,10 @@ import { DeliveryDetailsDrawer } from '../../delivery-details-drawer/delivery-de
     PackageActivities,
     DeliveryDetailsDrawer
   ],
-  templateUrl: './delivery-packages-by-owners.html',
-  styleUrl: './delivery-packages-by-owners.css',
+  templateUrl: './delivery-packages-list.html',
+  styleUrl: './delivery-packages-list.css',
 })
-export class DeliveryPackagesByOwners implements OnDestroy {
+export class DeliveryPackagesList implements OnDestroy {
   // services
   private readonly deliveriesService: DeliveriesService = inject(DeliveriesService);
   protected dialogService: DialogService = inject(DialogService);

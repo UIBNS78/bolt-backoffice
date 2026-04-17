@@ -11,7 +11,7 @@
         </p-overlaybadge>
         <p-button icon="pi pi-ellipsis-v" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || data().totalItems <= 0" pTooltip="Filtre avancée" tooltipPosition="top" />
     </div>
-    <div #scrollContainer (scroll)="onScroll($event)" class="flex flex-col h-[calc(100vh-308px)] overflow-y-auto pr-2 relative">
+    <div #scrollContainer (scroll)="onScroll($event)" class="flex flex-col h-[calc(100vh-240px)] overflow-y-auto pr-2 relative">
         @if (isLoading()) {
             <app-deliveries-placeholder></app-deliveries-placeholder>
         } @else {
