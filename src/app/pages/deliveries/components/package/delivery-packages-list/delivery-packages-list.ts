@@ -7,25 +7,25 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { debounceTime, distinctUntilChanged, finalize, Subject, take, takeUntil } from 'rxjs';
-import { DeliveryPackagesPlaceholder } from '../../delivery-packages-placeholder/delivery-packages-placeholder';
+import { DeliveryPackagesPlaceholder } from '../delivery-packages-placeholder/delivery-packages-placeholder';
 import { TableModule } from 'primeng/table';
 import { NgxMaskPipe } from 'ngx-mask';
 import { TagModule } from 'primeng/tag';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { DeliveryPackageFilterButton } from '../../delivery-package-filter-button/delivery-package-filter-button';
+import { DeliveryPackageFilterButton } from '../delivery-package-filter-button/delivery-package-filter-button';
 import { MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
-import { DeliveryPackageStatusEditable } from '../../delivery-package-status-editable/delivery-package-status-editable';
+import { DeliveryPackageStatusEditable } from '../delivery-package-status-editable/delivery-package-status-editable';
 import { DividerModule } from 'primeng/divider';
-import { DeliveryPackageForm } from '../../delivery-package-form/delivery-package-form';
-import { DeliveryFormDrawer } from '../../delivery-form-drawer/delivery-form-drawer';
+import { DeliveryPackageForm } from '../delivery-package-form/delivery-package-form';
+import { DeliveryFormDrawer } from '../../delivery/delivery-form-drawer/delivery-form-drawer';
 import { NgClass } from '@angular/common';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { Delivery } from '@shared/types/delivery';
-import { PackageActivities } from '../../package-activities/package-activities';
-import { DeliveryDetailsDrawer } from '../../delivery-details-drawer/delivery-details-drawer';
+import { PackageActivities } from '../package-activities/package-activities';
+import { DeliveryDetailsDrawer } from '../../delivery/delivery-details-drawer/delivery-details-drawer';
 
 @Component({
   selector: 'app-delivery-packages-list',

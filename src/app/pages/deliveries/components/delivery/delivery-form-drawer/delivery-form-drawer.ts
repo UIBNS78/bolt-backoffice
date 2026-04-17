@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DrawerModule } from 'primeng/drawer';
-import { DeliveriesService } from '../../deliveries-service';
+import { DeliveriesService } from '../../../deliveries-service';
 import { MessageService } from 'primeng/api';
 import { combineLatest, finalize, Subject, takeUntil } from 'rxjs';
 import { Delivery } from '@shared/types/delivery';
@@ -19,7 +19,7 @@ import { deliveryStatusOptions as deliveryStatusOpt } from '@shared/constants/de
 import { NgClass } from '@angular/common';
 import { format } from 'date-fns';
 import { InputTextModule } from 'primeng/inputtext';
-import { DeliveryDrawerForm } from '../../types/delivery-drawer-form';
+import { DeliveryDrawerForm } from '../../../types/delivery-drawer-form';
 
 @Component({
   selector: 'app-delivery-form-drawer',

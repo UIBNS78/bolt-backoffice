@@ -1,14 +1,15 @@
 import { Component, Signal, signal, viewChild, WritableSignal } from '@angular/core';
-import { DeliveriesCount } from '../../components/deliveries-count/deliveries-count';
+import { DeliveriesCount } from '../../components/delivery/deliveries-count/deliveries-count';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
-import { DeliveriesList } from '../../components/deliveries-list/deliveries-list';
+import { DeliveriesList } from '../../components/delivery/deliveries-list/deliveries-list';
 import { Delivery } from '@shared/types/delivery';
-import { DeliveryPackagesList } from '../../components/by-owners/delivery-packages-list/delivery-packages-list';
+import { DeliveryPackagesList } from '../../components/package/delivery-packages-list/delivery-packages-list';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-delivery-list',
@@ -21,7 +22,8 @@ import { DeliveryPackagesList } from '../../components/by-owners/delivery-packag
     TooltipModule,
     FormsModule,
     DeliveriesList,
-    DeliveryPackagesList
+    DeliveryPackagesList,
+    RouterLink
   ],
   templateUrl: './delivery-list.html',
   styleUrl: './delivery-list.css',
