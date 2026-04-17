@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MessageService, SelectItemGroup } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
 import { combineLatest, distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
-import { DeliveriesService } from '../../deliveries-service';
+import { DeliveriesService } from '../../../deliveries-service';
 import { PackageType, packageTypeObj, Package, PACKAGE_STATUS, PackageForm } from '@shared/types/package';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';

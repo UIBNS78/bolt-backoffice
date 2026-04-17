@@ -1,8 +1,8 @@
 import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
-import { DeliveryCount } from '../../types/delivery-count';
+import { DeliveryCount } from '../../../types/delivery-count';
 import { SkeletonModule } from 'primeng/skeleton';
 import { PluralPipe } from '@shared/pipes/plural.pipe';
-import { DeliveriesService } from '../../deliveries-service';
+import { DeliveriesService } from '../../../deliveries-service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({

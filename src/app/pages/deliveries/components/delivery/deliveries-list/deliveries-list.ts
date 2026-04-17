@@ -13,7 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { debounceTime, distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
-import { DeliveriesPlaceholder } from '../../deliveries-placeholder/deliveries-placeholder';
+import { DeliveriesPlaceholder } from '../deliveries-placeholder/deliveries-placeholder';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { Delivery, DeliveryByDate } from '@shared/types/delivery';
 import { DeliveryStatusIconPipe } from '@shared/pipes/delivery-pipes/delivery-status-icon-pipe';
@@ -27,7 +27,7 @@ import { format } from 'date-fns';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-deliveries-by-owners',
+  selector: 'app-deliveries-list',
   imports: [
     IconFieldModule,
     InputIconModule,
@@ -52,10 +52,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
     DatePipe,
     ReactiveFormsModule
   ],
-  templateUrl: './deliveries-by-owners.html',
-  styleUrl: './deliveries-by-owners.css',
+  templateUrl: './deliveries-list.html',
+  styleUrl: './deliveries-list.css',
 })
-export class DeliveriesByOwners implements OnDestroy {
+export class DeliveriesList implements OnDestroy {
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
   // servives
