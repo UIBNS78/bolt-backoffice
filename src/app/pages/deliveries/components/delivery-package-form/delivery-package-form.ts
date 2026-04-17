@@ -127,7 +127,7 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
     });
   }
 
-  handleSubmit(): void {
+  handleSubmit(close: boolean = true): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -156,10 +156,10 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
       return;
     }
 
-    this.create(rawValue);
+    this.create(rawValue, close);
   }
 
-  create(data: PackageForm): void {
+  create(data: PackageForm, close: boolean): void {
     this.deliveriesService.createPackage(data).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
@@ -170,7 +170,7 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
         detail: 'Le colis a été créé avec succès.'
       });
       
-      this.handleClose();
+      close && this.handleClose();
     });
   }
 

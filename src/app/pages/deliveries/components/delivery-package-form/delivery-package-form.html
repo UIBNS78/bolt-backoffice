@@ -151,9 +151,12 @@
             </div>
             <div class="flex items-center justify-end gap-3">
                 <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose(true)" [disabled]="loading()" />
+                @if (!isUpdate()) {
+                    <p-button type="submit" label="Ajouter et rester" severity="contrast" variant="outlined" size="small" [disabled]="loading()" />
+                }
                 <p-button 
                     type="submit" 
-                    [label]="isUpdate() ? (loading() ? 'Modification' : 'Modifier') : (loading() ? 'Enregistrement' : 'Enregistrer')" 
+                    [label]="isUpdate() ? (loading() ? 'Modification' : 'Modifier') : (loading() ? 'Ajout' : 'Ajouter')" 
                     severity="contrast" 
                     size="small" 
                     [loading]="loading()" 
