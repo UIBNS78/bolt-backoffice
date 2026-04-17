@@ -22,6 +22,7 @@ export type DeiveryRecuperator = Pick<DeliveryMan, "id" | "name" | "firstName" |
 
 export type Delivery = {
     id: number;
+    name: string;
     owner: DeliveryOwner;
     recuperationPlace: string;
     packageNumber: number;
