@@ -50,6 +50,7 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
   private _form: FormGroup = this.formBuilder.group({
     id: null,
+    name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
     ownerId: [{ value: null, disabled: true }, [Validators.required, Validators.min(0)]],
     recuperationPlace: [null, [Validators.required]],
     packageNumber: [{ value: null, disabled: true }, [Validators.required, Validators.min(1)]],
@@ -74,6 +75,7 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
 
     this._form.patchValue({
       id: data.id,
+      name: data.name,
       ownerId: data.owner.id,
       recuperationPlace: data.recuperationPlace,
       packageNumber: data.packageNumber,
