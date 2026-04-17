@@ -1,5 +1,5 @@
-import { NgClass } from '@angular/common';
-import { Component, effect, EventEmitter, inject, OnDestroy, OnInit, Output, signal, WritableSignal } from '@angular/core';
+import { DatePipe, NgClass } from '@angular/common';
+import { Component, computed, effect, EventEmitter, inject, OnDestroy, Output, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
 import { DeliveryStatusSeverityPipe } from '@shared/pipes/delivery-pipes/delivery-status-severity-pipe';
 import { DeliveryStatusPipe } from '@shared/pipes/delivery-pipes/delivery-status.pipe';
 import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
@@ -12,11 +12,19 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveriesPlaceholder } from '../../deliveries-placeholder/deliveries-placeholder';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
-import { Delivery } from '@shared/types/delivery';
+import { Delivery, DeliveryByDate } from '@shared/types/delivery';
 import { DeliveryStatusIconPipe } from '@shared/pipes/delivery-pipes/delivery-status-icon-pipe';
+import { AvatarModule } from 'primeng/avatar';
+import { BigramPipe } from '@shared/pipes/bigram.pipe';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { DatePickerModule } from 'primeng/datepicker';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Popover, PopoverModule } from 'primeng/popover';
+import { format } from 'date-fns';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-deliveries-by-owners',
@@ -34,12 +42,20 @@ import { DeliveryStatusIconPipe } from '@shared/pipes/delivery-pipes/delivery-st
     TooltipModule,
     TodayYesterdayTomorrowPipe,
     DeliveriesPlaceholder,
-    CivilityPipe
+    CivilityPipe,
+    AvatarModule,
+    BigramPipe,
+    OverlayBadgeModule,
+    DatePickerModule,
+    FormsModule,
+    PopoverModule,
+    DatePipe,
+    ReactiveFormsModule
   ],
   templateUrl: './deliveries-by-owners.html',
   styleUrl: './deliveries-by-owners.css',
 })
-export class DeliveriesByOwners implements OnInit, OnDestroy {
+export class DeliveriesByOwners implements OnDestroy {
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
   // servives
@@ -47,6 +63,10 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
 
   // vars
   @Output() onSelectEmitter: EventEmitter<Delivery> = new EventEmitter<Delivery>();
+  @ViewChild("datepicker") datepicker!: Popover;
+  protected today: Date = new Date();
+  protected selectedDate: WritableSignal<Date> = signal(this.today);
+  protected showScroll: WritableSignal<boolean> = signal(false);
   protected selectedDelivery: WritableSignal<Delivery | null> = signal(null);
   protected first: WritableSignal<number> = signal(0);
   protected rows: WritableSignal<number> = signal(10);
@@ -55,6 +75,28 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
     deliveries: [],
     totalItems: 0
   });
+  protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
+  protected searchValue: Signal<string> = toSignal(
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ),
+    { initialValue: "" }
+  );
+  protected filteredData: Signal<DeliveryByDate[]> = computed(() => {
+    if (this.searchValue() === "") return this.data().deliveries;
+
+    return this.data().deliveries.map(group => ({
+      ...group,
+      deliveries: group.deliveries.filter(d => {
+        return d.owner.name.toLowerCase().includes(this.searchValue().toLowerCase()) 
+          || d.owner.firstName.toLowerCase().includes(this.searchValue().toLowerCase())
+          || d.owner.commercialName.toLowerCase().includes(this.searchValue().toLowerCase())
+          || d.deliveryMan.firstName.toLowerCase().includes(this.searchValue().toLowerCase())
+          || d.recuperationPlace.toLowerCase().includes(this.searchValue().toLowerCase())
+      })
+    })).filter(group => group.deliveries.length > 0);
+  });
 
   constructor() {
     effect(() => {
@@ -62,11 +104,10 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
       const newSelectedDelivery: Delivery | undefined = newData.deliveries.flatMap(d => d.deliveries).find(d => d.id === this.selectedDelivery()?.id);
       if (newSelectedDelivery) this.handleSelectDelivery(newSelectedDelivery);
     });
-  }
 
-  ngOnInit(): void {
-    this.isLoading.set(true);
-    this.loadData();
+    effect(() => {
+      this.loadData();
+    });
   }
 
   ngOnDestroy(): void {
@@ -75,10 +116,17 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
   }
 
   loadData(): void {
-    this.deliviverisService.getDeliveriesByOwners({ page: this.first() / this.rows() + 1, itemsPerPage: this.rows()}).pipe(
+    this.isLoading.set(true);
+    this.deliviverisService.getDeliveriesByOwners({ 
+      startDate: format(this.selectedDate(), "yyyy-MM-dd"), 
+      endDate: format(this.selectedDate(), "yyyy-MM-dd") 
+    }).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe(response => {
+      if (response.totalItems > 0) this.searchControl.enable();
+      else this.searchControl.disable();
+      
       this.data.set(response);
     });
   }
@@ -86,5 +134,19 @@ export class DeliveriesByOwners implements OnInit, OnDestroy {
   handleSelectDelivery(delivery: Delivery): void {
     this.selectedDelivery.set(delivery);
     this.onSelectEmitter.emit(delivery);
+  }
+  
+  handleSelectDate(date: Date): void {
+    this.selectedDate.set(date);
+    this.selectedDelivery.set(null);
+    this.datepicker.hide();
+  }
+
+  onScroll(event: any) {
+    this.showScroll.set(event.target.scrollTop > 200);
+  }
+
+  scrollToTop(container: HTMLElement) {
+    container.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

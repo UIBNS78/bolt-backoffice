@@ -123,7 +123,7 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
     this.loading.set(true);
     this.deliveriesService.update({
       ...this.form.getRawValue(),
-      deliveryDate: new Date(this.form.get('deliveryDate')!.value)
+      deliveryDate: new Date(this.form.get('deliveryDate')!.value + ' 12:00:00')
     } as DeliveryDrawerForm).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))

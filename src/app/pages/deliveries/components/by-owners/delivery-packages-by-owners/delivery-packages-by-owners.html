@@ -37,7 +37,7 @@
 
     <div class="flex-1">
         @if (isLoading()) {
-            <span></span>
+            <app-delivery-packages-placeholder></app-delivery-packages-placeholder>
         } @else {
             @defer (on idle) {
                 @if (delivery()?.id) {

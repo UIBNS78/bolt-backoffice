@@ -8,6 +8,7 @@ import { DeliveryForm } from './types/delivery-form';
 import { Package, PackageForm } from '@shared/types/package';
 import { DeliveryDrawerForm } from './types/delivery-drawer-form';
 import { DeliveryDetails } from './types/delivery-details';
+import { DateRange } from '@shared/types/common';
 
 @Injectable({
   providedIn: 'root',
@@ -16,15 +17,9 @@ export class DeliveriesService {
   private readonly http: HttpClient = inject(HttpClient);
 
   // DELIVERIES
-  getDeliveriesByOwners(pagination?: {
-    itemsPerPage: number;
-    page: number;
-  }): Observable<DeliveryList> {
+  getDeliveriesByOwners(dates: DateRange): Observable<DeliveryList> {
     const params = new HttpParams({
-      fromObject: {
-        page: pagination ? pagination.page : 1,
-        itemsPerPage: pagination ? pagination.itemsPerPage : 10
-      }
+      fromObject: dates
     });
     
     return this.http.get<DeliveryList>(`${environment.apiURL}/deliveries/all-by-owners`, { params });

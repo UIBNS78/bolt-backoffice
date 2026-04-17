@@ -3,61 +3,106 @@
         <div class="flex-1">
             <p-iconfield>
                 <p-inputicon class="pi pi-search" />
-                <input type="text" pInputText pSize="small" placeholder="Recherche" class="w-full" [disabled]="isLoading() || data().totalItems <= 0" />
+                <input type="text" pInputText [formControl]="searchControl" pSize="small" placeholder="Recherche" class="w-full" />
             </p-iconfield>
         </div>
-        <p-button icon="pi pi-sliders-h" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || data().totalItems <= 0" pTooltip="Filtre avancée" tooltipPosition="top" />
+        <p-overlaybadge [badgeDisabled]="(selectedDate() | date:'dd MM yyyy') === (today | date:'dd MM yyyy')" severity="danger">
+            <p-button (click)="datepicker.toggle($event)" icon="pi pi-calendar" size="small" severity="secondary" variant="outlined" [disabled]="isLoading()" pTooltip="Date de livraison" tooltipPosition="top" />
+        </p-overlaybadge>
+        <p-button icon="pi pi-ellipsis-v" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || data().totalItems <= 0" pTooltip="Filtre avancée" tooltipPosition="top" />
     </div>
-    <div class="flex flex-col h-[calc(100vh-308px)] overflow-y-auto pr-2">
-        @defer (when !isLoading()) {
-            @for (d of data().deliveries; track $index) {
-                <p-divider align="left">
-                    <p class="text-gray-400">{{ d.date | todayYesterdayTomorrow:"dd MMMM yyyy" }}</p>
-                </p-divider>
-                <div class="flex flex-col gap-2">
-                    @for (delivery of d.deliveries; track $index) {
-                        <div (click)="handleSelectDelivery(delivery)" [ngClass]="['flex justify-between items-center py-3 px-4 rounded-xl cursor-pointer', selectedDelivery()?.id === delivery.id ? 'bg-linear-to-t from-sky-500 to-indigo-500' : 'bg-gray-100']">
-                            <div class="flex flex-col gap-1 flex-1">
-                                <div class="flex items-center justify-between flex-1">
-                                    <p [ngClass]="['font-bold', selectedDelivery()?.id === delivery.id ? 'text-white' : '']" style="font-size: 0.9rem;">{{ delivery.owner.commercialName }}</p>
-                                    <div class="flex items-center gap-1">
-                                        <i [ngClass]="['pi pi-box', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
-                                        <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.packageNumber }}</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : '']">Récup. {{ delivery.deliveryMan.gender | civility}} {{ delivery.deliveryMan.firstName }}</p>
-                                    <div class="flex items-center gap-2">
-                                        <i [ngClass]="['pi pi-map-marker', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
-                                        <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']">Mandroseza</p>
-                                    </div>
+    <div #scrollContainer (scroll)="onScroll($event)" class="flex flex-col h-[calc(100vh-308px)] overflow-y-auto pr-2 relative">
+        @if (isLoading()) {
+            <app-deliveries-placeholder></app-deliveries-placeholder>
+        } @else {
+            @defer (on idle) {
+                @for (d of filteredData(); track $index) {
+                    <p-divider align="left">
+                        <p class="text-gray-400">{{ d.date | todayYesterdayTomorrow:"dd MMMM yyyy" }}</p>
+                    </p-divider>
+                    <div class="flex flex-col gap-2">
+                        @for (delivery of d.deliveries; track $index) {
+                            <div (click)="handleSelectDelivery(delivery)" [ngClass]="['flex justify-between items-center py-3 px-4 rounded-xl cursor-pointer', selectedDelivery()?.id === delivery.id ? 'bg-linear-to-t from-sky-500 to-indigo-500' : 'bg-gray-100']">
+                                <div class="flex flex-col gap-2 flex-1">
                                     <div class="flex items-center justify-between flex-1">
                                         <div class="flex items-center gap-2">
-                                            <i [ngClass]="['pi pi-wallet', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-blue-500']" style="font-size: 0.6rem;"></i>
-                                            <p [ngClass]="['font-bold', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-blue-500']">{{ delivery.payment.toLocaleString('fr-FR') }} Ar</p>
-                                        </div>
-                                        <p-tag 
-                                            [severity]="selectedDelivery()?.id === delivery.id ? 'secondary' : delivery.status | deliveryStatusSeverity" 
-                                            [rounded]="true"
-                                        >
-                                            <div class="flex items-center justify-between gap-1 cursor-pointer">
-                                                <i [ngClass]="[delivery.status | deliveryStatusIcon]" style="font-size: 0.7rem;"></i>
-                                                <small style="font-size: 0.6rem;">{{ delivery.status | deliveryStatus }}</small>
+                                            <p-avatar 
+                                                [label]="!delivery.owner.profilePicture ? (delivery.owner.commercialName | bigram) : undefined"
+                                                [image]="delivery.owner.profilePicture ?? undefined" 
+                                                shape="circle" 
+                                            />
+                                            <div class="flex flex-col">
+                                                <div class="flex items-center gap-2">
+                                                    <p [ngClass]="['font-bold', selectedDelivery()?.id === delivery.id ? 'text-white' : '']" style="font-size: 0.8rem;">{{ delivery.owner.commercialName }}</p>
+                                                    @if (delivery.owner.planId === 2) {
+                                                        <i class="pi pi-star-fill text-orange-300" style="font-size: 0.8rem;" pTooltip="Propriétaire premium" tooltipPosition="top"></i>
+                                                    }
+                                                </div>
+                                                <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.owner.gender | civility }} {{ delivery.owner.firstName }}</p>
                                             </div>
-                                        </p-tag>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <i [ngClass]="['pi pi-box', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
+                                            <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.packageNumber }}</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : '']">Récup. {{ delivery.deliveryMan.gender | civility }} {{ delivery.deliveryMan.firstName }}</p>
+                                        <div class="flex items-center gap-2">
+                                            <i [ngClass]="['pi pi-map-marker', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
+                                            <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.recuperationPlace }}</p>
+                                        </div>
+                                        <div class="flex items-center justify-between flex-1">
+                                            <div class="flex items-center gap-2">
+                                                <i [ngClass]="['pi pi-wallet', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-blue-500']" style="font-size: 0.6rem;"></i>
+                                                <p [ngClass]="['font-bold', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-blue-500']">{{ delivery.payment.toLocaleString('fr-FR') }} Ar</p>
+                                            </div>
+                                            <p-tag 
+                                                [severity]="selectedDelivery()?.id === delivery.id ? 'secondary' : delivery.status | deliveryStatusSeverity" 
+                                                [rounded]="true"
+                                            >
+                                                <div class="flex items-center justify-between gap-1 cursor-pointer">
+                                                    <i [ngClass]="[delivery.status | deliveryStatusIcon]" style="font-size: 0.7rem;"></i>
+                                                    <small style="font-size: 0.6rem;">{{ delivery.status | deliveryStatus }}</small>
+                                                </div>
+                                            </p-tag>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    }
-                </div>
-            } @empty {
-                <div class="flex flex-col flex-1 justify-center items-center">
-                    <p class="text-gray-400">Aucune livraison trouvée</p>
-                </div>
+                        }
+                    </div>
+                } @empty {
+                    <div class="flex flex-col flex-1 justify-center items-center">
+                        <p class="text-gray-400">Aucune livraison trouvée</p>
+                    </div>
+                }
+            } @placeholder (minimum 600ms) {
+                <app-deliveries-placeholder></app-deliveries-placeholder>
             }
-        } @placeholder (minimum 600ms) {
-            <app-deliveries-placeholder></app-deliveries-placeholder>
+        }
+        @if (showScroll()) {
+            <div class="sticky bottom-5 self-end z-50 mr-2">
+                <p-button 
+                    icon="pi pi-arrow-up" 
+                    [rounded]="true" 
+                    severity="contrast"
+                    [raised]="true"
+                    size="small"
+                    (onClick)="scrollToTop(scrollContainer)"
+                    styleClass="animate-fadein animate-duration-300" 
+                />
+            </div>
         }
     </div>
 </div>
+
+<p-popover #datepicker>
+    <p-datepicker (onSelect)="handleSelectDate($event)" [showButtonBar]="true" [inline]="true">
+        <ng-template #buttonbar let-todayCallback="todayCallback">
+            <div class="flex justify-center w-full">
+                <p-button label="Aujourd'hui" severity="info" variant="text" size="small" (onClick)="todayCallback()" />
+            </div>
+        </ng-template>
+    </p-datepicker>
+</p-popover>
