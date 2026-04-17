@@ -1,5 +1,5 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { Component, effect, EventEmitter, inject, OnDestroy, Output, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, OnDestroy, Output, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
 import { DeliveryStatusSeverityPipe } from '@shared/pipes/delivery-pipes/delivery-status-severity-pipe';
 import { DeliveryStatusPipe } from '@shared/pipes/delivery-pipes/delivery-status.pipe';
 import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
@@ -12,18 +12,19 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveriesPlaceholder } from '../../deliveries-placeholder/deliveries-placeholder';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
-import { Delivery } from '@shared/types/delivery';
+import { Delivery, DeliveryByDate } from '@shared/types/delivery';
 import { DeliveryStatusIconPipe } from '@shared/pipes/delivery-pipes/delivery-status-icon-pipe';
 import { AvatarModule } from 'primeng/avatar';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { DatePickerModule } from 'primeng/datepicker';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { format } from 'date-fns';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-deliveries-by-owners',
@@ -48,7 +49,8 @@ import { format } from 'date-fns';
     DatePickerModule,
     FormsModule,
     PopoverModule,
-    DatePipe
+    DatePipe,
+    ReactiveFormsModule
   ],
   templateUrl: './deliveries-by-owners.html',
   styleUrl: './deliveries-by-owners.css',
@@ -72,6 +74,28 @@ export class DeliveriesByOwners implements OnDestroy {
   protected data: WritableSignal<DeliveryList> = signal({
     deliveries: [],
     totalItems: 0
+  });
+  protected searchControl: FormControl<string> = new FormControl({ value: "", disabled: true }, { nonNullable: true });
+  protected searchValue: Signal<string> = toSignal(
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged()
+    ),
+    { initialValue: "" }
+  );
+  protected filteredData: Signal<DeliveryByDate[]> = computed(() => {
+    if (this.searchValue() === "") return this.data().deliveries;
+
+    return this.data().deliveries.map(group => ({
+      ...group,
+      deliveries: group.deliveries.filter(d => {
+        return d.owner.name.toLowerCase().includes(this.searchValue().toLowerCase()) 
+          || d.owner.firstName.toLowerCase().includes(this.searchValue().toLowerCase())
+          || d.owner.commercialName.toLowerCase().includes(this.searchValue().toLowerCase())
+          || d.deliveryMan.firstName.toLowerCase().includes(this.searchValue().toLowerCase())
+          || d.recuperationPlace.toLowerCase().includes(this.searchValue().toLowerCase())
+      })
+    })).filter(group => group.deliveries.length > 0);
   });
 
   constructor() {
@@ -100,6 +124,9 @@ export class DeliveriesByOwners implements OnDestroy {
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe(response => {
+      if (response.totalItems > 0) this.searchControl.enable();
+      else this.searchControl.disable();
+      
       this.data.set(response);
     });
   }

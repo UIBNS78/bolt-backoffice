@@ -3,7 +3,7 @@
         <div class="flex-1">
             <p-iconfield>
                 <p-inputicon class="pi pi-search" />
-                <input type="text" pInputText pSize="small" placeholder="Recherche" class="w-full" [disabled]="isLoading() || data().totalItems <= 0" />
+                <input type="text" pInputText [formControl]="searchControl" pSize="small" placeholder="Recherche" class="w-full" />
             </p-iconfield>
         </div>
         <p-overlaybadge [badgeDisabled]="(selectedDate() | date:'dd MM yyyy') === (today | date:'dd MM yyyy')" severity="danger">
@@ -16,7 +16,7 @@
             <app-deliveries-placeholder></app-deliveries-placeholder>
         } @else {
             @defer (on idle) {
-                @for (d of data().deliveries; track $index) {
+                @for (d of filteredData(); track $index) {
                     <p-divider align="left">
                         <p class="text-gray-400">{{ d.date | todayYesterdayTomorrow:"dd MMMM yyyy" }}</p>
                     </p-divider>
