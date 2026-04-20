@@ -7,7 +7,7 @@
         <app-deliveries-count></app-deliveries-count>
     </div>    
     <div class="flex gap-3 h-[calc(100vh-120px)]">
-        <div class="flex flex-col gap-2 border rounded-xl border-gray-200 flex-1 pt-3 px-4">
+        <div class="flex flex-col gap-2 border rounded-xl border-gray-200 flex-1 p-4">
             <div class="flex justify-between items-center">
                 <h1 class="text-gray-400">Liste des livraisons</h1>
                 <div class="flex justify-end gap-2">
@@ -17,7 +17,7 @@
             </div>
             <app-deliveries-list (onSelectEmitter)="handleOnSelectDelivery($event)"></app-deliveries-list>
         </div>
-        <div class="flex flex-col gap-2 border rounded-xl border-gray-200 py-3 px-4 flex-3">
+        <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-4 flex-3">
             <app-delivery-packages-list [delivery]="selectedDelivery()" (loadDeliveryEmitter)="handleReloadDeliveries()"></app-delivery-packages-list>
         </div>
     </div>

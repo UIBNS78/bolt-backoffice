@@ -1,0 +1,168 @@
+<form [formGroup]="form" (ngSubmit)="handleSubmit()">
+    <div class="flex flex-col items-center gap-3 h-[calc(100vh-220px)]">
+        <div class="flex flex-1 gap-3 w-full h-full">
+            <div class="flex flex-col justify-between border rounded-xl border-gray-200 flex-1 h-full">
+                <div class="flex flex-col px-4 py-3">
+                    <p style="font-size: 1rem;">{{ editIndex() === -1 ? 'Nouveau colis' : 'Modification' }}</p>
+                    <p class="text-gray-400">{{  editIndex() === -1 ? 'Création d\'un nouveau colis' : 'Modification d\'un colis existant' }}.</p>
+                </div>
+                <div class="flex flex-col gap-2 overflow-y-auto overflow-x-hidden px-4">
+                    <div class="flex flex-col gap-1">
+                        <label for="type">Type de colis</label>
+                        <p-select [options]="packageTypeOptions" formControlName="type" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('type')?.invalid && (form.get('type')?.touched || form.get('type')?.dirty)" required />
+                        @if (form.get('type')?.invalid && (form.get('type')?.touched || form.get('type')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Type de colis requis.</p-message>
+                        }
+                    </div>
+                    <p-fieldset legend="A propos du client">
+                        <div class="flex flex-col gap-4">
+                            <div class="flex items-baseline gap-3">
+                                <div class="flex flex-col gap-1">
+                                    <label for="gender">Civilité</label>
+                                    <p-select [options]="genderOptions" formControlName="gender" size="small" optionLabel="label" optionValue="value" [invalid]="form.get('gender')?.invalid && (form.get('gender')?.touched || form.get('gender')?.dirty)" required />
+                                    @if (form.get('gender')?.invalid && (form.get('gender')?.touched || form.get('gender')?.dirty)) {
+                                        <p-message severity="error" size="small" variant="simple">Sexe requis.</p-message>
+                                    }
+                                </div>
+                                <div class="flex flex-col gap-1 flex-1">
+                                    <label for="customer">Nom</label>
+                                    <input type="text" pInputText pSize="small" [autocomplete]="false" id="customer" formControlName="customer" [invalid]="form.get('customer')?.invalid && (form.get('customer')?.touched || form.get('customer')?.dirty)" required>
+                                    @if (form.get('customer')?.invalid && (form.get('customer')?.touched || form.get('customer')?.dirty)) {
+                                        <p-message severity="error" size="small" variant="simple">Nom du client requis.</p-message>
+                                    }
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label for="phone">Numéro téléphone</label>
+                                <input pInputText pInputMask="+261 99 99 999 99" pSize="small" [autocomplete]="false" id="phone" formControlName="phone" [invalid]="form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)" required />
+                                @if (form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Numéro téléphone requis.</p-message>
+                                }
+                            </div>
+                            
+                            @switch (packageTypeSignal()) {
+                                @case (1) {
+                                    <div class="flex flex-col gap-4" formGroupName="location">
+                                        <div class="flex flex-col gap-1">
+                                            <label for="placeId">Lieu de livraison</label>
+                                            <p-select [options]="locationCityOptions()" id="placeId" formControlName="placeId" size="small" [invalid]="form.get('location.placeId')?.invalid && (form.get('location.placeId')?.touched || form.get('location.placeId')?.dirty)" required [group]="true" [filter]="true" filterBy="label" [showClear]="true" appendTo="body">
+                                                <ng-template let-group #group>
+                                                    <div class="flex items-center gap-2 border-b border-b-gray-200 pb-2">
+                                                        <i class="pi pi-map text-blue-500"></i>
+                                                        <p class="text-black" style="font-size: 0.8rem;">{{ group.label }}</p>
+                                                    </div>
+                                                </ng-template>
+                                            </p-select>
+                                            @if (form.get('location.placeId')?.invalid && (form.get('location.placeId')?.touched || form.get('location.placeId')?.dirty)) {
+                                                <p-message severity="error" size="small" variant="simple">Lieu de livraison requise.</p-message>
+                                            }
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <label for="precision">Repère</label>
+                                            <input type="text" pInputText pSize="small" id="precision" [autocomplete]="false" formControlName="precision" [invalid]="form.get('location.precision')?.invalid && (form.get('location.precision')?.touched || form.get('location.precision')?.dirty)">
+                                            @if (form.get('location.precision')?.invalid && (form.get('location.precision')?.touched || form.get('location.precision')?.dirty)) {
+                                                <p-message severity="error" size="small" variant="simple">Repère invalide.</p-message>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                @case (2) {
+                                    <div class="flex flex-col gap-4" formGroupName="location">
+                                        <div class="flex flex-col gap-1">
+                                            <label for="destination">Destination</label>
+                                            <input type="text" pInputText pSize="small" id="destination" [autocomplete]="false" formControlName="destination" [invalid]="form.get('location.destination')?.invalid && (form.get('location.destination')?.touched || form.get('location.destination')?.dirty)" required>
+                                            @if (form.get('location.destination')?.invalid && (form.get('location.destination')?.touched || form.get('location.destination')?.dirty)) {
+                                                <p-message severity="error" size="small" variant="simple">Destination requise.</p-message>
+                                            }
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <label for="cooperativeId">Coopérative</label>
+                                            <p-select [options]="locationCooperativeOptions()" id="cooperativeId" formControlName="cooperativeId" size="small" [invalid]="form.get('location.cooperativeId')?.invalid && (form.get('location.cooperativeId')?.touched || form.get('location.cooperativeId')?.dirty)" required [group]="true" [filter]="true" filterBy="label" [showClear]="true">
+                                                <ng-template let-group #group>
+                                                    <div class="flex items-center gap-2 border-b border-b-gray-200 pb-2">
+                                                        <i class="pi pi-map text-blue-500"></i>
+                                                        <p class="text-black" style="font-size: 0.8rem;">{{ group.label }}</p>
+                                                    </div>
+                                                </ng-template>
+                                            </p-select>
+                                            @if (form.get('location.cooperativeId')?.invalid && (form.get('location.cooperativeId')?.touched || form.get('location.cooperativeId')?.dirty)) {
+                                                <p-message severity="error" size="small" variant="simple">Coopérative requise.</p-message>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                @default {
+                                    <p class="text-center text-gray-400">Veuillez séléctionner un type de colis</p>
+                                }
+                            }
+                        </div>
+                    </p-fieldset>
+                    <p-fieldset legend="A propos du colis">
+                        <div class="flex flex-col gap-4">
+                            <div class="flex flex-col gap-1">
+                                <label for="price">Prix du colis (en Ariary)</label>
+                                <p-inputnumber inputId="integeronly" id="price" size="small" formControlName="price" [invalid]="form.get('price')?.invalid && (form.get('price')?.touched || form.get('price')?.dirty)" required />
+                                @if (form.get('price')?.invalid && (form.get('price')?.touched || form.get('price')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Prix requis.</p-message>
+                                }
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <label for="deliveryPrice">Frais de livraison (en Ariary)</label>
+                                <p-inputnumber inputId="integeronly" id="deliveryPrice" size="small" formControlName="deliveryPrice" [invalid]="form.get('deliveryPrice')?.invalid && (form.get('deliveryPrice')?.touched || form.get('deliveryPrice')?.dirty)" required />
+                                @if (form.get('deliveryPrice')?.invalid && (form.get('deliveryPrice')?.touched || form.get('deliveryPrice')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Frais de livraison requis.</p-message>
+                                }
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex flex-col max-w-[80%]">
+                                    <p class="font-bold">Colis fragile</p>
+                                    <p class="text-gray-400">En marquant ce colis comme fragile, un frais supplémentaire sera taxé au client.</p>
+                                </div>
+                                <div>
+                                    <p-toggleswitch name="isFragile" formControlName="isFragile" size="small" [invalid]="form.get('isFragile')?.invalid && (form.get('isFragile')?.touched || form.get('isFragile')?.dirty)" />
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <p class="font-bold">Statut du colis</p>
+                                    <p class="text-gray-400">Choisissez le statut du colis.</p>
+                                </div>
+                                <div>
+                                    <p-select [options]="packageStatusOptions" formControlName="status" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('status')?.invalid && (form.get('status')?.touched || form.get('status')?.dirty)" required>
+                                        <ng-template #selectedItem let-selectedStatus>
+                                            @if (selectedStatus) {
+                                                <div class="flex items-center gap-2">
+                                                    <i [ngClass]="selectedStatus.icon" style="font-size: 0.8rem;"></i>
+                                                    <p style="font-size: 0.8rem;">{{ selectedStatus.label }}</p>
+                                                </div>
+                                            }
+                                        </ng-template>
+                                        <ng-template let-status #item>
+                                            <div class="flex items-center gap-2">
+                                                <i [ngClass]="status.icon"></i>
+                                                <p>{{ status.label }}</p>
+                                            </div>
+                                        </ng-template>
+                                    </p-select>
+                                    @if (form.get('status')?.invalid && (form.get('status')?.touched || form.get('status')?.dirty)) {
+                                        <p-message severity="error" size="small" variant="simple">Statut requis.</p-message>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </p-fieldset>
+                </div>
+                <div class="flex justify-center items-center gap-2 px-4 py-3">
+                    <p-button (click)="addPackage()" label="Ajouter à la liste" size="small" icon="pi pi-plus" severity="contrast" />
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-4 flex-3">
+            </div>
+        </div>
+        <div class="flex w-full justify-between gap-5">
+            <p-button (onClick)="previousEmitter.emit(1)" label="Précédent" size="small" icon="pi pi-arrow-left" severity="secondary" />
+            <p-button type="submit" label="Suivant" size="small" icon="pi pi-arrow-right" severity="contrast" iconPos="right" />
+        </div>
+    </div>
+</form>

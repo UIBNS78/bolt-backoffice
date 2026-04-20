@@ -1,1 +1,104 @@
-<p>delivery-form works!</p>
+<div class="flex flex-col gap-3">
+    <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <a pButton routerLink="/deliveries/list" icon="pi pi-arrow-left" severity="secondary" [rounded]="true" pTooltip="Revenir à la liste"></a>
+            <div class="flex flex-col">
+                <h1 class="text-xl text-blue-950">Nouvelle livraisons</h1>
+                <p class="text-gray-400">Création d'une nouvelle livraison avec leurs colis respéctifs.</p>
+            </div>
+        </div>
+    </div>  
+    
+    <div class="flex justify-center h-[calc(100vh-120px)]">
+        <p-stepper 
+            #stepper
+            [value]="activeStep()"
+            (valueChange)="handleStepChange($event)" 
+            class="w-full flex flex-col items-center"
+            [style]="{'--p-stepper-separator-active-background': '#E3E8F0'}"
+        >
+            <p-step-list class="w-1/2">
+                <p-step [value]="1" class="flex flex-row flex-auto gap-2">
+                    <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                        <button class="bg-transparent border-0 inline-flex flex-col gap-2">
+                            <span
+                                class="rounded-full border-2 w-10 h-10 inline-flex items-center justify-center"
+                                [ngClass]="{
+                                    'bg-linear-to-t from-sky-500 to-indigo-500 text-primary-contrast': value <= activeStep(),
+                                    'border-surface': value > activeStep()
+                                }"
+                            >
+                                <i class="pi pi-truck" style="font-size: 0.9rem"></i>
+                            </span>
+                        </button>
+                        <span>Livraison</span>
+                    </ng-template>
+                </p-step>
+                <p-step [value]="2" class="flex flex-row flex-auto gap-2">
+                    <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                        <button class="bg-transparent border-0 inline-flex flex-col gap-2">
+                            <span
+                                class="rounded-full border-2 w-10 h-10 inline-flex items-center justify-center"
+                                [ngClass]="{
+                                    'bg-linear-to-t from-sky-500 to-indigo-500 text-primary-contrast': value <= activeStep(),
+                                    'border-surface': value > activeStep()
+                                }"
+                            >
+                                <i class="pi pi-box" style="font-size: 0.9rem"></i>
+                            </span>
+                        </button>
+                        <span>Colis</span>
+                    </ng-template>
+                </p-step>
+                <p-step [value]="3" class="flex flex-row flex-auto gap-2">
+                    <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                        <button class="bg-transparent border-0 inline-flex flex-col gap-2">
+                            <span
+                                class="rounded-full border-2 w-10 h-10 inline-flex items-center justify-center"
+                                [ngClass]="{
+                                    'bg-linear-to-t from-sky-500 to-indigo-500 text-primary-contrast': value <= activeStep(),
+                                    'border-surface': value > activeStep()
+                                }"
+                            >
+                                <i class="pi pi-check" style="font-size: 0.9rem"></i>
+                            </span>
+                        </button>
+                        <span>Création</span>
+                    </ng-template>
+                </p-step>
+            </p-step-list>
+
+            <p-step-panels class="w-full">
+                <p-step-panel [value]="1">
+                    <ng-template #content let-activateCallback="activateCallback">
+                        <app-delivery-step-form (nextEmitter)="handleNextDelivery($event)"></app-delivery-step-form>
+                    </ng-template>
+                </p-step-panel>
+                <p-step-panel [value]="2">
+                    <ng-template #content let-activateCallback="activateCallback">
+                        <app-package-step-form 
+                            (previousEmitter)="activateCallback($event)" 
+                            (nextEmitter)="handleNextPackages($event)"
+                        ></app-package-step-form>
+                    </ng-template>
+                </p-step-panel>
+                <p-step-panel [value]="3">
+                    <ng-template #content let-activateCallback="activateCallback">
+                        <div class="flex flex-col items-center gap-3 h-[calc(100vh-220px)]">
+                            <div class="flex flex-1 gap-3 w-full">
+                                <div class="border rounded-xl border-gray-200 p-4 flex-1">
+
+                                </div>
+                                <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-4 flex-3"></div>
+                            </div>
+                            <div class="flex w-full justify-between gap-5">
+                                <p-button (onClick)="activateCallback(2)" label="Précédent" size="small" icon="pi pi-arrow-left" severity="secondary" />
+                                <p-button type="submit" label="Créer la livraison" size="small" icon="pi pi-plus" severity="contrast" />
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-step-panel>
+            </p-step-panels>
+        </p-stepper>
+    </div>
+</div>
