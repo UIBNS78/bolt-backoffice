@@ -196,8 +196,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <!-- <td>{{ control.value.deliveryMan.gender | civility }} {{ control.value.deliveryMan.firstName }}</td> -->
-                            <td>LIVREUR</td>
+                            <td>{{ getDeliveryManName(control.value.deliveryManId) }}</td>
                             <td>
                                 <div class="flex flex-col items-end">
                                     <p class="font-bold">{{ control.value.price.toLocaleString('fr-FR') }} Ar</p>

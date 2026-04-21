@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, effect, EventEmitter, inject, input, InputSignal, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, input, InputSignal, OnChanges, OnDestroy, Output, Signal, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { PACKAGE_STATUS, PackageForm, PackageStatus, PackageType, packageTypeObj } from '@shared/types/package';
@@ -14,7 +14,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { combineLatest, distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { packageTypeOptions as packageTypeOpt } from '@shared/constants/package';
 import { packageStatusOptions as packageStatusOpt } from '@shared/constants/package';
 import { genderOptions as genderOpts } from '@shared/constants/user';
@@ -71,7 +71,7 @@ type PackageArrayType = {
   templateUrl: './package-step-form.html',
   styleUrl: './package-step-form.css',
 })
-export class PackageStepForm implements OnDestroy {
+export class PackageStepForm implements OnChanges, OnDestroy {
   // services
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
   private readonly deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
@@ -113,16 +113,19 @@ export class PackageStepForm implements OnDestroy {
       status: new FormControl<PackageStatus>(PACKAGE_STATUS.inProgress, { validators: [Validators.required], nonNullable: true }),
     });
 
-    effect(() => {
-      this.form.get("deliveryManId")?.setValue(this.defaultDeliveryManId());
-    });
-
     this._initialFormValues.set(this.form.getRawValue());
     this.packageTypeListener();
     this.locationInCityListener();
     this.locationOutCityListener();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['defaultDeliveryManId'] && !changes['defaultDeliveryManId'].firstChange) {
+      this.form.get("deliveryManId")?.setValue(this.defaultDeliveryManId(), { emitEvent: false });
+      this._initialFormValues.set(this.form.getRawValue());
+    }
+  }
+  
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -209,6 +212,10 @@ export class PackageStepForm implements OnDestroy {
     })) as PackageForm[]);
   }
 
+  getDeliveryManName(id: number): string {
+    return this.menOptions().find(m => m.id === id)?.label ?? '';
+  }
+  
   getPlaceName(id: number): string {
     return this.locationCityOptions().flatMap(lco => lco.items).find(i => i.value === id)?.label ?? '';
   }
