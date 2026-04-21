@@ -37,8 +37,8 @@ export class DeliveriesService {
     );
   }
 
-  create(data: DeliveryForm): Observable<void> {
-    return this.http.post<void>(`${environment.apiURL}/deliveries`, data);
+  create(data: DeliveryForm): Observable<{ deliveryId: number }> {
+    return this.http.post<{ deliveryId: number }>(`${environment.apiURL}/deliveries`, data);
   }
 
   update(data: DeliveryDrawerForm): Observable<void> {

@@ -1,19 +1,20 @@
 import { Component, inject, OnDestroy, Signal, signal, viewChild, WritableSignal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { Stepper, StepperModule } from 'primeng/stepper';
 import { NgClass } from '@angular/common';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
-import { Subject } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { MessageService, SelectItemGroup } from 'primeng/api';
 import { packageTypeOptions as packageTypeOpt } from '@shared/constants/package';
 import { packageStatusOptions as packageStatusOpt } from '@shared/constants/package';
 import { genderOptions as genderOpts } from '@shared/constants/user';
 import { PackageForm, PackageType, packageTypeObj } from '@shared/types/package';
-import { DeliveryPricesService } from 'app/pages/delivery-prices/delivery-prices-service';
-import { DeliveryStepForm } from '../../components/delivery/delivery-step-form/delivery-step-form';
+import { DeliveryStepForm } from '../../components/form-steps/delivery-step-form/delivery-step-form';
 import { DeliveryForm as DeliveryFormType } from '../../types/delivery-form';
-import { PackageStepForm } from '../../components/package/package-step-form/package-step-form';
+import { PackageStepForm } from '../../components/form-steps/package-step-form/package-step-form';
+import { DeliveriesService } from '../../deliveries-service';
+import { DeliveryStepRecap } from '../../components/form-steps/delivery-step-recap/delivery-step-recap';
 
 @Component({
   selector: 'app-delivery-form',
@@ -23,15 +24,17 @@ import { PackageStepForm } from '../../components/package/package-step-form/pack
     StepperModule,
     NgClass,
     DeliveryStepForm,
-    PackageStepForm
+    PackageStepForm,
+    DeliveryStepRecap
   ],
   templateUrl: './delivery-form.html',
   styleUrl: './delivery-form.css',
 })
 export class DeliveryForm implements OnDestroy {
   // services
-  protected deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
-  protected messageService: MessageService = inject(MessageService);
+  private readonly deliveriesService: DeliveriesService = inject(DeliveriesService);
+  private readonly messageService: MessageService = inject(MessageService);
+  private readonly router: Router = inject(Router);
 
   // vars
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -92,6 +95,19 @@ export class DeliveryForm implements OnDestroy {
       return;
     }
 
-    console.log(this.data());
+    this.loading.set(true);
+    this.deliveriesService.create(this.data()!).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.loading.set(false))
+    ).subscribe(({ deliveryId }) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Création réussie',
+        detail: 'La livraison a été créée avec succès.'
+      });
+
+      this.data.set(null);
+      // this.router.navigate(['/deliveries/list', deliveryId]);
+    });
   }
 }

@@ -84,18 +84,12 @@
                 </p-step-panel>
                 <p-step-panel [value]="3">
                     <ng-template #content let-activateCallback="activateCallback">
-                        <div class="flex flex-col items-center gap-3 h-[calc(100vh-220px)]">
-                            <div class="flex flex-1 gap-3 w-full">
-                                <div class="border rounded-xl border-gray-200 p-4 flex-1">
-
-                                </div>
-                                <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-4 flex-3"></div>
-                            </div>
-                            <div class="flex w-full justify-between gap-5">
-                                <p-button (click)="activateCallback(2)" label="Précédent" size="small" icon="pi pi-arrow-left" severity="secondary" />
-                                <p-button (click)="handleSubmit()" label="Créer la livraison" size="small" icon="pi pi-plus" severity="contrast" />
-                            </div>
-                        </div>
+                        <app-delivery-step-recap
+                            [data]="data()!"
+                            [loading]="loading()"
+                            (previousEmitter)="activateCallback($event)" 
+                            (nextEmitter)="handleSubmit()"
+                        ></app-delivery-step-recap>
                     </ng-template>
                 </p-step-panel>
             </p-step-panels>
