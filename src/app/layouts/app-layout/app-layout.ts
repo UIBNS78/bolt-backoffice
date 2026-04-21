@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { SideNav } from "./components/side-nav/side-nav";
 import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
 import { combineLatest, Subject, takeUntil } from 'rxjs';
+import { OwnersService } from 'app/pages/owners/owners-service';
 
 @Component({
   selector: 'app-app-layout',
@@ -16,6 +17,8 @@ import { combineLatest, Subject, takeUntil } from 'rxjs';
 export class AppLayout implements OnInit {
   // services
   private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly ownersServices: OwnersService = inject(OwnersService);
+
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -25,7 +28,8 @@ export class AppLayout implements OnInit {
 
   private loadAllOptions(): void {
     combineLatest([
-      this.deliveryMenService.getAllAsOptions()
+      this.deliveryMenService.getAllAsOptions(),
+      this.ownersServices.getAllAsOptions()
     ]).pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe();

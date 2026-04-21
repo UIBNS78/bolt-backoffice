@@ -1,14 +1,13 @@
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DrawerModule } from 'primeng/drawer';
 import { DeliveriesService } from '../../../deliveries-service';
 import { MessageService } from 'primeng/api';
-import { combineLatest, finalize, Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 import { Delivery } from '@shared/types/delivery';
 import { OwnersService } from 'app/pages/owners/owners-service';
 import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
-import { GENDER } from '@shared/types/user';
 import { ButtonModule } from 'primeng/button';
 import { FieldsetModule } from 'primeng/fieldset';
 import { SelectModule } from 'primeng/select';
@@ -38,30 +37,30 @@ import { DeliveryDrawerForm } from '../../../types/delivery-drawer-form';
   templateUrl: './delivery-form-drawer.html',
   styleUrl: './delivery-form-drawer.css',
 })
-export class DeliveryFormDrawer implements OnInit, OnDestroy {
+export class DeliveryFormDrawer implements OnDestroy {
   // services
-  private formBuilder: FormBuilder = inject(FormBuilder);
-  protected deliveriesService: DeliveriesService = inject(DeliveriesService);
-  protected ownersService: OwnersService = inject(OwnersService);
-  protected deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
-  protected messageService: MessageService = inject(MessageService);
+  private readonly formBuilder: FormBuilder = inject(FormBuilder);
+  private readonly deliveriesService: DeliveriesService = inject(DeliveriesService);
+  private readonly ownersService: OwnersService = inject(OwnersService);
+  private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly messageService: MessageService = inject(MessageService);
 
   // vars
   private unsubscribe$: Subject<void> = new Subject<void>();
   private _form: FormGroup = this.formBuilder.group({
     id: null,
     name: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-    ownerId: [{ value: null, disabled: true }, [Validators.required, Validators.min(0)]],
+    ownerId: [null, [Validators.required, Validators.min(0)]],
     recuperationPlace: [null, [Validators.required]],
     packageNumber: [{ value: null, disabled: true }, [Validators.required, Validators.min(1)]],
     payment: [null, [Validators.required, Validators.min(0)]],
-    deliveryManId: [{ value: null, disabled: true }, [Validators.required, Validators.min(0)]],
+    deliveryManId: [null, [Validators.required, Validators.min(0)]],
     deliveryDate: [null, [Validators.required]],
     status: [null, [Validators.required, Validators.min(1), Validators.max(4)]]
   });
   private _initialValues: WritableSignal<Delivery | null> = signal(null);
   protected loading: WritableSignal<boolean> = signal(false);
-  protected ownersOptions: WritableSignal<InputSelectOptions[]> = signal([]);
+  protected ownersOptions: InputSelectOptions[] = this.ownersService.options();
   protected menOptions: InputSelectOptions[] = this.deliveryMenService.options();
   protected deliveryStatusOptions: InputSelectOptions[] = deliveryStatusOpt;
 
@@ -91,27 +90,9 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
     return this._form;
   }
 
-  ngOnInit(): void {
-    this.loading.set(true);
-    this.loadOptions();
-  }
-
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-  }
-
-  loadOptions(): void {
-    combineLatest([
-      this.ownersService.getAllAsOptions()
-    ]).pipe(
-      takeUntil(this.unsubscribe$),
-      finalize(() => this.loading.set(false))
-    ).subscribe(([ownerOpt]) => {
-      this.ownersOptions.set(ownerOpt.map(o => ({ id: o.id, label: o.commercialName })));
-      this.form.get('ownerId')?.enable();
-      this.form.get('deliveryManId')?.enable();
-    });
   }
 
   handleSubmit(): void {
