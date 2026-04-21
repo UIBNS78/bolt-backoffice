@@ -4,7 +4,7 @@
             <div class="flex flex-col justify-between border rounded-xl border-gray-200 flex-1 h-full">
                 <div class="flex flex-col px-4 py-3">
                     <p style="font-size: 1rem;">{{ editIndex() === -1 ? 'Nouveau colis' : 'Modification' }}</p>
-                    <p class="text-gray-400">{{  editIndex() === -1 ? 'Création d\'un nouveau colis' : 'Modification d\'un colis existant' }}.</p>
+                    <p class="text-gray-400">{{ editIndex() === -1 ? 'Création d\'un nouveau colis' : 'Modification d\'un colis existant' }}.</p>
                 </div>
                 <div class="flex flex-col gap-2 overflow-y-auto overflow-x-hidden px-4">
                     <div class="flex flex-col gap-1">
@@ -100,6 +100,13 @@
                     <p-fieldset legend="A propos du colis">
                         <div class="flex flex-col gap-4">
                             <div class="flex flex-col gap-1">
+                                <label for="deliveryManId">Livreur</label>
+                                <p-select [options]="menOptions()" formControlName="deliveryManId" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('deliveryManId')?.invalid && (form.get('deliveryManId')?.touched || form.get('deliveryManId')?.dirty)" required [filter]="true" filterBy="label" [showClear]="true" appendTo="body" />
+                                @if (form.get('deliveryManId')?.invalid && (form.get('deliveryManId')?.touched || form.get('deliveryManId')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Livreur requis.</p-message>
+                                }
+                            </div>
+                            <div class="flex flex-col gap-1">
                                 <label for="price">Prix du colis (en Ariary)</label>
                                 <p-inputnumber inputId="integeronly" id="price" size="small" formControlName="price" [invalid]="form.get('price')?.invalid && (form.get('price')?.touched || form.get('price')?.dirty)" required />
                                 @if (form.get('price')?.invalid && (form.get('price')?.touched || form.get('price')?.dirty)) {
@@ -189,8 +196,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <!-- <td>{{ control.value.deliveryMan.gender | civility }} {{ control.value.deliveryMan.firstName }}</td> -->
-                            <td>LIVREUR</td>
+                            <td>{{ getDeliveryManName(control.value.deliveryManId) }}</td>
                             <td>
                                 <div class="flex flex-col items-end">
                                     <p class="font-bold">{{ control.value.price.toLocaleString('fr-FR') }} Ar</p>

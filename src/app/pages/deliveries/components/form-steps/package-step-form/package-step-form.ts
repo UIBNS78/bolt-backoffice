@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, inject, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, input, InputSignal, OnChanges, OnDestroy, Output, Signal, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { PACKAGE_STATUS, PackageForm, PackageStatus, PackageType, packageTypeObj } from '@shared/types/package';
@@ -14,7 +14,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { combineLatest, distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { packageTypeOptions as packageTypeOpt } from '@shared/constants/package';
 import { packageStatusOptions as packageStatusOpt } from '@shared/constants/package';
 import { genderOptions as genderOpts } from '@shared/constants/user';
@@ -25,6 +25,7 @@ import { TagModule } from 'primeng/tag';
 import { PackageStatusSeverityPipe } from '@shared/pipes/package-pipes/package-status-severity-pipe';
 import { PackageStatusPipe } from '@shared/pipes/package-pipes/package-status-pipe';
 import { PackageStatusIconPipe } from '@shared/pipes/package-pipes/package-status-icon-pipe';
+import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
 
 type LocationForm = {
   placeId: FormControl<number | null>;
@@ -38,6 +39,7 @@ type PackageArrayType = {
   gender: FormControl<Gender | null>;
   customer: FormControl<string | null>;
   phone: FormControl<string | null>;
+  deliveryManId: FormControl<number | null>;
   location: FormGroup<LocationForm>;
   price: FormControl<number | null>;
   deliveryPrice: FormControl<number | null>;
@@ -69,10 +71,11 @@ type PackageArrayType = {
   templateUrl: './package-step-form.html',
   styleUrl: './package-step-form.css',
 })
-export class PackageStepForm implements OnDestroy {
+export class PackageStepForm implements OnChanges, OnDestroy {
   // services
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
   private readonly deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
+  private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
   private readonly messageService: MessageService = inject(MessageService);
 
   // vars
@@ -80,6 +83,7 @@ export class PackageStepForm implements OnDestroy {
   private _initialFormValues: WritableSignal<PackageForm | null> = signal(null);
   @Output() previousEmitter: EventEmitter<number> = new EventEmitter<number>();
   @Output() nextEmitter: EventEmitter<PackageForm[]> = new EventEmitter<PackageForm[]>();
+  defaultDeliveryManId: InputSignal<number | null> = input<number | null>(null);
   protected editIndex: WritableSignal<number> = signal(-1); // -1 for create
   protected form: FormGroup = new FormGroup({});
   protected loading: WritableSignal<boolean> = signal(false);
@@ -87,6 +91,7 @@ export class PackageStepForm implements OnDestroy {
   protected packageStatusOptions: InputSelectOptions[] = packageStatusOpt;
   protected genderOptions: { value: string; label: string }[] = genderOpts;
   protected packageTypeSignal: WritableSignal<PackageType> = signal(packageTypeObj.inCity);
+  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.options;
   protected locationCityOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cityOptions;
   protected locationCooperativeOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cooperativeOptions;
   protected packages: FormArray<FormGroup<PackageArrayType>> = new FormArray<FormGroup<PackageArrayType>>([]);
@@ -101,6 +106,7 @@ export class PackageStepForm implements OnDestroy {
         placeId: new FormControl<number | null>(null, [Validators.required]),
         precision: new FormControl<string | null>(null),
       }) as FormGroup<LocationForm>,
+      deliveryManId: new FormControl<number | null>(null, { validators: [Validators.required, Validators.min(0)], nonNullable: true }),
       price: new FormControl<number>(0, { validators: [Validators.required, Validators.min(0)], nonNullable: true }),
       deliveryPrice: new FormControl<number>({ value: 0, disabled: true }, { validators: [Validators.required, Validators.min(0)], nonNullable: true }),
       isFragile: new FormControl<boolean>(false, { validators: [Validators.required], nonNullable: true }),
@@ -113,6 +119,13 @@ export class PackageStepForm implements OnDestroy {
     this.locationOutCityListener();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['defaultDeliveryManId'] && !changes['defaultDeliveryManId'].firstChange) {
+      this.form.get("deliveryManId")?.setValue(this.defaultDeliveryManId(), { emitEvent: false });
+      this._initialFormValues.set(this.form.getRawValue());
+    }
+  }
+  
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -151,6 +164,7 @@ export class PackageStepForm implements OnDestroy {
       gender: [values.gender, [Validators.required]],
       customer: [values.customer, [Validators.required, Validators.minLength(3)]],
       phone: [values.phone, [Validators.required]],
+      deliveryManId: [values.deliveryManId, [Validators.required, Validators.min(0)]],
       location: locationGroup,
       price: [values.price, [Validators.required, Validators.min(0)]],
       deliveryPrice: [values.deliveryPrice, [Validators.required, Validators.min(0)]],
@@ -186,6 +200,7 @@ export class PackageStepForm implements OnDestroy {
       gender: p.gender,
       customer: p.customer,
       phone: p.phone,
+      deliveryManId: p.deliveryManId,
       placeId: p.location?.placeId,
       precision: p.location?.precision,
       destination: p.location?.destination,
@@ -197,6 +212,10 @@ export class PackageStepForm implements OnDestroy {
     })) as PackageForm[]);
   }
 
+  getDeliveryManName(id: number): string {
+    return this.menOptions().find(m => m.id === id)?.label ?? '';
+  }
+  
   getPlaceName(id: number): string {
     return this.locationCityOptions().flatMap(lco => lco.items).find(i => i.value === id)?.label ?? '';
   }
