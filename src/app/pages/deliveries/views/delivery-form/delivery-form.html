@@ -77,6 +77,7 @@
                 <p-step-panel [value]="2">
                     <ng-template #content let-activateCallback="activateCallback">
                         <app-package-step-form 
+                            [defaultDeliveryManId]="data()?.deliveryManId ?? null"
                             (previousEmitter)="activateCallback($event)" 
                             (nextEmitter)="handleNextPackages($event)"
                         ></app-package-step-form>

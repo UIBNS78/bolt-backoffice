@@ -96,7 +96,7 @@
                     <div class="flex flex-col gap-4">
                         <div class="flex flex-col gap-1">
                             <label for="deliveryManId">Livreur</label>
-                            <p-select [options]="menOptions()" formControlName="deliveryManId" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('deliveryManId')?.invalid && (form.get('deliveryManId')?.touched || form.get('deliveryManId')?.dirty)" required />
+                            <p-select [options]="menOptions()" formControlName="deliveryManId" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('deliveryManId')?.invalid && (form.get('deliveryManId')?.touched || form.get('deliveryManId')?.dirty)" required [filter]="true" filterBy="label" [showClear]="true" />
                             @if (form.get('deliveryManId')?.invalid && (form.get('deliveryManId')?.touched || form.get('deliveryManId')?.dirty)) {
                                 <p-message severity="error" size="small" variant="simple">Livreur requis.</p-message>
                             }
