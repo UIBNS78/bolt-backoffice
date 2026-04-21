@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { map, Observable, of, Subject } from 'rxjs';
+import { combineLatest, map, Observable, of, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { SetRefreshTokenAction, SetTokenAction } from '../store/app/app.action';
 import { AppState } from '../store/app/app.state';
@@ -9,6 +9,8 @@ import { REFRESH_TOKEN, TOKEN, USER } from '@shared/constants/storage';
 import { SetUserAction } from 'store/user/user.action';
 import { User } from '@shared/types/user';
 import { ToastModule } from 'primeng/toast';
+import { DeliveryMenService } from './pages/delivery-men/delivery-men-service';
+import { ta } from 'date-fns/locale';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -21,13 +23,15 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './app.css'
 })
 export class App implements OnInit, OnDestroy {
+  // services
+  private readonly store: Store = inject(Store);
+  
+  // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   protected connected$: Observable<boolean> = of(false);
   protected busy$: Observable<boolean> = of(false);
 
-  constructor(
-    private store: Store,
-  ) {
+  constructor() {
     this.connected$ = this.store.select(AppState.token).pipe(map(t => !!t));
     this.busy$ = this.store.select(AppState.isBusy);
 }
@@ -41,7 +45,7 @@ export class App implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  initGlobalState(): void {
+  private initGlobalState(): void {
     const user: string | null = localStorage.getItem(USER);
     const token: string | null = localStorage.getItem(TOKEN);
     const refreshToken: string | null = localStorage.getItem(REFRESH_TOKEN);

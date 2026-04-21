@@ -46,7 +46,7 @@ export class DeliveryStepForm implements OnInit, OnDestroy {
   protected loading: WritableSignal<boolean> = signal(false);
   protected form: FormGroup = new FormGroup({});
   protected ownersOptions: WritableSignal<InputSelectOptions[]> = signal([]);
-  protected menOptions: WritableSignal<InputSelectOptions[]> = signal([]);
+  protected menOptions: InputSelectOptions[] = this.deliveryMenService.options();
   protected deliveryStatusOptions: InputSelectOptions[] = deliveryStatusOpt;
   
   constructor() {
@@ -74,14 +74,12 @@ export class DeliveryStepForm implements OnInit, OnDestroy {
   
   loadOptions(): void {
     combineLatest([
-      this.ownersService.getAllAsOptions(),
-      this.deliveryMenService.getAllAsOptions()
+      this.ownersService.getAllAsOptions()
     ]).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
-    ).subscribe(([ownerOpt, menOpt]) => {
+    ).subscribe(([ownerOpt]) => {
       this.ownersOptions.set(ownerOpt.map(o => ({ id: o.id, label: o.commercialName })));
-      this.menOptions.set(menOpt.map(m => ({ id: m.id, label: `${m.gender === GENDER.WOMAN ? "Mme" : "Mr"} ${m.firstName}` })));
       this.form.get('ownerId')?.enable();
       this.form.get('deliveryManId')?.enable();
     });
