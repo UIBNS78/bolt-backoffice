@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { DeliveryPriceCity, DeliveryPriceCityUpdateForm, DeliveryPriceProvince, DeliveryPriceProvinceUpdateForm } from '@shared/types/delivery-price';
 import { environment } from 'environments/environment';
 import { SelectItemGroup } from 'primeng/api';
@@ -9,7 +9,13 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class DeliveryPricesService {
-  private http: HttpClient = inject(HttpClient);
+  // services
+  private readonly http: HttpClient = inject(HttpClient);
+  // vars
+  private _cities: WritableSignal<SelectItemGroup[]> = signal<SelectItemGroup[]>([]);
+  private _cooperatives: WritableSignal<SelectItemGroup[]> = signal<SelectItemGroup[]>([]);
+  public cityOptions: Signal<SelectItemGroup[]> = computed(() => this._cities());
+  public cooperativeOptions: Signal<SelectItemGroup[]> = computed(() => this._cooperatives());
 
   getAllCity(): Observable<DeliveryPriceCity[]> {    
     return this.http.get<{ deliveryPrices: DeliveryPriceCity[] }>(`${environment.apiURL}/delivery-prices/city`).pipe(
@@ -19,7 +25,10 @@ export class DeliveryPricesService {
 
   getAllCityOptions(): Observable<SelectItemGroup[]> {    
     return this.http.get<{ deliveryPricesOptions: SelectItemGroup[] }>(`${environment.apiURL}/delivery-prices/city-options`).pipe(
-      map(data => data.deliveryPricesOptions)
+      map(data => {
+        this._cities.set(data.deliveryPricesOptions);
+        return data.deliveryPricesOptions;
+      })
     );
   }
 
@@ -31,7 +40,10 @@ export class DeliveryPricesService {
 
   getAllCooperativeOptions(): Observable<SelectItemGroup[]> {    
     return this.http.get<{ deliveryPricesOptions: SelectItemGroup[] }>(`${environment.apiURL}/delivery-prices/cooperative-options`).pipe(
-      map(data => data.deliveryPricesOptions)
+      map(data => {
+        this._cooperatives.set(data.deliveryPricesOptions);
+        return data.deliveryPricesOptions;
+      })
     );
   }
   
