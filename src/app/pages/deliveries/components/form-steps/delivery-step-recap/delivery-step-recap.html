@@ -1,0 +1,121 @@
+<div class="flex flex-col items-center gap-3 h-[calc(100vh-220px)]">
+    <div class="flex flex-1 gap-3 w-full">
+        <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-4 flex-1">
+            <div class="flex flex-col">
+                <p style="font-size: 1rem;">Livraison</p>
+                <p class="text-gray-400">Récapitulatif des informations de la livraison.</p>
+            </div>
+            @if (data()) {
+                <div class="flex flex-col gap-3">
+                    <p-fieldset legend="A propos du propriétaire">
+                        <table class="w-full">
+                            <tr class="h-8">
+                                <td class="font-bold">Propriétaire</td>
+                                <td>{{ getCommercialName(data()!.ownerId) }}</td>
+                            </tr>
+                            <tr class="h-8">
+                                <td class="font-bold">Lieu de récupération</td>
+                                <td>{{ data()!.recuperationPlace }}</td>
+                            </tr>
+                            <tr class="h-8">
+                                <td class="font-bold">Versement (en Ariary)</td>
+                                <td>{{ data()!.payment.toLocaleString('fr-FR') }} Ar</td>
+                            </tr>
+                        </table>
+                    </p-fieldset>
+                    <p-fieldset legend="A propos de la livraison">
+                        <table class="w-full">
+                            <tr class="h-8">
+                                <td class="font-bold">Nom de la livraison</td>
+                                <td>{{ data()!.name }}</td>
+                            </tr>
+                            <tr class="h-8">
+                                <td class="font-bold">Nombre de colis</td>
+                                <td>{{ data()!.packageNumber }} colis</td>
+                            </tr>
+                            <tr class="h-8">
+                                <td class="font-bold">Récupérer par</td>
+                                <td>{{ getDeliveryManName(data()!.deliveryManId) }}</td>
+                            </tr>
+                            <tr class="h-8">
+                                <td class="font-bold">Date de livraison</td>
+                                <td>{{ data()!.deliveryDate | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
+                            </tr>
+                        </table>
+                    </p-fieldset>
+                </div>
+            } @else {
+                <div class="flex justify-center items-center">
+                    <p class="text-gray-400">Livraison introuvable.</p>
+                </div>
+            }
+        </div>
+        <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-4 flex-3">
+            @if (data()) {
+                <p-table [value]="data()!.packages" [scrollable]="true" scrollHeight="flex" class="flex-1" [tableStyle]="{ 'min-width': '50rem' }">
+                    <ng-template #header>
+                        <tr>
+                            <th>Client</th>
+                            <th style="min-width: 8rem;">Numéro téléphone</th>
+                            <th>Lieu de livraison</th>
+                            <th>Livreur</th>
+                            <th style="text-align: end;">Prix et frais de livraison</th>
+                            <th style="text-align: center;">Fragile</th>
+                            <th style="text-align: center; min-width: 8rem;">Statut</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-package>
+                        <tr>
+                            <td>{{ package.gender | civility }} {{ package.customer }}</td>
+                            <td>
+                                <p class="font-bold">{{ package.phone | mask:'+999 99 99 999 99' }}</p>
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <i [ngClass]="['pi text-blue-500', package.type === 1 ? 'pi pi-map-marker' : 'pi pi-truck']"></i>
+                                    <div class="flex flex-col">
+                                        <p>{{ package.type === 1 ? getPlaceName(package.placeId) : getCooperativeName(package.cooperativeId) }}</p>
+                                        <p class="text-gray-400">{{ package.type === 1 ? package.precision : (package.destination ?? "Inconnue") }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- <td>{{ package.deliveryMan.gender | civility }} {{ package.deliveryMan.firstName }}</td> -->
+                            <td>LIVREUR</td>
+                            <td>
+                                <div class="flex flex-col items-end">
+                                    <p class="font-bold">{{ package.price.toLocaleString('fr-FR') }} Ar</p>
+                                    <p class="text-gray-400">+ {{ package.deliveryPrice.toLocaleString('fr-FR') }} Ar</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex justify-center">
+                                    @if (package.isFragile) {
+                                        <i class="pi pi-exclamation-triangle text-orange-400" pTooltip="Ce colis est fragile" tooltipPosition="top"></i>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex items-center justify-center">
+                                    <p-tag [severity]="package.status | packageStatusSeverity" [rounded]="true">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <i [ngClass]="[package.status | packageStatusIcon]" style="font-size: 0.7rem;"></i>
+                                            <small style="font-size: 0.6rem;">{{ package.status | packageStatus }}</small>
+                                        </div>
+                                    </p-tag>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            } @else {
+                <div class="flex justify-center items-center">
+                    <p class="text-gray-400">Aucun colis trouvé.</p>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="flex w-full justify-between gap-5">
+        <p-button (click)="handlePrevious()" label="Précédent" size="small" icon="pi pi-arrow-left" severity="secondary" [disabled]="loading()" />
+        <p-button (click)="handleNext()" label="Créer la livraison" size="small" icon="pi pi-plus" severity="contrast" [loading]="loading()" />
+    </div>
+</div>

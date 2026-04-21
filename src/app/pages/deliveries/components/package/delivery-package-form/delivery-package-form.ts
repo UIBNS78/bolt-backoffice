@@ -1,8 +1,8 @@
-import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService, SelectItemGroup } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
-import { combineLatest, distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
+import { distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveriesService } from '../../../deliveries-service';
 import { PackageType, packageTypeObj, Package, PACKAGE_STATUS, PackageForm } from '@shared/types/package';
 import { ButtonModule } from 'primeng/button';
@@ -39,7 +39,7 @@ import { InputMaskModule } from 'primeng/inputmask';
   templateUrl: './delivery-package-form.html',
   styleUrl: './delivery-package-form.css',
 })
-export class DeliveryPackageForm implements OnInit, OnDestroy {
+export class DeliveryPackageForm implements OnDestroy {
   // services
   private formBuilder: FormBuilder = inject(FormBuilder);
   protected deliveriesService: DeliveriesService = inject(DeliveriesService);
@@ -57,8 +57,8 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
   protected isUpdate: WritableSignal<boolean> = signal(false);
   protected loading: WritableSignal<boolean> = signal(false);
   protected packageTypeSignal: WritableSignal<PackageType> = signal(packageTypeObj.inCity);
-  protected locationCityOptions: WritableSignal<SelectItemGroup[]> = signal([]);
-  protected locationCooperativeOptions: WritableSignal<SelectItemGroup[]> = signal([]);
+  protected locationCityOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cityOptions;
+  protected locationCooperativeOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cooperativeOptions;
 
   @Output() onCloseEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() open: boolean = false;
@@ -101,30 +101,9 @@ export class DeliveryPackageForm implements OnInit, OnDestroy {
     return this._form;
   }
 
-  ngOnInit(): void {
-    this.loadOptions();
-  }
-
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-  }
-
-  loadOptions(): void {
-    this.loading.set(true);
-    combineLatest([
-      this.deliveryPricesService.getAllCityOptions(),
-      this.deliveryPricesService.getAllCooperativeOptions()
-    ]).pipe(
-      takeUntil(this.unsubscribe$),
-      finalize(() => this.loading.set(false))
-    ).subscribe(([inCityOptions, outCityOptions]) => {
-      this.locationCityOptions.set(inCityOptions);
-      this.locationCooperativeOptions.set(outCityOptions);
-      this.form.get('location.placeId')?.enable();
-      this.form.get('location.destination')?.enable();
-      this.form.get('location.cooperativeId')?.enable();
-    });
   }
 
   handleSubmit(close: boolean = true): void {

@@ -129,6 +129,8 @@ export class DeliveryPriceCooperativeForm implements OnDestroy {
         detail: 'L\'emplacement a été mis à jour avec succès.'
       });
       this.handleClose();
+      // refresh cooperative options
+      this.deliveryPricesService.getAllCooperativeOptions().subscribe();
     });
   }
 

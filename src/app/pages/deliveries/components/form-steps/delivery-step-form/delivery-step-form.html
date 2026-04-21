@@ -1,0 +1,98 @@
+<form [formGroup]="form" (ngSubmit)="handleSubmit()">
+    <div class="flex flex-col gap-3 items-center h-[calc(100vh-220px)]">
+        <div class="flex flex-col gap-3 overflow-y-auto overflow-x-hidden w-150 pr-3">
+            <p-fieldset legend="A propos du propriétaire">
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-1">
+                        <label for="ownerId">Propriétaire</label>
+                        <p-select [options]="ownersOptions()" formControlName="ownerId" size="small" [filter]="true" filterBy="label" [showClear]="true" optionLabel="label" optionValue="id" [invalid]="form.get('ownerId')?.invalid && (form.get('ownerId')?.touched || form.get('ownerId')?.dirty)" required />
+                        @if (form.get('ownerId')?.invalid && (form.get('ownerId')?.touched || form.get('ownerId')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Propriétaire requis.</p-message>
+                        }
+                    </div>
+                    <div class="flex items-baseline gap-3">
+                        <div class="flex flex-col gap-1 w-full">
+                            <label for="recuperationPlace">Lieu de récupération</label>
+                            <input type="text" pInputText pSize="small" id="recuperationPlace" formControlName="recuperationPlace" fluid [invalid]="form.get('recuperationPlace')?.invalid && (form.get('recuperationPlace')?.touched || form.get('recuperationPlace')?.dirty)" required>
+                            @if (form.get('recuperationPlace')?.invalid && (form.get('recuperationPlace')?.touched || form.get('recuperationPlace')?.dirty)) {
+                                <p-message severity="error" size="small" variant="simple">Lieu de récupération requis.</p-message>
+                            }
+                        </div>
+                        <div class="flex flex-col gap-1 w-full">
+                            <label for="payment">Versement (Ariary)</label>
+                            <p-inputnumber inputId="integeronly" id="payment" size="small" formControlName="payment" [invalid]="form.get('payment')?.invalid && (form.get('payment')?.touched || form.get('payment')?.dirty)" required />
+                            @if (form.get('payment')?.invalid && (form.get('payment')?.touched || form.get('payment')?.dirty)) {
+                                <p-message severity="error" size="small" variant="simple">Versement requis.</p-message>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </p-fieldset>
+            <p-fieldset legend="A propos de la livraison">
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-1">
+                        <label for="name">Nom de la livraison</label>
+                        <input type="text" pInputText pSize="small" id="name" formControlName="name" fluid [invalid]="form.get('name')?.invalid && (form.get('name')?.touched || form.get('name')?.dirty)" required>
+                        @if (form.get('name')?.invalid && (form.get('name')?.touched || form.get('name')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Nom requis.</p-message>
+                        }
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <label for="deliveryManId">Récupérateur (Livreur)</label>
+                        <p-select [options]="menOptions()" formControlName="deliveryManId" size="small" [filter]="true" filterBy="label" [showClear]="true" optionLabel="label" optionValue="id" [invalid]="form.get('deliveryManId')?.invalid && (form.get('deliveryManId')?.touched || form.get('deliveryManId')?.dirty)" required appendTo="body" />
+                        @if (form.get('deliveryManId')?.invalid && (form.get('deliveryManId')?.touched || form.get('deliveryManId')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Récupérateur requis.</p-message>
+                        }
+                    </div>
+                    <div class="flex flex-col gap-1 w-full">
+                        <label for="deliveryDate">Date de livraison</label>
+                        <p-datepicker 
+                            formControlName="deliveryDate" 
+                            size="small" 
+                            dateFormat="dd MM yy"
+                            [showClear]="true" 
+                            [iconDisplay]="'input'" 
+                            [showIcon]="true" 
+                            inputId="deliveryDate" 
+                            [invalid]="form.get('deliveryDate')?.invalid && (form.get('deliveryDate')?.touched || form.get('deliveryDate')?.dirty)"
+                            appendTo="body"
+                        />
+                        @if (form.get('deliveryDate')?.invalid && (form.get('deliveryDate')?.touched || form.get('deliveryDate')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Date de livraison requise.</p-message>
+                        }
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <p class="font-bold">Statut de la livraison</p>
+                            <p class="text-gray-400">Choisissez le statut da livraison.</p>
+                        </div>
+                        <div>
+                            <p-select [options]="deliveryStatusOptions" formControlName="status" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('status')?.invalid && (form.get('status')?.touched || form.get('status')?.dirty)" required appendTo="body">
+                                <ng-template #selectedItem let-selectedStatus>
+                                    @if (selectedStatus) {
+                                        <div class="flex items-center gap-2">
+                                            <i [ngClass]="selectedStatus.icon" style="font-size: 0.8rem;"></i>
+                                            <p style="font-size: 0.8rem;">{{ selectedStatus.label }}</p>
+                                        </div>
+                                    }
+                                </ng-template>
+                                <ng-template let-status #item>
+                                    <div class="flex items-center gap-2">
+                                        <i [ngClass]="status.icon"></i>
+                                        <p>{{ status.label }}</p>
+                                    </div>
+                                </ng-template>
+                            </p-select>
+                            @if (form.get('status')?.invalid && (form.get('status')?.touched || form.get('status')?.dirty)) {
+                                <p-message severity="error" size="small" variant="simple">Statut requis.</p-message>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </p-fieldset>
+        </div>
+        <div class="flex w-150 justify-end pr-3">
+            <p-button type="submit" label="Suivant" size="small" icon="pi pi-arrow-right" severity="contrast" iconPos="right" />
+        </div>
+    </div>
+</form>

@@ -128,6 +128,8 @@ export class DeliveryPriceCityForm implements OnDestroy {
         summary: 'Mise à jour réussie',
         detail: 'L\'emplacement a été mis à jour avec succès.'
       });
+      // refresh city options
+      this.deliveryPricesService.getAllCityOptions().subscribe();
       this.handleClose();
     });
   }
