@@ -28,12 +28,13 @@ import { DividerModule } from 'primeng/divider';
   styleUrl: './sign-in.css',
 })
 export class SignIn implements OnInit, OnDestroy {
-  private unsubscribe$: Subject<void> = new Subject<void>();
-  
+  // services
   protected form: FormGroup = new FormGroup({});
   private formBuilder: FormBuilder = inject(FormBuilder);
   private authService: Authentication = inject(Authentication);
   private socialAuthService: SocialAuthService = inject(SocialAuthService);
+  // vars
+  private unsubscribe$: Subject<void> = new Subject<void>();
   private router: Router = inject(Router);
   private store: Store = inject(Store);
 
