@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService, SelectItemGroup } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
@@ -57,8 +57,8 @@ export class DeliveryPackageForm implements OnDestroy {
   protected isUpdate: WritableSignal<boolean> = signal(false);
   protected loading: WritableSignal<boolean> = signal(false);
   protected packageTypeSignal: WritableSignal<PackageType> = signal(packageTypeObj.inCity);
-  protected locationCityOptions: SelectItemGroup[] = this.deliveryPricesService.cityOptions();
-  protected locationCooperativeOptions: SelectItemGroup[] = this.deliveryPricesService.cooperativeOptions();
+  protected locationCityOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cityOptions;
+  protected locationCooperativeOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cooperativeOptions;
 
   @Output() onCloseEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() open: boolean = false;
@@ -76,10 +76,10 @@ export class DeliveryPackageForm implements OnDestroy {
       location: 
         (data && data.type === packageTypeObj.outCity) ? 
           this.formBuilder.group({
-            destination: [{ value: data?.customer.outCity?.destination ?? '', disabled: this.locationCooperativeOptions.length <= 0 }, [Validators.required, Validators.minLength(3)]],
-            cooperativeId: [{ value: data?.customer.outCity?.cooperative.id ?? '', disabled: this.locationCooperativeOptions.length <= 0 }, [Validators.required]]
+            destination: [{ value: data?.customer.outCity?.destination ?? '', disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required, Validators.minLength(3)]],
+            cooperativeId: [{ value: data?.customer.outCity?.cooperative.id ?? '', disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required]]
           }) : this.formBuilder.group({
-            placeId: [{ value: data?.customer.inCity?.place.id ?? '', disabled: this.locationCityOptions.length <= 0 }, [Validators.required]],
+            placeId: [{ value: data?.customer.inCity?.place.id ?? '', disabled: this.locationCityOptions().length <= 0 }, [Validators.required]],
             precision: data?.customer.inCity?.precision ?? '',
           }),
       price: [data?.price ?? 0, [Validators.required, Validators.min(0)]],
@@ -189,14 +189,14 @@ export class DeliveryPackageForm implements OnDestroy {
     switch (packageType) {
       case packageTypeObj.inCity:
         locationControl = this.formBuilder.group({
-          placeId: [{ value: this._data()?.customer.inCity?.place.id ?? '', disabled: this.locationCityOptions.length <= 0 }, [Validators.required]],
+          placeId: [{ value: this._data()?.customer.inCity?.place.id ?? '', disabled: this.locationCityOptions().length <= 0 }, [Validators.required]],
           precision: this._data()?.customer.inCity?.precision ?? '',
         });
         break;
       case packageTypeObj.outCity:
         locationControl = this.formBuilder.group({
-          destination: [{ value: this._data()?.customer.outCity?.destination ?? '', disabled: this.locationCooperativeOptions.length <= 0 }, [Validators.required, Validators.minLength(3)]],
-          cooperativeId: [{ value: this._data()?.customer.outCity?.cooperative.id ?? '', disabled: this.locationCooperativeOptions.length <= 0 }, [Validators.required]]
+          destination: [{ value: this._data()?.customer.outCity?.destination ?? '', disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required, Validators.minLength(3)]],
+          cooperativeId: [{ value: this._data()?.customer.outCity?.cooperative.id ?? '', disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required]]
         });
         break;
     }
@@ -214,7 +214,7 @@ export class DeliveryPackageForm implements OnDestroy {
       takeUntil(this.unsubscribe$),
       distinctUntilChanged()
     ).subscribe((value: number) => {
-      const locationCity: SelectItemGroup | undefined = this.locationCityOptions.find(lco => lco.items.find(i => i.value === value))
+      const locationCity: SelectItemGroup | undefined = this.locationCityOptions().find(lco => lco.items.find(i => i.value === value))
       this.form.get("deliveryPrice")?.setValue(locationCity ? locationCity.value : 0);
     });
   }
@@ -225,7 +225,7 @@ export class DeliveryPackageForm implements OnDestroy {
       takeUntil(this.unsubscribe$),
       distinctUntilChanged()
     ).subscribe((value: number) => {
-      const locationCity: SelectItemGroup | undefined = this.locationCooperativeOptions.find(lco => lco.items.find(i => i.value === value))
+      const locationCity: SelectItemGroup | undefined = this.locationCooperativeOptions().find(lco => lco.items.find(i => i.value === value))
       this.form.get("deliveryPrice")?.setValue(locationCity ? locationCity.value : 0);
     });
   }

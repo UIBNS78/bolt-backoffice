@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DrawerModule } from 'primeng/drawer';
 import { DeliveriesService } from '../../../deliveries-service';
@@ -60,8 +60,8 @@ export class DeliveryFormDrawer implements OnDestroy {
   });
   private _initialValues: WritableSignal<Delivery | null> = signal(null);
   protected loading: WritableSignal<boolean> = signal(false);
-  protected ownersOptions: InputSelectOptions[] = this.ownersService.options();
-  protected menOptions: InputSelectOptions[] = this.deliveryMenService.options();
+  protected ownersOptions: Signal<InputSelectOptions[]> = this.ownersService.options;
+  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.options;
   protected deliveryStatusOptions: InputSelectOptions[] = deliveryStatusOpt;
 
   @Output() onCloseEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();

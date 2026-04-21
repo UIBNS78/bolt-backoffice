@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
@@ -42,8 +42,8 @@ export class DeliveryStepForm {
   @Output() nextEmitter: EventEmitter<DeliveryForm> = new EventEmitter<DeliveryForm>();
   protected loading: WritableSignal<boolean> = signal(false);
   protected form: FormGroup = new FormGroup({});
-  protected ownersOptions: InputSelectOptions[] = this.ownersService.options();
-  protected menOptions: InputSelectOptions[] = this.deliveryMenService.options();
+  protected ownersOptions: Signal<InputSelectOptions[]> = this.ownersService.options;
+  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.options;
   protected deliveryStatusOptions: InputSelectOptions[] = deliveryStatusOpt;
   
   constructor() {

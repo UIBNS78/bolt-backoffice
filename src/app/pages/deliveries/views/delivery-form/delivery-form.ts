@@ -55,7 +55,11 @@ export class DeliveryForm implements OnDestroy {
   }
 
   handleNextDelivery(delivery: DeliveryFormType): void {
-    this.data.set(delivery);
+    this.data.set({
+      ...delivery,
+      deliveryDate: new Date(delivery.deliveryDate + ' 12:00:00'),
+      packages: []
+    });
 
     this.handleStepChange(2);
   }
@@ -107,7 +111,7 @@ export class DeliveryForm implements OnDestroy {
       });
 
       this.data.set(null);
-      // this.router.navigate(['/deliveries/list', deliveryId]);
+      this.router.navigate(['/deliveries/list']);
     });
   }
 }

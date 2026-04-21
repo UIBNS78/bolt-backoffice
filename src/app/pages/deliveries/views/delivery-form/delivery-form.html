@@ -85,7 +85,7 @@
                 <p-step-panel [value]="3">
                     <ng-template #content let-activateCallback="activateCallback">
                         <app-delivery-step-recap
-                            [data]="data()!"
+                            [data]="data()"
                             [loading]="loading()"
                             (previousEmitter)="activateCallback($event)" 
                             (nextEmitter)="handleSubmit()"

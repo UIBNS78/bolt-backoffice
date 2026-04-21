@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, inject, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { PACKAGE_STATUS, PackageForm, PackageStatus, PackageType, packageTypeObj } from '@shared/types/package';
@@ -72,8 +72,8 @@ type PackageArrayType = {
 export class PackageStepForm implements OnDestroy {
   // services
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
-  protected deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
-  protected messageService: MessageService = inject(MessageService);
+  private readonly deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
+  private readonly messageService: MessageService = inject(MessageService);
 
   // vars
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -87,8 +87,8 @@ export class PackageStepForm implements OnDestroy {
   protected packageStatusOptions: InputSelectOptions[] = packageStatusOpt;
   protected genderOptions: { value: string; label: string }[] = genderOpts;
   protected packageTypeSignal: WritableSignal<PackageType> = signal(packageTypeObj.inCity);
-  protected locationCityOptions: SelectItemGroup[] = this.deliveryPricesService.cityOptions();
-  protected locationCooperativeOptions: SelectItemGroup[] = this.deliveryPricesService.cooperativeOptions();
+  protected locationCityOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cityOptions;
+  protected locationCooperativeOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cooperativeOptions;
   protected packages: FormArray<FormGroup<PackageArrayType>> = new FormArray<FormGroup<PackageArrayType>>([]);
 
   constructor() {
@@ -198,11 +198,11 @@ export class PackageStepForm implements OnDestroy {
   }
 
   getPlaceName(id: number): string {
-    return this.locationCityOptions.flatMap(lco => lco.items).find(i => i.value === id)?.label ?? '';
+    return this.locationCityOptions().flatMap(lco => lco.items).find(i => i.value === id)?.label ?? '';
   }
 
   getCooperativeName(id: number): string {
-    return this.locationCooperativeOptions.flatMap(lco => lco.items).find(i => i.value === id)?.label ?? ''; 
+    return this.locationCooperativeOptions().flatMap(lco => lco.items).find(i => i.value === id)?.label ?? ''; 
   }
 
   resetForm() {
@@ -226,14 +226,14 @@ export class PackageStepForm implements OnDestroy {
     switch (packageType) {
       case packageTypeObj.inCity:
         locationControl = this.formBuilder.group({
-          placeId: [{ value: null, disabled: this.locationCityOptions.length <= 0 }, [Validators.required]],
+          placeId: [{ value: null, disabled: this.locationCityOptions().length <= 0 }, [Validators.required]],
           precision: '',
         });
         break;
       case packageTypeObj.outCity:
         locationControl = this.formBuilder.group({
-          destination: [{ value: null, disabled: this.locationCooperativeOptions.length <= 0 }, [Validators.required, Validators.minLength(3)]],
-          cooperativeId: [{ value: '', disabled: this.locationCooperativeOptions.length <= 0 }, [Validators.required]]
+          destination: [{ value: null, disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required, Validators.minLength(3)]],
+          cooperativeId: [{ value: '', disabled: this.locationCooperativeOptions().length <= 0 }, [Validators.required]]
         });
         break;
     }
@@ -251,7 +251,7 @@ export class PackageStepForm implements OnDestroy {
       takeUntil(this.unsubscribe$),
       distinctUntilChanged()
     ).subscribe((value: number) => {
-      const locationCity: SelectItemGroup | undefined = this.locationCityOptions.find(lco => lco.items.find(i => i.value === value))
+      const locationCity: SelectItemGroup | undefined = this.locationCityOptions().find(lco => lco.items.find(i => i.value === value))
       this.form.get("deliveryPrice")?.setValue(locationCity ? locationCity.value : 0);
     });
   }
@@ -262,7 +262,7 @@ export class PackageStepForm implements OnDestroy {
       takeUntil(this.unsubscribe$),
       distinctUntilChanged()
     ).subscribe((value: number) => {
-      const locationCity: SelectItemGroup | undefined = this.locationCooperativeOptions.find(lco => lco.items.find(i => i.value === value))
+      const locationCity: SelectItemGroup | undefined = this.locationCooperativeOptions().find(lco => lco.items.find(i => i.value === value))
       this.form.get("deliveryPrice")?.setValue(locationCity ? locationCity.value : 0);
     });
   }
