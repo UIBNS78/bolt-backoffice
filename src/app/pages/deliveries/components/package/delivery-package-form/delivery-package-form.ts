@@ -20,6 +20,7 @@ import { InputSelectOptions } from '@shared/components/types/input-select-option
 import { packageStatusOptions as packageStatusOpt } from '@shared/constants/package';
 import { NgClass } from '@angular/common';
 import { InputMaskModule } from 'primeng/inputmask';
+import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
 
 @Component({
   selector: 'app-delivery-package-form',
@@ -44,6 +45,7 @@ export class DeliveryPackageForm implements OnDestroy {
   private formBuilder: FormBuilder = inject(FormBuilder);
   protected deliveriesService: DeliveriesService = inject(DeliveriesService);
   protected deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
+    private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
   protected messageService: MessageService = inject(MessageService);
 
   // vars
@@ -57,6 +59,7 @@ export class DeliveryPackageForm implements OnDestroy {
   protected isUpdate: WritableSignal<boolean> = signal(false);
   protected loading: WritableSignal<boolean> = signal(false);
   protected packageTypeSignal: WritableSignal<PackageType> = signal(packageTypeObj.inCity);
+  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.options;
   protected locationCityOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cityOptions;
   protected locationCooperativeOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cooperativeOptions;
 
@@ -82,6 +85,7 @@ export class DeliveryPackageForm implements OnDestroy {
             placeId: [{ value: data?.customer.inCity?.place.id ?? '', disabled: this.locationCityOptions().length <= 0 }, [Validators.required]],
             precision: data?.customer.inCity?.precision ?? '',
           }),
+      deliveryManId: [data?.deliveryMan.id ?? null, [Validators.required, Validators.min(0)]],
       price: [data?.price ?? 0, [Validators.required, Validators.min(0)]],
       deliveryPrice: [{ value: data?.deliveryPrice ?? '', disabled: true }, [Validators.required, Validators.min(0)]],
       isFragile: [data?.isFragile ?? false, [Validators.required]],
@@ -120,6 +124,7 @@ export class DeliveryPackageForm implements OnDestroy {
       gender: values.gender,
       customer: values.customer,
       phone: values.phone,
+      deliveryManId: values.deliveryManId,
       placeId: values.location.placeId,
       precision: values.location.precision,
       destination: values.location.destination,

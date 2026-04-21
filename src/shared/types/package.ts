@@ -45,6 +45,7 @@ export type PackageForm = {
     gender: Gender;
     customer: string;
     phone: string;
+    deliveryManId: number;
     placeId?: number;
     precision?: string;
     destination?: string;
