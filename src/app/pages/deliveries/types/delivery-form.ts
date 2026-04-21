@@ -1,9 +1,9 @@
-import type { Package } from "@shared/types/package";
+import { Delivery } from "@shared/types/delivery";
+import type { PackageForm } from "@shared/types/package";
 
-export type DeliveryForm = {
-    ownerId: number;
-    deliveryDate: Date;
-    recuperationPlace: string;
-    deliveryManId: number;
-    packages: Package[];
-}
+export type DeliveryForm =
+    Omit<Delivery, "owner" | "deliveryMan" | "createdAt" | "isDeleting"> & {
+        ownerId: number;
+        deliveryManId: number;
+        packages: PackageForm[];
+    };

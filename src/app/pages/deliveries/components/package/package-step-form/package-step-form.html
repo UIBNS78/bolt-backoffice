@@ -77,7 +77,7 @@
                                         </div>
                                         <div class="flex flex-col gap-1">
                                             <label for="cooperativeId">Coopérative</label>
-                                            <p-select [options]="locationCooperativeOptions()" id="cooperativeId" formControlName="cooperativeId" size="small" [invalid]="form.get('location.cooperativeId')?.invalid && (form.get('location.cooperativeId')?.touched || form.get('location.cooperativeId')?.dirty)" required [group]="true" [filter]="true" filterBy="label" [showClear]="true">
+                                            <p-select [options]="locationCooperativeOptions()" id="cooperativeId" formControlName="cooperativeId" size="small" [invalid]="form.get('location.cooperativeId')?.invalid && (form.get('location.cooperativeId')?.touched || form.get('location.cooperativeId')?.dirty)" required [group]="true" [filter]="true" filterBy="label" [showClear]="true" appendTo="body">
                                                 <ng-template let-group #group>
                                                     <div class="flex items-center gap-2 border-b border-b-gray-200 pb-2">
                                                         <i class="pi pi-map text-blue-500"></i>
@@ -152,12 +152,77 @@
                         </div>
                     </p-fieldset>
                 </div>
-                <div class="flex justify-center items-center gap-2 px-4 py-3">
-                    <p-button (click)="addPackage()" label="Ajouter à la liste" size="small" icon="pi pi-plus" severity="contrast" />
+                <div class="flex justify-center items-center gap-3 px-4 py-3">
+                    @if (editIndex() >= 0) {
+                        <p-button (click)="resetForm()" label="Annuler" size="small" severity="secondary" />
+                    }
+                    <p-button (click)="addPackage()" [label]="editIndex() >= 0 ? 'Modifier' : 'Ajouter à la liste'" size="small" icon="pi pi-plus" severity="contrast" />
                 </div>
             </div>
 
             <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-4 flex-3">
+                <p-table [value]="packages.controls" [scrollable]="true" scrollHeight="flex" class="flex-1" [tableStyle]="{ 'min-width': '50rem' }">
+                    <ng-template #header>
+                        <tr>
+                            <th>Client</th>
+                            <th style="min-width: 8rem;">Numéro téléphone</th>
+                            <th>Lieu de livraison</th>
+                            <th>Livreur</th>
+                            <th style="text-align: end;">Prix et frais de livraison</th>
+                            <th style="text-align: center;">Fragile</th>
+                            <th style="text-align: center; min-width: 8rem;">Statut</th>
+                            <th style="text-align: center;">Actions</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-control let-index="rowIndex">
+                        <tr>
+                            <td>{{ control.value.gender | civility }} {{ control.value.customer }}</td>
+                            <td>
+                                <p class="font-bold">{{ control.value.phone | mask:'+999 99 99 999 99' }}</p>
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <i [ngClass]="['pi text-blue-500', control.value.type === 1 ? 'pi pi-map-marker' : 'pi pi-truck']"></i>
+                                    <div class="flex flex-col">
+                                        <p>{{ control.value.type === 1 ? getPlaceName(control.value.location.placeId) : getCooperativeName(control.value.location.cooperativeId) }}</p>
+                                        <p class="text-gray-400">{{ control.value.type === 1 ? control.value.location.precision : (control.value.location.destination ?? "Inconnue") }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- <td>{{ control.value.deliveryMan.gender | civility }} {{ control.value.deliveryMan.firstName }}</td> -->
+                            <td>LIVREUR</td>
+                            <td>
+                                <div class="flex flex-col items-end">
+                                    <p class="font-bold">{{ control.value.price.toLocaleString('fr-FR') }} Ar</p>
+                                    <p class="text-gray-400">+ {{ control.value.deliveryPrice.toLocaleString('fr-FR') }} Ar</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex justify-center">
+                                    @if (control.value.isFragile) {
+                                        <i class="pi pi-exclamation-triangle text-orange-400" pTooltip="Ce colis est fragile" tooltipPosition="top"></i>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex items-center justify-center">
+                                    <p-tag [severity]="control.value.status | packageStatusSeverity" [rounded]="true">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <i [ngClass]="[control.value.status | packageStatusIcon]" style="font-size: 0.7rem;"></i>
+                                            <small style="font-size: 0.6rem;">{{ control.value.status | packageStatus }}</small>
+                                        </div>
+                                    </p-tag>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-1">
+                                    <p-button (click)="editPackage(index)" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" size="small" pTooltip="Modifier" tooltipPosition="top" />
+                                    <p-button (click)="removePackage(index)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" size="small" pTooltip="Supprimer" tooltipPosition="top" />
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
             </div>
         </div>
         <div class="flex w-full justify-between gap-5">

@@ -92,8 +92,8 @@
                                 <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-4 flex-3"></div>
                             </div>
                             <div class="flex w-full justify-between gap-5">
-                                <p-button (onClick)="activateCallback(2)" label="Précédent" size="small" icon="pi pi-arrow-left" severity="secondary" />
-                                <p-button type="submit" label="Créer la livraison" size="small" icon="pi pi-plus" severity="contrast" />
+                                <p-button (click)="activateCallback(2)" label="Précédent" size="small" icon="pi pi-arrow-left" severity="secondary" />
+                                <p-button (click)="handleSubmit()" label="Créer la livraison" size="small" icon="pi pi-plus" severity="contrast" />
                             </div>
                         </div>
                     </ng-template>

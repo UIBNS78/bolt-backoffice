@@ -1,20 +1,16 @@
-import { Component, inject, OnDestroy, OnInit, Signal, signal, viewChild, WritableSignal } from '@angular/core';
+import { Component, inject, OnDestroy, Signal, signal, viewChild, WritableSignal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
 import { Stepper, StepperModule } from 'primeng/stepper';
 import { NgClass } from '@angular/common';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { Subject } from 'rxjs';
 import { MessageService, SelectItemGroup } from 'primeng/api';
-import { TableModule } from 'primeng/table';
 import { packageTypeOptions as packageTypeOpt } from '@shared/constants/package';
 import { packageStatusOptions as packageStatusOpt } from '@shared/constants/package';
 import { genderOptions as genderOpts } from '@shared/constants/user';
 import { PackageForm, PackageType, packageTypeObj } from '@shared/types/package';
 import { DeliveryPricesService } from 'app/pages/delivery-prices/delivery-prices-service';
-import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { DeliveryStepForm } from '../../components/delivery/delivery-step-form/delivery-step-form';
 import { DeliveryForm as DeliveryFormType } from '../../types/delivery-form';
 import { PackageStepForm } from '../../components/package/package-step-form/package-step-form';
@@ -24,27 +20,22 @@ import { PackageStepForm } from '../../components/package/package-step-form/pack
   imports: [
     RouterLink,
     ButtonModule,
-    TooltipModule,
     StepperModule,
     NgClass,
-    TableModule,
-    ToggleSwitchModule,
     DeliveryStepForm,
     PackageStepForm
   ],
   templateUrl: './delivery-form.html',
   styleUrl: './delivery-form.css',
 })
-export class DeliveryForm implements OnInit, OnDestroy {
+export class DeliveryForm implements OnDestroy {
   // services
-  private readonly formBuilder: FormBuilder = inject(FormBuilder);
   protected deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
   protected messageService: MessageService = inject(MessageService);
 
   // vars
   private unsubscribe$: Subject<void> = new Subject<void>();
   protected stepper: Signal<Stepper | undefined> = viewChild(Stepper);
-  protected form: FormGroup = new FormGroup({});
   protected loading: WritableSignal<boolean> = signal(false);
   protected activeStep: WritableSignal<number> = signal(1);
   protected genderOptions: { value: string; label: string }[] = genderOpts;
@@ -53,20 +44,7 @@ export class DeliveryForm implements OnInit, OnDestroy {
   protected packageTypeSignal: WritableSignal<PackageType> = signal(packageTypeObj.inCity);
   protected locationCityOptions: WritableSignal<SelectItemGroup[]> = signal([]);
   protected locationCooperativeOptions: WritableSignal<SelectItemGroup[]> = signal([]);
-
-  constructor() {
-    this.form = this.formBuilder.group({
-      packages: this.formBuilder.array([], [Validators.required, Validators.min(1)]),
-    });
-  }
-  
-  get packagesForm() {
-    return this.form.get("packages") as FormArray;
-  }
-  
-  ngOnInit(): void {
-    this.loading.set(true);
-  }
+  protected data: WritableSignal<DeliveryFormType | null> = signal(null);
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
@@ -74,15 +52,17 @@ export class DeliveryForm implements OnInit, OnDestroy {
   }
 
   handleNextDelivery(delivery: DeliveryFormType): void {
-    // add delivery value
-    console.log("=====>", delivery);
+    this.data.set(delivery);
 
     this.handleStepChange(2);
   }
 
-  handleNextPackages(packages: PackageForm): void {
-    // add packages value
-    console.log("=====>", packages);
+  handleNextPackages(packages: PackageForm[]): void {
+    this.data.update(d => {
+      d!.packages = packages;
+      d!.packageNumber = packages.length;
+      return d!;
+    });
 
     this.handleStepChange(3);
   }
@@ -92,11 +72,26 @@ export class DeliveryForm implements OnInit, OnDestroy {
   }
 
   handleSubmit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
+    if (!this.data()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Attention',
+        detail: 'Veuillez créer une livraison avant de continuer'
+      });
+
       return;
     }
 
-    console.log(this.form.getRawValue());
+    if (this.data()!.packages.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Attention',
+        detail: 'Veuillez ajouter au moins un colis avant de continuer'
+      });
+
+      return;
+    }
+
+    console.log(this.data());
   }
 }
