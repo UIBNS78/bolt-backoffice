@@ -18,7 +18,7 @@
                     <app-notification-placeholder></app-notification-placeholder>
                 } @else {
                     @defer (on idle) {
-                        @for (notification of data(); track $index) {
+                        @for (notification of filtredData(); track $index) {
                             <div (click)="handleOnClick(notification)" class="flex justify-between items-center cursor-pointer py-3 px-3 rounded-md hover:bg-gray-100">
                                 <div class="flex items-center gap-3">
                                     <p-avatar 

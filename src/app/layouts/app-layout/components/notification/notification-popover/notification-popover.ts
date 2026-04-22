@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
@@ -44,10 +44,18 @@ export class NotificationPopover implements OnInit, OnDestroy {
   
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject();
-  protected selected: number = 1;
+  protected selected: WritableSignal<number> = signal(1);
   protected loading: WritableSignal<boolean> = signal(false);
   protected hasNewNotification: WritableSignal<boolean> = signal(false);
-  protected data: WritableSignal<Notification[]> = signal([]);
+  private _data: WritableSignal<Notification[]> = signal([]);
+  protected filtredData: Signal<Notification[]> = computed(() => {
+    const data = this._data();
+    if (this.selected() === 2) {
+      return data.filter(notification => !notification.isRead);
+    } else {
+      return data;
+    }
+  });
 
   @ViewChild("notificationPopover") notificationPopover!: Popover
 
@@ -90,7 +98,7 @@ export class NotificationPopover implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(response => {
-      this.data.set(response);
+      this._data.set(response);
     });
   }
 }
