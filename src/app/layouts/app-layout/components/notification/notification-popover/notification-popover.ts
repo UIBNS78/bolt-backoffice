@@ -66,13 +66,19 @@ export class NotificationPopover implements OnInit, OnDestroy {
   handleOpen(event: Event): void {
     this.notificationPopover.toggle(event);
     this.hasNewNotification.set(false);
+    this.loading.set(true);
     this.loadData();
   }
   
   handleMarkAllAsRead(): void {}
 
+  handleOnClick(notification: Notification): void {
+    this.notificationService.markAsRead(notification.id).pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe(() => this.loadData());
+  }
+
   private loadData(): void {
-    this.loading.set(true);
     this.notificationService.getAll({ 
       startDate: format(new Date(), "yyyy-MM-dd"), 
       endDate: format(new Date(), "yyyy-MM-dd") 

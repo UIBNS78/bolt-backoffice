@@ -19,7 +19,7 @@
                 } @else {
                     @defer (on idle) {
                         @for (notification of data(); track $index) {
-                            <div class="flex justify-between items-center cursor-pointer py-3 px-3 rounded-md hover:bg-gray-100">
+                            <div (click)="handleOnClick(notification)" class="flex justify-between items-center cursor-pointer py-3 px-3 rounded-md hover:bg-gray-100">
                                 <div class="flex items-center gap-3">
                                     <p-avatar 
                                         [image]="notification.sender.profilePicture ?? undefined" 
