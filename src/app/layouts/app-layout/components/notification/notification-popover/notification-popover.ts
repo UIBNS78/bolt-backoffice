@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
@@ -8,6 +8,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AvatarModule } from 'primeng/avatar';
 import { Subject } from 'rxjs';
 import { NotificationPlaceholder } from '../notification-placeholder/notification-placeholder';
+import { SocketService } from 'core/services/socket-service';
+import { SOCKET_EVENT } from '@shared/types/socket';
 
 @Component({
   selector: 'app-notification-popover',
@@ -24,13 +26,23 @@ import { NotificationPlaceholder } from '../notification-placeholder/notificatio
   templateUrl: './notification-popover.html',
   styleUrl: './notification-popover.css',
 })
-export class NotificationPopover implements OnDestroy {
+export class NotificationPopover implements OnInit, OnDestroy {
+  // services
+  private readonly socketService: SocketService = inject(SocketService);
+  
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject();
   protected selected: number = 1;
   protected loading: WritableSignal<boolean> = signal(false);
+  protected hasNewNotification: WritableSignal<boolean> = signal(false);
 
   @ViewChild("notificationPopover") notificationPopover!: Popover
+
+  ngOnInit(): void {
+    this.socketService.onEvent(SOCKET_EVENT.newNotification, () => {
+      this.hasNewNotification.set(true);
+    });
+  }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
@@ -46,6 +58,7 @@ export class NotificationPopover implements OnDestroy {
   
   handleOpen(event: Event): void {
     this.notificationPopover.toggle(event);
+    this.hasNewNotification.set(false);
     this.loadData();
   }
   

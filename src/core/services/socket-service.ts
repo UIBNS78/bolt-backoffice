@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { SocketEvent } from '@shared/types/socket';
 import { environment } from 'environments/environment';
 import { io, Socket } from 'socket.io-client';
 
@@ -12,11 +13,11 @@ export class SocketService {
     this._socket = io(environment.backendUri);
   }
 
-  onEvent(event: string, callback: (data: any) => void) {
+  onEvent(event: SocketEvent, callback: (data: any) => void) {
     this._socket.on(event, callback);
   }
 
-  emitEvent(event: string, data: any) {
+  emitEvent(event: SocketEvent, data: any) {
     this._socket.emit(event, data);
   }
 }

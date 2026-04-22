@@ -1,0 +1,17 @@
+import { ValueOf } from "@shared/types/owner-plan";
+
+export const NOTIFICATION_TYPES: {
+    newDelivery: 'NEW_DELIVERY';
+    cancelledDelivery: 'CANCELLED_DELIVERY';
+    packageDelivered: 'PACKAGE_DELIVERED';
+    packageReported: 'PACKAGE_REPORTED';
+    packageCancelled: 'PACKAGE_CANCELLED';
+} = {
+    newDelivery: 'NEW_DELIVERY',
+    cancelledDelivery: 'CANCELLED_DELIVERY',
+    packageDelivered: 'PACKAGE_DELIVERED',
+    packageReported: 'PACKAGE_REPORTED',
+    packageCancelled: 'PACKAGE_CANCELLED',
+} as const;
+
+export type NotificationType = ValueOf<typeof NOTIFICATION_TYPES>;
