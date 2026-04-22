@@ -2,19 +2,19 @@ import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, sign
 import { FormsModule } from '@angular/forms';
 import { AvatarModule } from 'primeng/avatar';
 import { DrawerModule } from 'primeng/drawer';
-import { TabsModule } from 'primeng/tabs';
 import { DeliveryManInformations } from './delivery-man-informations/delivery-man-informations';
 import { DeliveryManData } from './delivery-man-data/delivery-man-data';
 import { DeliveryManHistory } from './delivery-man-history/delivery-man-history';
 import { Subject } from 'rxjs';
 import { DeliveryMenService } from '../../delivery-men-service';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
   selector: 'app-delivery-man-details',
   imports: [
     DrawerModule,
     AvatarModule,
-    TabsModule,
+    SelectButtonModule,
     FormsModule,
     DeliveryManInformations,
     DeliveryManData,
@@ -31,12 +31,13 @@ export class DeliveryManDetails implements OnInit, OnDestroy {
   // services
   private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
   // vars
+  protected selected: number = 1;
   private unsubscribe$: Subject<void> = new Subject<void>();
   protected currentTab: WritableSignal<number> = signal(0);
-  protected tabs: { id: number; label: string; icon: string }[] = [
-    { id: 0, label: "A propos", icon: "pi pi-info-circle" },
-    { id: 1, label: "Données", icon: "pi pi-chart-line" },
-    { id: 2, label: "Historique", icon: "pi pi-history" },
+  protected tabs: { id: number; label: string; }[] = [
+    { id: 0, label: "A propos"},
+    { id: 1, label: "Données" },
+    { id: 2, label: "Historique" },
   ];
 
   ngOnInit(): void {

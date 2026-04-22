@@ -20,26 +20,19 @@
                 </div>
             </div>
         </div>
-        <p-tabs [value]="0">
-            <p-tablist>
-                @for (tab of tabs; track tab.id) {
-                    <p-tab [value]="tab.id" class="flex items-center gap-2 text-inherit">
-                        <i [class]="tab.icon"></i>
-                        <span>{{ tab.label }}</span>
-                    </p-tab>
-                }
-            </p-tablist>
-            <p-tabpanels>
-                <p-tabpanel [value]="0">
-                    <app-delivery-man-informations></app-delivery-man-informations>
-                </p-tabpanel>
-                <p-tabpanel [value]="1">
-                    <app-delivery-man-data></app-delivery-man-data>
-                </p-tabpanel>
-                <p-tabpanel [value]="2">
-                    <app-delivery-man-history></app-delivery-man-history>
-                </p-tabpanel>
-            </p-tabpanels>
-        </p-tabs>
+        <p-selectbutton [options]="[{ id: 1, label: 'A propos' }, { id: 2, label: 'Données' }, { id: 3, label: 'Historique' }]" [(ngModel)]="selected" optionLabel="label" optionValue="id" size="small">
+            <ng-template #item let-item>
+                <small class="font-bold">{{ item.label }}</small>
+            </ng-template>
+        </p-selectbutton>
+        @if (selected === 1) {
+            <app-delivery-man-informations></app-delivery-man-informations>
+        } 
+        @if (selected === 2) {
+            <app-delivery-man-data></app-delivery-man-data>
+        }
+        @if (selected === 3) {
+            <app-delivery-man-history></app-delivery-man-history>            
+        }
     </div>
 </p-drawer>
