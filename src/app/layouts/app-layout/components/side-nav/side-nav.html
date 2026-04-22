@@ -1,4 +1,4 @@
-<div class="flex flex-col justify-between bg-gray-50 h-full rounded-2xl p-5">
+<div class="flex flex-col justify-between h-full rounded-2xl p-5" style="background-color: #F1F5F9;">
     <div class="flex flex-col gap-5">
         <a routerLink="/">
             <img src="images/bolt-logo.png" alt="logo" style="width: 50px; height: 50px">
@@ -23,9 +23,12 @@
         </div>
     </div>
     <div class="flex flex-col items-center">
-        <a routerLink="/settings" routerLinkActive="bg-blue-100" #settingsLink="routerLinkActive" pTooltip="Paramètres" class="p-3 flex justify-center items-center rounded-lg transition-all w-12">
-            <i [ngClass]="['pi pi-cog', settingsLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
-        </a>
+        <div class="flex flex-col items-center gap-3">
+            <app-notification-popover></app-notification-popover>
+            <a routerLink="/settings" routerLinkActive="bg-blue-100" #settingsLink="routerLinkActive" pTooltip="Paramètres" class="p-3 flex justify-center items-center rounded-lg transition-all w-12">
+                <i [ngClass]="['pi pi-cog', settingsLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+            </a>
+        </div>
         <p-divider />
         <app-avatar-popover></app-avatar-popover>
     </div>

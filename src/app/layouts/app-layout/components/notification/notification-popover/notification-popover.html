@@ -1,0 +1,90 @@
+<p-popover #notificationPopover>
+    <div class="flex flex-col gap-2 w-100 h-[calc(100vh-300px)] px-2">
+        <div class="flex justify-between items-center">
+            <p style="font-size: 1rem;" [autofocus]="true">Notifications</p>
+            <div class="flex items-center gap-2">
+                <p-button (click)="handleMarkAllAsRead()" icon="pi pi-list-check" [rounded]="true" [text]="true" size="small" severity="secondary" pTooltip="Marquer tout comme lue" tooltipPosition="top" [disabled]="loading()" />
+                <p-overlaybadge [badgeDisabled]="(selectedDate() | date:'dd MM yyyy') === (today | date:'dd MM yyyy')" severity="danger">
+                    <p-button (click)="datepicker.toggle($event)" icon="pi pi-calendar" [rounded]="true" [text]="true" size="small" severity="secondary" pTooltip="Filtrer par date" tooltipPosition="top" [disabled]="loading()" />
+                </p-overlaybadge>
+                <p-popover #datepicker>
+                    <p-datepicker (onSelect)="handleSelectDate($event)" [showButtonBar]="true" [inline]="true">
+                        <ng-template #buttonbar let-todayCallback="todayCallback">
+                            <div class="flex justify-center w-full">
+                                <p-button label="Aujourd'hui" severity="info" variant="text" size="small" (onClick)="todayCallback()" />
+                            </div>
+                        </ng-template>
+                    </p-datepicker>
+                </p-popover>
+            </div>
+        </div>
+        <div class="flex flex-col gap-3 overflow-y-auto overflow-x-hidden h-full">
+            <p-selectbutton [options]="[{ id: 1, label: 'Tout' }, { id: 2, label: 'Non-lu' }]" [(ngModel)]="selected" optionLabel="label" optionValue="id" size="small" [disabled]="loading()">
+                <ng-template #item let-item>
+                    <small class="font-bold">{{ item.label }}</small>
+                </ng-template>
+            </p-selectbutton>
+            <div class="flex flex-col h-full">
+                @if (loading()) {
+                    <app-notification-placeholder></app-notification-placeholder>
+                } @else {
+                    @defer (on idle) {
+                        @for (notification of filtredData(); track $index) {
+                            <div (click)="handleOnClick(notification)" class="flex justify-between items-center cursor-pointer py-3 px-3 rounded-md hover:bg-gray-100">
+                                <div class="flex items-center gap-3">
+                                    <p-avatar 
+                                        [image]="notification.sender.profilePicture ?? undefined" 
+                                        [label]="!notification.sender.profilePicture ? ((notification.sender.commercialName ?? (notification.sender.name + ' ' + notification.sender.firstName)) | bigram) : undefined" 
+                                        shape="circle" 
+                                    />
+                                    <div class="flex flex-col gap-1 max-w-[85%]">
+                                        <p class="text-gray-400">
+                                            <span class="font-bold text-black">
+                                                {{ notification.sender.commercialName ?? (notification.sender.gender | civility) + ' ' + notification.sender.firstName }}
+                                            </span> 
+                                            @switch (notification.type) {
+                                                @case ("NEW_DELIVERY") {
+                                                    <span> a créée une nouvelle livraison</span>
+                                                }
+                                                @case ("CANCELLED_DELIVERY") {
+                                                    <span> a annulée une livraison</span>
+                                                }
+                                                @case ("PACKAGE_DELIVERED") {
+                                                    <span> vient de livré le colis de <span class="font-bold text-black">{{ notification.recipientName }}</span></span>
+                                                }
+                                                @case ("PACKAGE_REPORTED") {
+                                                    <span> a reporté le colis de <span class="font-bold text-black">{{ notification.recipientName }}</span></span>
+                                                }
+                                                @case ("PACKAGE_CANCELLED") {
+                                                    <span> a annulé le colis de <span class="font-bold text-black">{{ notification.recipientName }}</span></span>
+                                                }
+                                                @default {
+                                                    <span> - </span>
+                                                }
+                                            }
+                                        </p>
+                                        <small class="text-gray-400">{{ notification.createdAt | duration }}</small>
+                                    </div>
+                                </div>
+                                @if (!notification.isRead) {
+                                    <i class="pi pi-circle-fill text-blue-500" style="font-size: 0.4rem;"></i>
+                                }
+                            </div>
+                        } @empty {
+                            <div class="flex justify-center items-center flex-1">
+                                <p class="text-gray-400">Aucune notification trouvée</p>
+                            </div>
+                        }
+                    } @placeholder (minimum 600ms) {
+                        <app-notification-placeholder></app-notification-placeholder>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</p-popover>
+<div (click)="handleOpen($event)" class="p-3 flex justify-center items-center rounded-lg transition-all w-12 cursor-pointer">
+    <p-overlaybadge [badgeDisabled]="!hasNewNotification()" severity="danger">
+        <i class="pi pi-bell text-gray-400"></i>
+    </p-overlaybadge>
+</div>

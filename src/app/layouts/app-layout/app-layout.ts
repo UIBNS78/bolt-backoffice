@@ -5,6 +5,7 @@ import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service'
 import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { OwnersService } from 'app/pages/owners/owners-service';
 import { DeliveryPricesService } from 'app/pages/delivery-prices/delivery-prices-service';
+import { BrowserNotificationService } from 'core/services/browser-notification-service';
 
 @Component({
   selector: 'app-app-layout',
@@ -20,12 +21,14 @@ export class AppLayout implements OnInit {
   private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
   private readonly ownersService: OwnersService = inject(OwnersService);
   private readonly deliveryPricesSerivce: DeliveryPricesService = inject(DeliveryPricesService);
+  private readonly browserNotificationService: BrowserNotificationService = inject(BrowserNotificationService);
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
   ngOnInit(): void {
     this.loadAllOptions();
+    this.browserNotificationService.requestPermission();
   }
 
   private loadAllOptions(): void {

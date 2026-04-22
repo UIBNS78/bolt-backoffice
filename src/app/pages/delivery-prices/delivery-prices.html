@@ -6,24 +6,15 @@
         </div>
         <app-delivery-price-counts></app-delivery-price-counts>
     </div>
-    <p-tabs [value]="0">
-        <p-tablist>
-            @for (tab of tabs; track tab.id) {
-                <p-tab [value]="tab.id" class="flex items-center gap-2 text-inherit">
-                    <i [class]="tab.icon"></i>
-                    <span>{{ tab.label }}</span>
-                </p-tab>
-            }
-        </p-tablist>
-        <p-tabpanels>
-            <p-tabpanel [value]="0">
-                <app-delivery-price-city></app-delivery-price-city>
-            </p-tabpanel>
-            <p-tabpanel [value]="1" #secondTab>
-                @if (secondTab.active()) {
-                    <app-delivery-price-cooperative></app-delivery-price-cooperative>
-                }
-            </p-tabpanel>
-        </p-tabpanels>
-    </p-tabs>
+    <p-selectbutton [options]="[{ id: 1, label: 'Livraison à Antananarivo' }, { id: 2, label: 'Livraison en province' }]" [(ngModel)]="selected" optionLabel="label" optionValue="id" size="small">
+        <ng-template #item let-item>
+            <small class="font-bold">{{ item.label }}</small>
+        </ng-template>
+    </p-selectbutton>
+    @if (selected === 1) {
+        <app-delivery-price-city></app-delivery-price-city>
+    }
+    @if (selected === 2) {
+        <app-delivery-price-cooperative></app-delivery-price-cooperative>
+    }
 </div>

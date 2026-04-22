@@ -1,0 +1,15 @@
+<div class="flex flex-col gap-1">
+    @for (item of items; track $index) {
+        <div class="flex justify-between items-center p-3">
+            <div class="flex items-center gap-3">
+                <div>
+                    <p-skeleton size="2rem" shape="circle" />
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                    <p-skeleton height="10px" width="280px" />
+                    <p-skeleton height="10px" width="50px" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
