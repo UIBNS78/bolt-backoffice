@@ -70,7 +70,11 @@ export class NotificationPopover implements OnInit, OnDestroy {
     this.loadData();
   }
   
-  handleMarkAllAsRead(): void {}
+  handleMarkAllAsRead(): void {
+    this.notificationService.markAllAsRead().pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe(() => this.loadData());
+  }
 
   handleOnClick(notification: Notification): void {
     this.notificationService.markAsRead(notification.id).pipe(
