@@ -4,7 +4,18 @@
             <p style="font-size: 1rem;" [autofocus]="true">Notifications</p>
             <div class="flex items-center gap-2">
                 <p-button (click)="handleMarkAllAsRead()" icon="pi pi-list-check" [rounded]="true" [text]="true" size="small" severity="secondary" pTooltip="Marquer tout comme lue" tooltipPosition="top" [disabled]="loading()" />
-                <p-button icon="pi pi-calendar" [rounded]="true" [text]="true" size="small" severity="secondary" pTooltip="Filtrer par date" tooltipPosition="top" [disabled]="loading()" />
+                <p-overlaybadge [badgeDisabled]="(selectedDate() | date:'dd MM yyyy') === (today | date:'dd MM yyyy')" severity="danger">
+                    <p-button (click)="datepicker.toggle($event)" icon="pi pi-calendar" [rounded]="true" [text]="true" size="small" severity="secondary" pTooltip="Filtrer par date" tooltipPosition="top" [disabled]="loading()" />
+                </p-overlaybadge>
+                <p-popover #datepicker>
+                    <p-datepicker (onSelect)="handleSelectDate($event)" [showButtonBar]="true" [inline]="true">
+                        <ng-template #buttonbar let-todayCallback="todayCallback">
+                            <div class="flex justify-center w-full">
+                                <p-button label="Aujourd'hui" severity="info" variant="text" size="small" (onClick)="todayCallback()" />
+                            </div>
+                        </ng-template>
+                    </p-datepicker>
+                </p-popover>
             </div>
         </div>
         <div class="flex flex-col gap-3 overflow-y-auto overflow-x-hidden h-full">
@@ -13,7 +24,7 @@
                     <small class="font-bold">{{ item.label }}</small>
                 </ng-template>
             </p-selectbutton>
-            <div class="flex flex-col">
+            <div class="flex flex-col h-full">
                 @if (loading()) {
                     <app-notification-placeholder></app-notification-placeholder>
                 } @else {
@@ -61,7 +72,7 @@
                             </div>
                         } @empty {
                             <div class="flex justify-center items-center flex-1">
-                                <p class="text-gray-400">Aucune notifications pour le moment</p>
+                                <p class="text-gray-400">Aucune notification trouvée</p>
                             </div>
                         }
                     } @placeholder (minimum 600ms) {

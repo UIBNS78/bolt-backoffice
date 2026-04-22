@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, viewChild, ViewChild, WritableSignal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
@@ -17,6 +17,8 @@ import { Notification } from '@shared/types/notification';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { DurationPipe } from '@shared/pipes/duration-pipe';
+import { DatePickerModule } from 'primeng/datepicker';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-notification-popover',
@@ -31,7 +33,9 @@ import { DurationPipe } from '@shared/pipes/duration-pipe';
     NotificationPlaceholder,
     BigramPipe,
     CivilityPipe,
-    DurationPipe
+    DurationPipe,
+    DatePickerModule,
+    DatePipe
   ],
   templateUrl: './notification-popover.html',
   styleUrl: './notification-popover.css',
@@ -44,6 +48,8 @@ export class NotificationPopover implements OnInit, OnDestroy {
   
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject();
+  protected today: Date = new Date();
+  protected selectedDate: WritableSignal<Date> = signal(this.today);
   protected selected: WritableSignal<number> = signal(1);
   protected loading: WritableSignal<boolean> = signal(false);
   protected hasNewNotification: WritableSignal<boolean> = signal(false);
@@ -57,7 +63,8 @@ export class NotificationPopover implements OnInit, OnDestroy {
     }
   });
 
-  @ViewChild("notificationPopover") notificationPopover!: Popover
+  notificationPopover = viewChild<Popover>("notificationPopover");
+  datepicker = viewChild<Popover>("datepicker");
 
   ngOnInit(): void {
     this.socketService.onEvent(SOCKET_EVENT.newNotification, ({ title, body }: NotificationSocketData) => {
@@ -72,7 +79,7 @@ export class NotificationPopover implements OnInit, OnDestroy {
   }
   
   handleOpen(event: Event): void {
-    this.notificationPopover.toggle(event);
+    this.notificationPopover()!.toggle(event);
     this.hasNewNotification.set(false);
     this.loading.set(true);
     this.loadData();
@@ -85,15 +92,24 @@ export class NotificationPopover implements OnInit, OnDestroy {
   }
 
   handleOnClick(notification: Notification): void {
+    if (notification.isRead) return;
+    
     this.notificationService.markAsRead(notification.id).pipe(
       takeUntil(this.unsubscribe$),
     ).subscribe(() => this.loadData());
   }
 
+  handleSelectDate(date: Date): void {
+    this.selectedDate.set(date);
+    this.datepicker()!.hide();
+    this.loading.set(true);
+    this.loadData()
+  }
+
   private loadData(): void {
     this.notificationService.getAll({ 
-      startDate: format(new Date(), "yyyy-MM-dd"), 
-      endDate: format(new Date(), "yyyy-MM-dd") 
+      startDate: format(this.selectedDate(), "yyyy-MM-dd"), 
+      endDate: format(this.selectedDate(), "yyyy-MM-dd") 
     }).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
