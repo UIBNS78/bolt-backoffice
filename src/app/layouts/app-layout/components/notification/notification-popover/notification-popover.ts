@@ -10,6 +10,7 @@ import { Subject } from 'rxjs';
 import { NotificationPlaceholder } from '../notification-placeholder/notification-placeholder';
 import { SocketService } from 'core/services/socket-service';
 import { SOCKET_EVENT } from '@shared/types/socket';
+import { BrowserNotificationService } from 'core/services/browser-notification-service';
 
 @Component({
   selector: 'app-notification-popover',
@@ -29,6 +30,7 @@ import { SOCKET_EVENT } from '@shared/types/socket';
 export class NotificationPopover implements OnInit, OnDestroy {
   // services
   private readonly socketService: SocketService = inject(SocketService);
+  private readonly browserNotificationService: BrowserNotificationService = inject(BrowserNotificationService);
   
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject();
@@ -41,6 +43,9 @@ export class NotificationPopover implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.socketService.onEvent(SOCKET_EVENT.newNotification, () => {
       this.hasNewNotification.set(true);
+      this.browserNotificationService.show('Nouveau Colis', {
+        body: 'Une nouvelle livraison a été créée.'
+      });
     });
   }
 
