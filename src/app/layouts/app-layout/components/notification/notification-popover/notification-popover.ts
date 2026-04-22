@@ -9,7 +9,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { Subject } from 'rxjs';
 import { NotificationPlaceholder } from '../notification-placeholder/notification-placeholder';
 import { SocketService } from 'core/services/socket-service';
-import { SOCKET_EVENT } from '@shared/types/socket';
+import { NotificationSocketData, SOCKET_EVENT } from '@shared/types/socket';
 import { BrowserNotificationService } from 'core/services/browser-notification-service';
 
 @Component({
@@ -41,11 +41,9 @@ export class NotificationPopover implements OnInit, OnDestroy {
   @ViewChild("notificationPopover") notificationPopover!: Popover
 
   ngOnInit(): void {
-    this.socketService.onEvent(SOCKET_EVENT.newNotification, () => {
+    this.socketService.onEvent(SOCKET_EVENT.newNotification, ({ title, body }: NotificationSocketData) => {
       this.hasNewNotification.set(true);
-      this.browserNotificationService.show('Nouveau Colis', {
-        body: 'Une nouvelle livraison a été créée.'
-      });
+      this.browserNotificationService.show(title, { body });
     });
   }
 

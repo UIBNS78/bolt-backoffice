@@ -14,3 +14,7 @@ export const SOCKET_EVENT: {
     newPackage: 'NEW_PACKAGE',
 } as const;
 export type SocketEvent = ValueOf<typeof SOCKET_EVENT>;
+
+export type NotificationSocketData = {
+    title: string;
+    body: string;}
