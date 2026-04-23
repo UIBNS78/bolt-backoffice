@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, viewChild, ViewChild, WritableSignal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, viewChild, WritableSignal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
@@ -13,12 +13,13 @@ import { NotificationSocketData, SOCKET_EVENT } from '@shared/types/socket';
 import { BrowserNotificationService } from 'core/services/browser-notification-service';
 import { NotificationService } from '../notification-service';
 import { format } from 'date-fns';
-import { Notification } from '@shared/types/notification';
+import { Notification, NOTIFICATION_TYPES } from '@shared/types/notification';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { DurationPipe } from '@shared/pipes/duration-pipe';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-notification-popover',
@@ -45,6 +46,7 @@ export class NotificationPopover implements OnInit, OnDestroy {
   private readonly socketService: SocketService = inject(SocketService);
   private readonly browserNotificationService: BrowserNotificationService = inject(BrowserNotificationService);
   private readonly notificationService: NotificationService = inject(NotificationService);
+  private readonly router: Router = inject(Router);
   
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject();
@@ -92,11 +94,27 @@ export class NotificationPopover implements OnInit, OnDestroy {
   }
 
   handleOnClick(notification: Notification): void {
-    if (notification.isRead) return;
+    if (!notification.isRead) {
+      this.notificationService.markAsRead(notification.id).pipe(
+        takeUntil(this.unsubscribe$),
+      ).subscribe();
+    }
     
-    this.notificationService.markAsRead(notification.id).pipe(
-      takeUntil(this.unsubscribe$),
-    ).subscribe(() => this.loadData());
+    switch(notification.type) {
+      case NOTIFICATION_TYPES.newDelivery:
+      case NOTIFICATION_TYPES.cancelledDelivery: {
+        this.router.navigate(
+          ['/deliveries/list'], 
+          { 
+            queryParams: { 
+              delivery: notification.targetId
+            }
+          }
+        );
+        break;
+      }
+    }
+    this.notificationPopover()!.hide();
   }
 
   handleSelectDate(date: Date): void {

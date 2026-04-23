@@ -1,4 +1,4 @@
-import { Component, Signal, signal, viewChild, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, Signal, signal, viewChild, WritableSignal } from '@angular/core';
 import { DeliveriesCount } from '../../components/delivery/deliveries-count/deliveries-count';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -9,7 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { DeliveriesList } from '../../components/delivery/deliveries-list/deliveries-list';
 import { Delivery } from '@shared/types/delivery';
 import { DeliveryPackagesList } from '../../components/package/delivery-packages-list/delivery-packages-list';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-delivery-list',
@@ -28,10 +29,18 @@ import { RouterLink } from '@angular/router';
   templateUrl: './delivery-list.html',
   styleUrl: './delivery-list.css',
 })
-export class DeliveryList {
+export class DeliveryList implements OnInit {
+  // services
+  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
+  private readonly messageService: MessageService = inject(MessageService);
+  
+  // vars
   private readonly deliveryByOwnerChild: Signal<DeliveriesList | undefined> = viewChild(DeliveriesList);
-
   protected selectedDelivery: WritableSignal<Delivery | null> = signal(null); 
+
+  ngOnInit(): void {
+    this.handleAutoSelectDelivery();
+  }
 
   handleOnSelectDelivery(delivery: Delivery): void {
     this.selectedDelivery.set(delivery);
@@ -40,6 +49,25 @@ export class DeliveryList {
   handleReloadDeliveries(): void {
     this.deliveryByOwnerChild()!.loadData();
   }
-  
-  handleOpenForm(): void {}
+
+  private handleAutoSelectDelivery(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params["delivery"]) {
+        const deliveryId: number = parseInt(params["delivery"]!, 10);
+
+        // check delivery id
+        if (Number.isNaN(deliveryId)) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'L\'identifiant de livraison fourni est invalide.'
+          });
+
+          return;
+        }
+
+        this.deliveryByOwnerChild()!.loadByQueryParams(deliveryId);
+      }
+    });
+  }
 }
