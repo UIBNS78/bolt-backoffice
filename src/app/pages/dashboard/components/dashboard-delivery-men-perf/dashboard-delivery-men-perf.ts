@@ -19,8 +19,9 @@ export class DashboardDeliveryMenPerf {
       name: 'Jean Dupont',
       packages: {
         total: 145,
+        inProgress: 40,
         delivered: 100,
-        reported: 40,
+        reported: 0,
         cancelled: 5
       },
       payment: 120000
@@ -29,8 +30,9 @@ export class DashboardDeliveryMenPerf {
       name: 'Marie Martin',
       packages: {
         total: 95,
+        inProgress: 10,
         delivered: 80,
-        reported: 14,
+        reported: 4,
         cancelled: 1
       },
       payment: 78000
@@ -39,8 +41,9 @@ export class DashboardDeliveryMenPerf {
       name: 'Pierre Durand',
       packages: {
         total: 45,
+        inProgress: 15,
         delivered: 30,
-        reported: 15,
+        reported: 0,
         cancelled: 0
       },
       payment: 25000

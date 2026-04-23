@@ -11,12 +11,20 @@
                 <th style="text-align: center;">Versement</th>
             </tr>
         </ng-template>
-        <ng-template #body let-man>
+        <ng-template #body let-man let-last>
             <tr>
                 <td>{{ man.name }}</td>
                 <td style="text-align: center;">{{ man.packages.total }}</td>
                 <td>
                     <div class="flex items-center justify-center gap-2">
+                        <div class="flex items-center justify-center">
+                            <p-tag severity="info" [rounded]="true">
+                                <div class="flex items-center justify-between gap-2">
+                                    <i class="pi pi-bullseye" style="font-size: 0.7rem;"></i>
+                                    <small style="font-size: 0.6rem;">{{ man.packages.delivered }}</small>
+                                </div>
+                            </p-tag>
+                        </div>
                         <div class="flex items-center justify-center">
                             <p-tag severity="success" [rounded]="true">
                                 <div class="flex items-center justify-between gap-2">
@@ -43,7 +51,7 @@
                         </div>
                     </div>
                 </td>
-                <td style="text-align: center;">{{ man.payment.toLocaleString('fr-FR') }} Ar</td>
+                <td class="font-bold" style="text-align: center;">{{ man.payment.toLocaleString('fr-FR') }} Ar</td>
             </tr>
         </ng-template>
     </p-table>
