@@ -26,6 +26,7 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { Delivery } from '@shared/types/delivery';
 import { PackageActivities } from '../package-activities/package-activities';
 import { DeliveryDetailsDrawer } from '../../delivery/delivery-details-drawer/delivery-details-drawer';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-delivery-packages-list',
@@ -56,12 +57,14 @@ import { DeliveryDetailsDrawer } from '../../delivery/delivery-details-drawer/de
 export class DeliveryPackagesList implements OnDestroy {
   // services
   private readonly deliveriesService: DeliveriesService = inject(DeliveriesService);
-  protected dialogService: DialogService = inject(DialogService);
-  private messageService: MessageService = inject(MessageService);
+  private readonly dialogService: DialogService = inject(DialogService);
+  private readonly messageService: MessageService = inject(MessageService);
+  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   // vars
   @Output() loadDeliveryEmitter: EventEmitter<void> = new EventEmitter<void>();
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
+  protected flashingPackageId: WritableSignal<number | null> = signal<number | null>(null);
   protected showPackageForm: WritableSignal<boolean> = signal(false);
   protected showPackageActivity: WritableSignal<boolean> = signal(false);
   protected showDeliveryForm: WritableSignal<boolean> = signal(false);
@@ -118,6 +121,7 @@ export class DeliveryPackagesList implements OnDestroy {
 
       this.hasFilter.set(false);
       this.packages.set(packages);
+      this.triggerFlash();
     });
   }
 
@@ -236,6 +240,28 @@ export class DeliveryPackagesList implements OnDestroy {
           
           this.loadData();
         });
+      }
+    });
+  }
+
+  private triggerFlash() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params["package"]) {
+        const packageId: number = parseInt(params["package"]!, 10);
+
+        // check package id
+        if (Number.isNaN(packageId)) {
+          return;
+        }
+
+        this.flashingPackageId.set(packageId);
+        
+        // remove class after animation (2s)
+        setTimeout(() => {
+          if (this.flashingPackageId() === packageId) {
+            this.flashingPackageId.set(null);
+          }
+        }, 2000);
       }
     });
   }

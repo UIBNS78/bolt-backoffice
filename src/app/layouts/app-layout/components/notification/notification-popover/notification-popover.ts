@@ -12,7 +12,7 @@ import { SocketService } from 'core/services/socket-service';
 import { NotificationSocketData, SOCKET_EVENT } from '@shared/types/socket';
 import { BrowserNotificationService } from 'core/services/browser-notification-service';
 import { NotificationService } from '../notification-service';
-import { format } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 import { Notification, NOTIFICATION_TYPES } from '@shared/types/notification';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
@@ -113,13 +113,31 @@ export class NotificationPopover implements OnInit, OnDestroy {
         );
         break;
       }
+      case NOTIFICATION_TYPES.packageDelivered:
+      case NOTIFICATION_TYPES.packageReported:
+      case NOTIFICATION_TYPES.cancelledDelivery: {
+        this.router.navigate(
+          ['/deliveries/list'], 
+          { 
+            queryParams: { 
+              package: notification.targetId
+            }
+          }
+        );
+        break;
+      }
     }
+    this.selectedDate.set(this.today);
+    this.selected.set(1);
     this.notificationPopover()!.hide();
   }
 
   handleSelectDate(date: Date): void {
-    this.selectedDate.set(date);
     this.datepicker()!.hide();
+    
+    if (isSameDay(date, this.selectedDate())) return;
+
+    this.selectedDate.set(date);
     this.loading.set(true);
     this.loadData()
   }

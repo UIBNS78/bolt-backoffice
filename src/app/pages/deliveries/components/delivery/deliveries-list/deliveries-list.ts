@@ -1,5 +1,5 @@
 import { DatePipe, NgClass } from '@angular/common';
-import { Component, computed, effect, EventEmitter, inject, OnDestroy, Output, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, OnDestroy, OnInit, Output, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
 import { DeliveryStatusSeverityPipe } from '@shared/pipes/delivery-pipes/delivery-status-severity-pipe';
 import { DeliveryStatusPipe } from '@shared/pipes/delivery-pipes/delivery-status.pipe';
 import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
@@ -57,7 +57,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './deliveries-list.html',
   styleUrl: './deliveries-list.css',
 })
-export class DeliveriesList implements OnDestroy {
+export class DeliveriesList implements OnInit, OnDestroy {
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
 
   // servives
@@ -116,6 +116,10 @@ export class DeliveriesList implements OnDestroy {
     });
   }
 
+  ngOnInit(): void {
+    this.handleAutoSelectDelivery();
+  }
+  
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -159,7 +163,7 @@ export class DeliveriesList implements OnDestroy {
     container.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  public loadByQueryParams(deliveryId: number): void {
+  public loadByDeliveryIdFromQueryParams(deliveryId: number): void {
     this.isLoading.set(true);
     this.deliviverisService.getDeliveryByIdWithDate(deliveryId).pipe(
       takeUntil(this.unsubscribe$),
@@ -179,6 +183,66 @@ export class DeliveriesList implements OnDestroy {
         });
       }
     })
+  }
+
+  public loadByPackageIdFromQueryParams(packageId: number): void {
+    this.isLoading.set(true);
+    this.deliviverisService.getDeliveryByPackageIdWithDate(packageId).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.isLoading.set(false))
+    ).subscribe(response => {
+      if (response) {
+        this.deliveryIdQueryParam.set(response.deliveries[0].id);
+        this.selectedDate.set(new Date(response.date));
+      } else {
+        this.searchControl.disable();
+        this.data.set({ deliveries: [], totalItems: 0 });
+        this.deliveryIdQueryParam.set(null);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'La livraison demandée est introuvable.'
+        });
+      }
+    })
+  }
+
+  private handleAutoSelectDelivery(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params["delivery"]) {
+        const deliveryId: number = parseInt(params["delivery"]!, 10);
+
+        // check delivery id
+        if (Number.isNaN(deliveryId)) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'L\'identifiant de la livraison est invalide.'
+          });
+
+          return;
+        }
+
+        this.loadByDeliveryIdFromQueryParams(deliveryId);
+      }
+
+      if (params["package"]) {
+        const packageId: number = parseInt(params["package"]!, 10);
+
+        // check package id
+        if (Number.isNaN(packageId)) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: 'L\'identifiant du colis est invalide.'
+          });
+
+          return;
+        }
+
+        this.loadByPackageIdFromQueryParams(packageId);
+      }
+    });
   }
 
   private selectDeliveryWithId(deliveryId: number): void {
