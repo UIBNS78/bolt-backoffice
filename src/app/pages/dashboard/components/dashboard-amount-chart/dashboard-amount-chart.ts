@@ -1,15 +1,16 @@
-import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ChartModule } from 'primeng/chart';
-import { isPlatformBrowser } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-dashboard-amount-chart',
   imports: [
     FormsModule,
     SelectButtonModule,
-    ChartModule
+    ChartModule,
+    ButtonModule
   ],
   templateUrl: './dashboard-amount-chart.html',
   styleUrl: './dashboard-amount-chart.css',
@@ -31,20 +32,14 @@ export class DashboardAmountChart implements OnInit {
     const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
 
     this.data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
         datasets: [
             {
-                label: 'My First dataset',
-                backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
-                borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-                data: [65, 59, 80, 81, 56, 55, 40]
+                label: 'Frais de livraison',
+                backgroundColor: documentStyle.getPropertyValue('--p-blue-300'),
+                borderColor: documentStyle.getPropertyValue('--p-blue-300'),
+                data: [65, 59, 80, 81, 56, 55, 40, 20, 35, 45, 60, 15]
             },
-            {
-                label: 'My Second dataset',
-                backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
-                borderColor: documentStyle.getPropertyValue('--p-gray-500'),
-                data: [28, 48, 40, 19, 86, 27, 90]
-            }
         ]
     };
 
@@ -53,9 +48,7 @@ export class DashboardAmountChart implements OnInit {
         aspectRatio: 0.8,
         plugins: {
             legend: {
-                labels: {
-                    color: textColor
-                }
+              display: false
             }
         },
         scales: {

@@ -1,7 +1,12 @@
 <div class="flex flex-col gap-4 border rounded-xl border-gray-200 flex-1 p-4">
     <div class="flex justify-between items-center">
         <p class="font-bold">Status des colis</p>
-        <p-button label="Aujourd'hui" icon="pi pi-calendar" iconPos="right" size="small" [text]="true" severity="secondary" />
+        <p-button size="small" [rounded]="true" [text]="true" severity="secondary">
+            <div class="flex items-center gap-2 justify-between">
+                <small>Aujourd'hui</small>
+                <i class="pi pi-calendar" style="font-size: 0.8rem;"></i>
+            </div>
+        </p-button>
     </div>
     <p-metergroup [value]="packages">
         <ng-template pTemplate="label"></ng-template>
