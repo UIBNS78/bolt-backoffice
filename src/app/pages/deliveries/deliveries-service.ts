@@ -9,6 +9,7 @@ import { Package, PackageForm } from '@shared/types/package';
 import { DeliveryDrawerForm } from './types/delivery-drawer-form';
 import { DeliveryDetails } from './types/delivery-details';
 import { DateRange } from '@shared/types/common';
+import { DeliveryByDate } from '@shared/types/delivery';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,12 @@ export class DeliveriesService {
     });
     
     return this.http.get<DeliveryList>(`${environment.apiURL}/deliveries/all-by-owners`, { params });
+  }
+
+  getDeliveryByIdWithDate(id: number): Observable<DeliveryByDate | null> {
+    return this.http.get<{ delivery: DeliveryByDate | null }>(`${environment.apiURL}/deliveries/${id}`).pipe(
+      map(data => data.delivery)
+    );
   }
 
   getDeliveryCount(): Observable<DeliveryCount> {

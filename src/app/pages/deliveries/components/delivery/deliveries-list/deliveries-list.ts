@@ -25,6 +25,8 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { format } from 'date-fns';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MessageService } from 'primeng/api';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-deliveries-list',
@@ -60,12 +62,16 @@ export class DeliveriesList implements OnDestroy {
 
   // servives
   private readonly deliviverisService: DeliveriesService = inject(DeliveriesService);
+  private readonly messageService: MessageService = inject(MessageService);
+  private readonly router: Router = inject(Router);
+  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   // vars
-  @Output() onSelectEmitter: EventEmitter<Delivery> = new EventEmitter<Delivery>();
+  @Output() onSelectEmitter: EventEmitter<Delivery | null> = new EventEmitter<Delivery | null>();
   @ViewChild("datepicker") datepicker!: Popover;
   protected today: Date = new Date();
   protected selectedDate: WritableSignal<Date> = signal(this.today);
+  protected deliveryIdQueryParam: WritableSignal<number | null> = signal(null);
   protected showScroll: WritableSignal<boolean> = signal(false);
   protected selectedDelivery: WritableSignal<Delivery | null> = signal(null);
   protected first: WritableSignal<number> = signal(0);
@@ -128,17 +134,20 @@ export class DeliveriesList implements OnDestroy {
       else this.searchControl.disable();
       
       this.data.set(response);
+      if (this.deliveryIdQueryParam()) this.selectDeliveryWithId(this.deliveryIdQueryParam()!);
     });
   }
 
-  handleSelectDelivery(delivery: Delivery): void {
+  handleSelectDelivery(delivery: Delivery | null): void {
     this.selectedDelivery.set(delivery);
     this.onSelectEmitter.emit(delivery);
   }
   
   handleSelectDate(date: Date): void {
     this.selectedDate.set(date);
-    this.selectedDelivery.set(null);
+    this.clearQueryParams();
+    this.deliveryIdQueryParam.set(null);
+    this.handleSelectDelivery(null);
     this.datepicker.hide();
   }
 
@@ -148,5 +157,40 @@ export class DeliveriesList implements OnDestroy {
 
   scrollToTop(container: HTMLElement) {
     container.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  public loadByQueryParams(deliveryId: number): void {
+    this.isLoading.set(true);
+    this.deliviverisService.getDeliveryByIdWithDate(deliveryId).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.isLoading.set(false))
+    ).subscribe(response => {
+      if (response) {
+        this.selectedDate.set(new Date(response.date));
+        this.deliveryIdQueryParam.set(deliveryId);
+      } else {
+        this.searchControl.disable();
+        this.data.set({ deliveries: [], totalItems: 0 });
+        this.deliveryIdQueryParam.set(null);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Erreur',
+          detail: 'La livraison demandée est introuvable.'
+        });
+      }
+    })
+  }
+
+  private selectDeliveryWithId(deliveryId: number): void {
+    const delivery = this.data().deliveries.flatMap(d => d.deliveries).find(d => d.id === deliveryId);
+    if (delivery) this.handleSelectDelivery(delivery);
+  }
+
+  private clearQueryParams() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {},
+      replaceUrl: true
+    });
   }
 }

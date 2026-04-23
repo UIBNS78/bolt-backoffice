@@ -22,7 +22,7 @@
                     </p-divider>
                     <div class="flex flex-col gap-2">
                         @for (delivery of d.deliveries; track $index) {
-                            <div (click)="handleSelectDelivery(delivery)" [ngClass]="['flex justify-between items-center py-3 px-4 rounded-xl cursor-pointer', selectedDelivery()?.id === delivery.id ? 'bg-linear-to-t from-sky-500 to-indigo-500' : 'bg-gray-100']">
+                            <div (click)="handleSelectDelivery(delivery)" [ngClass]="['flex justify-between items-center py-3 px-4 rounded-xl cursor-pointer', selectedDelivery()?.id === delivery.id ? 'bg-linear-to-t from-sky-500 to-indigo-500' : 'bg-[#F1F5F9]']">
                                 <div class="flex flex-col gap-2 flex-1">
                                     <div class="flex items-center justify-between flex-1">
                                         <div class="flex items-center gap-2">
@@ -100,7 +100,7 @@
 </div>
 
 <p-popover #datepicker>
-    <p-datepicker (onSelect)="handleSelectDate($event)" [showButtonBar]="true" [inline]="true">
+    <p-datepicker [(ngModel)]="selectedDate" (onSelect)="handleSelectDate($event)" [showButtonBar]="true" [inline]="true">
         <ng-template #buttonbar let-todayCallback="todayCallback">
             <div class="flex justify-center w-full">
                 <p-button label="Aujourd'hui" severity="info" variant="text" size="small" (onClick)="todayCallback()" />
