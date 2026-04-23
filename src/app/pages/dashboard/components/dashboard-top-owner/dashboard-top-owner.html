@@ -1,0 +1,37 @@
+<div class="flex flex-col gap-3 border rounded-xl border-gray-200 flex-1 p-4">
+    <div class="flex justify-between items-center">
+        <p class="font-bold">Top 3 propriétaire</p>
+    </div>
+    <div class="flex justify-between items-center">
+        <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-2">
+                <p-overlay-badge severity="info" class="inline-flex">
+                    <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" />
+                </p-overlay-badge>
+                <div class="flex flex-col">
+                    <p>Rabary Lodge</p>
+                    <small class="text-gray-400">3 000 000 Ar</small>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <p-overlay-badge severity="warn" class="inline-flex">
+                    <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/asiyajavayant.png" shape="circle" />
+                </p-overlay-badge>
+                <div class="flex flex-col">
+                    <p>USA Shirt</p>
+                    <small class="text-gray-400">700 000 Ar</small>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <p-overlay-badge severity="contrast" class="inline-flex">
+                    <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/onyamalimba.png" shape="circle" />
+                </p-overlay-badge>
+                <div class="flex flex-col">
+                    <p>Mikata</p>
+                    <small class="text-gray-400">100 000 Ar</small>
+                </div>
+            </div>
+        </div>
+        <p-chart type="doughnut" [data]="data" [options]="options" class="w-[9rem]" />
+    </div>
+</div>
