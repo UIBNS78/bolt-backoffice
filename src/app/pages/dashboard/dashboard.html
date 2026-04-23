@@ -7,15 +7,17 @@
     </div>
     <div class="flex flex-col gap-2 h-[calc(100vh-120px)] overflow-x-hidden overflow-y-auto">
         <div class="flex gap-3 w-full">
-            <div class="flex flex-col gap-3 flex-1">
-                <app-dashboard-counts></app-dashboard-counts>
-
-                <app-dashboard-amount-chart></app-dashboard-amount-chart>
-            </div>
             <div class="flex flex-col gap-3 w-100">
                 <app-dashboard-package-status></app-dashboard-package-status>
 
                 <app-dashboard-top-owner></app-dashboard-top-owner>
+            </div>
+            <div class="flex flex-col gap-3 flex-1">
+                <app-dashboard-counts></app-dashboard-counts>
+
+                <app-dashboard-delivery-men-perf></app-dashboard-delivery-men-perf>
+
+                <app-dashboard-amount-chart></app-dashboard-amount-chart>
             </div>
         </div>
     </div>

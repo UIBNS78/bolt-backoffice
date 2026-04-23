@@ -1,0 +1,50 @@
+<div class="flex flex-col gap-3 border rounded-xl border-gray-200 flex-1 p-4">
+    <div class="flex justify-between items-center">
+        <p class="font-bold">Performance des livreurs</p>
+    </div>
+    <p-table [value]="deliveryMenPerf" size="small">
+        <ng-template #header>
+            <tr>
+                <th>Nom</th>
+                <th style="text-align: center;">Nombre de colis</th>
+                <th style="text-align: center;">Colis</th>
+                <th style="text-align: center;">Versement</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-man>
+            <tr>
+                <td>{{ man.name }}</td>
+                <td style="text-align: center;">{{ man.packages.total }}</td>
+                <td>
+                    <div class="flex items-center justify-center gap-2">
+                        <div class="flex items-center justify-center">
+                            <p-tag severity="success" [rounded]="true">
+                                <div class="flex items-center justify-between gap-2">
+                                    <i class="pi pi-check" style="font-size: 0.7rem;"></i>
+                                    <small style="font-size: 0.6rem;">{{ man.packages.delivered }}</small>
+                                </div>
+                            </p-tag>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <p-tag severity="warn" [rounded]="true">
+                                <div class="flex items-center justify-between gap-2">
+                                    <i class="pi pi-refresh" style="font-size: 0.7rem;"></i>
+                                    <small style="font-size: 0.6rem;">{{ man.packages.reported }}</small>
+                                </div>
+                            </p-tag>
+                        </div>
+                        <div class="flex items-center justify-center">
+                            <p-tag severity="danger" [rounded]="true">
+                                <div class="flex items-center justify-between gap-2">
+                                    <i class="pi pi-times" style="font-size: 0.7rem;"></i>
+                                    <small style="font-size: 0.6rem;">{{ man.packages.cancelled }}</small>
+                                </div>
+                            </p-tag>
+                        </div>
+                    </div>
+                </td>
+                <td style="text-align: center;">{{ man.payment.toLocaleString('fr-FR') }} Ar</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
