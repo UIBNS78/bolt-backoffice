@@ -67,7 +67,7 @@ export class DeliveriesList implements OnDestroy {
   private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   // vars
-  @Output() onSelectEmitter: EventEmitter<Delivery> = new EventEmitter<Delivery>();
+  @Output() onSelectEmitter: EventEmitter<Delivery | null> = new EventEmitter<Delivery | null>();
   @ViewChild("datepicker") datepicker!: Popover;
   protected today: Date = new Date();
   protected selectedDate: WritableSignal<Date> = signal(this.today);
@@ -138,7 +138,7 @@ export class DeliveriesList implements OnDestroy {
     });
   }
 
-  handleSelectDelivery(delivery: Delivery): void {
+  handleSelectDelivery(delivery: Delivery | null): void {
     this.selectedDelivery.set(delivery);
     this.onSelectEmitter.emit(delivery);
   }
@@ -147,7 +147,7 @@ export class DeliveriesList implements OnDestroy {
     this.selectedDate.set(date);
     this.clearQueryParams();
     this.deliveryIdQueryParam.set(null);
-    this.selectedDelivery.set(null);
+    this.handleSelectDelivery(null);
     this.datepicker.hide();
   }
 

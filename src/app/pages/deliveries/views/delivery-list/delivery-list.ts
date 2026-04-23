@@ -42,7 +42,7 @@ export class DeliveryList implements OnInit {
     this.handleAutoSelectDelivery();
   }
 
-  handleOnSelectDelivery(delivery: Delivery): void {
+  handleOnSelectDelivery(delivery: Delivery | null): void {
     this.selectedDelivery.set(delivery);
   }
 
