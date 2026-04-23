@@ -56,7 +56,7 @@
                             </tr>
                         </ng-template>
                         <ng-template #body let-package>
-                            <tr>
+                            <tr [class.row-flash]="flashingPackageId() === package.id">
                                 <td>{{ package.id }}</td>
                                 <td>{{ package.customer.gender | civility }} {{ package.customer.name }}</td>
                                 <td>

@@ -27,7 +27,13 @@ export class DeliveriesService {
   }
 
   getDeliveryByIdWithDate(id: number): Observable<DeliveryByDate | null> {
-    return this.http.get<{ delivery: DeliveryByDate | null }>(`${environment.apiURL}/deliveries/${id}`).pipe(
+    return this.http.get<{ delivery: DeliveryByDate | null }>(`${environment.apiURL}/deliveries/delivery/${id}`).pipe(
+      map(data => data.delivery)
+    );
+  }
+
+  getDeliveryByPackageIdWithDate(id: number): Observable<DeliveryByDate | null> {
+    return this.http.get<{ delivery: DeliveryByDate | null }>(`${environment.apiURL}/deliveries/delivery/package/${id}`).pipe(
       map(data => data.delivery)
     );
   }
