@@ -20,7 +20,18 @@
                 </div>
             </div>
         </div>
-        <p-selectbutton [options]="[{ id: 1, label: 'A propos' }, { id: 2, label: 'Données' }, { id: 3, label: 'Historique' }]" [(ngModel)]="selected" optionLabel="label" optionValue="id" size="small">
+        <p-selectbutton 
+            [options]="[
+                { id: 1, label: 'A propos' }, 
+                { id: 2, label: 'Données' }, 
+                { id: 3, label: 'Historique' }
+            ]" 
+            [(ngModel)]="selected" 
+            optionLabel="label" 
+            optionValue="id" 
+            size="small"
+            [unselectable]="true"
+        >
             <ng-template #item let-item>
                 <small class="font-bold">{{ item.label }}</small>
             </ng-template>

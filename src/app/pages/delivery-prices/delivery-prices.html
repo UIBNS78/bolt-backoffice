@@ -6,7 +6,17 @@
         </div>
         <app-delivery-price-counts></app-delivery-price-counts>
     </div>
-    <p-selectbutton [options]="[{ id: 1, label: 'Livraison à Antananarivo' }, { id: 2, label: 'Livraison en province' }]" [(ngModel)]="selected" optionLabel="label" optionValue="id" size="small">
+    <p-selectbutton 
+        [options]="[
+            { id: 1, label: 'Livraison à Antananarivo' }, 
+            { id: 2, label: 'Livraison en province' }
+        ]" 
+        [(ngModel)]="selected" 
+        optionLabel="label" 
+        optionValue="id" 
+        size="small"
+        [unselectable]="true"
+    >
         <ng-template #item let-item>
             <small class="font-bold">{{ item.label }}</small>
         </ng-template>
