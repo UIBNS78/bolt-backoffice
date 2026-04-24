@@ -1,4 +1,5 @@
 import { Component, EventEmitter, input, InputSignal, Output } from '@angular/core';
+import { FormatImageSizePipe } from '@shared/pipes/format-image-size-pipe';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { FileUploadEvent, FileUploadModule } from 'primeng/fileupload';
@@ -10,7 +11,8 @@ import { MessageModule } from 'primeng/message';
     DialogModule,
     FileUploadModule,
     ButtonModule,
-    MessageModule
+    MessageModule,
+    FormatImageSizePipe
   ],
   templateUrl: './driver-information-dialog.html',
   styleUrl: './driver-information-dialog.css',
@@ -26,19 +28,6 @@ export class DriverInformationDialog {
   handleSubmit(): void {
     console.log('submit');
     this.handleClose();
-  }
-
-  formatSize(bytes: number): string {
-    if (bytes === 0) return '0 Octet';
-
-    const k = 1024;
-    const dm = 3;
-    const sizes = ['Octets', 'Ko', 'Mo', 'Go', 'To'];
-
-    // On calcule l'index de l'unité (0 pour Octets, 1 pour Ko, etc.)
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
   
   handleClose(): void {

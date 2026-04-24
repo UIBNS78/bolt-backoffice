@@ -36,6 +36,7 @@ export type Package = {
     fixedTime?: string;
     description?: string;
     status: PackageStatus;
+    driverInformation: string | null;
     deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName" | "gender">;
 } & { isStatusChanging?: boolean } & Pick<LoadingState, "isDeleting">
 

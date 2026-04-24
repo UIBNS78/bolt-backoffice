@@ -1,10 +1,10 @@
-import { Component, EventEmitter, inject, Input, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, inject, Input, OnDestroy, Output, Signal, signal, ViewChild, viewChild, WritableSignal } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService, SelectItemGroup } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
 import { distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveriesService } from '../../../deliveries-service';
-import { PackageType, packageTypeObj, Package, PACKAGE_STATUS, PackageForm } from '@shared/types/package';
+import { PackageType, packageTypeObj, Package, PACKAGE_STATUS, PackageForm, PackageStatus } from '@shared/types/package';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
@@ -21,6 +21,8 @@ import { packageStatusOptions as packageStatusOpt } from '@shared/constants/pack
 import { NgClass } from '@angular/common';
 import { InputMaskModule } from 'primeng/inputmask';
 import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
+import { FormatImageSizePipe } from '@shared/pipes/format-image-size-pipe';
 
 @Component({
   selector: 'app-delivery-package-form',
@@ -35,7 +37,10 @@ import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service'
     FieldsetModule,
     ToggleSwitchModule,
     NgClass,
-    InputMaskModule
+    InputMaskModule,
+    FileUploadModule,
+    FormatImageSizePipe,
+    NgClass
   ],
   templateUrl: './delivery-package-form.html',
   styleUrl: './delivery-package-form.css',
@@ -90,10 +95,12 @@ export class DeliveryPackageForm implements OnDestroy {
       deliveryPrice: [{ value: data?.deliveryPrice ?? '', disabled: true }, [Validators.required, Validators.min(0)]],
       isFragile: [data?.isFragile ?? false, [Validators.required]],
       status: [data?.status ?? PACKAGE_STATUS.inProgress, [Validators.required, Validators.min(1), Validators.max(4)]],
+      driverInformation: [{ value: data?.driverInformation ?? null, disabled: true }],
     });
 
     
     this.packageTypeListener();
+    this.packageStatusListener();
     this.locationInCityListener();
     this.locationOutCityListener();
 
@@ -103,6 +110,9 @@ export class DeliveryPackageForm implements OnDestroy {
   }
   get form(): FormGroup {
     return this._form;
+  }
+  get packageStatusControl(): FormControl {
+    return this.form.get('status') as FormControl;
   }
 
   ngOnDestroy(): void {
@@ -133,6 +143,7 @@ export class DeliveryPackageForm implements OnDestroy {
       deliveryPrice: values.deliveryPrice,
       isFragile: values.isFragile,
       status: values.status,
+      driverInformation: values.driverInformation
     } as PackageForm;
 
     if (this.isUpdate()) {
@@ -173,6 +184,21 @@ export class DeliveryPackageForm implements OnDestroy {
     });
   }
 
+  handleOnSelectFile(event: FileSelectEvent): void {
+    const file = event.currentFiles[0];
+    this.form.patchValue({
+      driverInformation: file
+    });
+    this.form.get("driverInformation")?.markAsTouched();
+  }
+
+  handleOnRemoveFile(): void {
+    this.form.patchValue({
+      driverInformation: null
+    });
+    this.form.get("driverInformation")?.markAsTouched();
+  }
+  
   handleClose(isCancel: boolean = false): void {
     this.form.reset(this.initialFormValues());
     this.onCloseEmitter.emit(isCancel);
@@ -188,6 +214,25 @@ export class DeliveryPackageForm implements OnDestroy {
     });
   }
 
+  private packageStatusListener(): void {
+    this.form.get("status")?.valueChanges.pipe(
+      takeUntil(this.unsubscribe$),
+      distinctUntilChanged()
+    ).subscribe((value: PackageStatus) => {
+      if (value === PACKAGE_STATUS.delivered && this.packageTypeSignal() === packageTypeObj.outCity) {
+        this.form.setControl("driverInformation", this.formBuilder.control('', [Validators.required]));
+        this.form.get("driverInformation")?.enable();
+      } else {
+        this.form.get("driverInformation")?.disable();
+        this.form.removeControl("driverInformation");
+        this.form.patchValue({
+          driverInformation: null
+        });
+        this.form.get("driverInformation")?.markAsTouched();
+      }
+    });
+  }
+  
   private rebuildForm(packageType: PackageType): void {
     let locationControl: FormGroup = this.formBuilder.group({});
     
