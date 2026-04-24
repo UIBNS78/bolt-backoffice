@@ -1,6 +1,12 @@
 <div class="flex flex-col gap-3 border rounded-xl border-gray-200 flex-1 p-4">
     <div class="flex justify-between items-center">
         <p class="font-bold">Performance des livreurs</p>
+        <p-button size="small" [rounded]="true" [text]="true" severity="secondary">
+            <div class="flex items-center gap-2 justify-between">
+                <small>Aujourd'hui</small>
+                <i class="pi pi-calendar" style="font-size: 0.8rem;"></i>
+            </div>
+        </p-button>
     </div>
     <p-table [value]="deliveryMenPerf" size="small">
         <ng-template #header>

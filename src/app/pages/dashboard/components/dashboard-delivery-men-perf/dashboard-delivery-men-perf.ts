@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { TagModule } from 'primeng/tag';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-dashboard-delivery-men-perf',
   imports: [
     TableModule,
     FormsModule,
-    TagModule
+    TagModule,
+    ButtonModule
   ],
   templateUrl: './dashboard-delivery-men-perf.html',
   styleUrl: './dashboard-delivery-men-perf.css',
