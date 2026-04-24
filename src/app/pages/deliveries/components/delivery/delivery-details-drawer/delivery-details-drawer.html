@@ -1,4 +1,4 @@
-<p-drawer [visible]="open()" position="right" header="Détails de la livraison" (onHide)="handleClose()" styleClass="!w-[30rem]">
+<p-drawer [visible]="open()" position="right" header="Détails de la livraison" (onHide)="handleClose()" styleClass="!w-[30rem] rounded-l-2xl">
     <div class="flex flex-col gap-3">
         @if (isLoading()) {
             <span></span>

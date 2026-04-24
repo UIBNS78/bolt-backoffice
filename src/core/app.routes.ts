@@ -53,34 +53,6 @@ export const routes: Routes = [
                 path: "owners",
                 title: "Propriétaires",
                 loadComponent: () => import("../app/pages/owners/owners").then(c => c.Owners)
-            },
-            {
-                path: "settings",
-                title: "Paramètres",
-                loadComponent: () => import("../app/pages/settings/settings").then(c => c.Settings),
-                children: [
-                    {
-                        path: "",
-                        redirectTo: "general",
-                        pathMatch: "full"
-                    },
-                    {
-                        path: "general",
-                        loadComponent: () => import("../app/pages/settings/views/general/general").then(c => c.General)
-                    },
-                    {
-                        path: "my-account",
-                        loadComponent: () => import("../app/pages/settings/views/my-account/my-account").then(c => c.MyAccount)
-                    },
-                    {
-                        path: "security",
-                        loadComponent: () => import("../app/pages/settings/views/security/security").then(c => c.Security)
-                    },
-                    {
-                        path: "notifications",
-                        loadComponent: () => import("../app/pages/settings/views/notifications/notifications").then(c => c.Notifications)
-                    }
-                ]
             }
         ]
     },

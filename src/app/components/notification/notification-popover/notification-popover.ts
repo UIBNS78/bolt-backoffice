@@ -87,6 +87,10 @@ export class NotificationPopover implements OnInit, OnDestroy {
     this.loadData();
   }
   
+  handleClose(): void {
+    this.selected.set(1);
+  }
+  
   handleMarkAllAsRead(): void {
     this.notificationService.markAllAsRead().pipe(
       takeUntil(this.unsubscribe$),

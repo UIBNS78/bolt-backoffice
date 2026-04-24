@@ -30,8 +30,8 @@ export class DashboardTopOwner implements OnInit {
         datasets: [
             {
                 data: [3000000, 700000, 100000],
-                backgroundColor: [documentStyle.getPropertyValue('--p-cyan-500'), documentStyle.getPropertyValue('--p-orange-500'), documentStyle.getPropertyValue('--p-gray-500')],
-                hoverBackgroundColor: [documentStyle.getPropertyValue('--p-cyan-400'), documentStyle.getPropertyValue('--p-orange-400'), documentStyle.getPropertyValue('--p-gray-400')],
+                backgroundColor: [documentStyle.getPropertyValue('--p-blue-500'), documentStyle.getPropertyValue('--p-orange-500'), documentStyle.getPropertyValue('--p-gray-500')],
+                hoverBackgroundColor: [documentStyle.getPropertyValue('--p-blue-400'), documentStyle.getPropertyValue('--p-orange-400'), documentStyle.getPropertyValue('--p-gray-400')],
             }
         ]
     };

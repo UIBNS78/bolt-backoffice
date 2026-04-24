@@ -1,4 +1,4 @@
-<p-drawer [(visible)]="open" [dismissible]="false" position="right" [header]="isUpdate() ? 'Modification' : 'Nouveau livreur'" (onHide)="handleClose()" styleClass="!w-[35rem]">
+<p-drawer [(visible)]="open" [dismissible]="false" position="right" [header]="isUpdate() ? 'Modification' : 'Nouveau livreur'" (onHide)="handleClose()" styleClass="!w-[35rem] rounded-l-2xl">
     <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="h-full">
         <div class="flex flex-col justify-between gap-2 h-full">
             <div class="flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
