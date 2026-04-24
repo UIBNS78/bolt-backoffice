@@ -5,17 +5,17 @@ import { FileUploadEvent, FileUploadModule } from 'primeng/fileupload';
 import { MessageModule } from 'primeng/message';
 
 @Component({
-  selector: 'app-cooperative-package-information',
+  selector: 'app-driver-information-dialog',
   imports: [
     DialogModule,
     FileUploadModule,
     ButtonModule,
     MessageModule
   ],
-  templateUrl: './cooperative-package-information.html',
-  styleUrl: './cooperative-package-information.css',
+  templateUrl: './driver-information-dialog.html',
+  styleUrl: './driver-information-dialog.css',
 })
-export class CooperativePackageInformation {
+export class DriverInformationDialog {
   @Output() closeEmitter: EventEmitter<void> = new EventEmitter<void>();
   visible: InputSignal<boolean> = input.required<boolean>();
 

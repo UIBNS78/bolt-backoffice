@@ -9,7 +9,7 @@ import { MenuModule } from 'primeng/menu';
 import { TagModule } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
-import { CooperativePackageInformation } from './cooperative-package-information/cooperative-package-information';
+import { DriverInformationDialog } from './driver-information-dialog/driver-information-dialog';
 
 @Component({
   selector: 'app-delivery-package-status-editable',
@@ -22,7 +22,7 @@ import { CooperativePackageInformation } from './cooperative-package-information
     PackageStatusPipe,
     ProgressSpinnerModule,
     DialogModule,
-    CooperativePackageInformation
+    DriverInformationDialog
   ],
   templateUrl: './delivery-package-status-editable.html',
   styleUrl: './delivery-package-status-editable.css',
