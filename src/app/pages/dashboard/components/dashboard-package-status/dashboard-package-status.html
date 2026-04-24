@@ -24,11 +24,11 @@
         @for (package of packages; track $index) {
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                    <i [ngClass]="['pi pi-circle-fill', `text-[${package.color}]`]" style="font-size: 0.5rem;"></i>
+                    <i class="pi pi-circle-fill" [style]="{ fontSize: '0.5rem', color: package.color }"></i>
                     <p>{{ package.label }}</p>
                 </div>
                 <div class="py-1 px-2 rounded-md">
-                    <p [ngClass]="[`text-[${package.color}]`]">{{ package.value }}</p>
+                    <p class="font-bold">{{ package.value }}</p>
                 </div>
             </div>
         }
