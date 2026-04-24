@@ -1,13 +1,15 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, EventEmitter, input, InputSignal, Output, Signal } from '@angular/core';
+import { Component, computed, EventEmitter, input, InputSignal, Output, signal, Signal, WritableSignal } from '@angular/core';
 import { PackageStatusIconPipe } from '@shared/pipes/package-pipes/package-status-icon-pipe';
 import { PackageStatusPipe } from '@shared/pipes/package-pipes/package-status-pipe';
 import { PackageStatusSeverityPipe } from '@shared/pipes/package-pipes/package-status-severity-pipe';
-import { Package, PACKAGE_STATUS, PackageStatus } from '@shared/types/package';
+import { Package, PACKAGE_STATUS, PackageStatus, packageTypeObj } from '@shared/types/package';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 import { TagModule } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DialogModule } from 'primeng/dialog';
+import { CooperativePackageInformation } from './cooperative-package-information/cooperative-package-information';
 
 @Component({
   selector: 'app-delivery-package-status-editable',
@@ -18,7 +20,9 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     PackageStatusSeverityPipe,
     PackageStatusIconPipe,
     PackageStatusPipe,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    DialogModule,
+    CooperativePackageInformation
   ],
   templateUrl: './delivery-package-status-editable.html',
   styleUrl: './delivery-package-status-editable.css',
@@ -27,6 +31,7 @@ export class DeliveryPackageStatusEditable {
   @Output() onStatusChangeEmitter: EventEmitter<PackageStatus> = new EventEmitter<PackageStatus>();
   
   package: InputSignal<Package> = input.required<Package>();
+  protected openCooperativePackageInformation: WritableSignal<boolean> = signal(false);
 
   protected items: MenuItem[] = [
     {
@@ -42,7 +47,11 @@ export class DeliveryPackageStatusEditable {
       label: 'Livrés',
       icon: 'pi pi-check',
       command: () => {
-        this.handleStatusChange(PACKAGE_STATUS.delivered);
+        if (this.package().type === packageTypeObj.outCity) {
+          this.openCooperativePackageInformation.set(true);
+        } else {
+          this.handleStatusChange(PACKAGE_STATUS.delivered);
+        }
       }
     },
     {
@@ -67,7 +76,11 @@ export class DeliveryPackageStatusEditable {
     return this.items.filter(s => s.id !== this.package().status.toString());
   });
 
-  handleStatusChange(newStatus: PackageStatus): void {
+  handleCloseCooperativePackageInformation(): void {
+    this.openCooperativePackageInformation.set(false);
+  }
+  
+  private handleStatusChange(newStatus: PackageStatus): void {
     if (newStatus === this.package().status) return;
     this.onStatusChangeEmitter.emit(newStatus);
   }
