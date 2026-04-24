@@ -1,4 +1,4 @@
-<p-popover #notificationPopover>
+<p-popover #notificationPopover (onHide)="handleClose()">
     <div class="flex flex-col gap-2 w-100 h-[calc(100vh-300px)] px-2">
         <div class="flex justify-between items-center">
             <p style="font-size: 1rem;" [autofocus]="true">Notifications</p>
