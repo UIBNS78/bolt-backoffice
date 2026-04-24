@@ -1,0 +1,45 @@
+<div (click)="handleOpen()" class="p-3 flex justify-center items-center rounded-lg transition-all w-12 cursor-pointer" pTooltip="Paramètres">
+    <i class="pi pi-cog text-gray-400"></i>
+</div>
+
+<p-drawer [(visible)]="open" position="right" header="Paramètres" [dismissible]="false" (onHide)="handleClose()" styleClass="!w-[40rem] rounded-l-2xl">
+    <div class="flex flex-col gap-3">
+        <p-selectbutton 
+            [options]="[
+                { id: 1, label: 'Général' }, 
+                { id: 2, label: 'Mon compte' },
+                { id: 3, label: 'Notifications' },
+                { id: 4, label: 'Sécurité' }
+            ]"
+            [(ngModel)]="selected" 
+            optionLabel="label" 
+            optionValue="id" 
+            size="small"
+            [unselectable]="true"
+            [fluid]="true"
+        >
+            <ng-template #item let-item>
+                <small class="font-bold">{{ item.label }}</small>
+            </ng-template>
+        </p-selectbutton>
+        @switch (selected()) {
+            @case (1) {
+                <app-general-settings></app-general-settings>
+            }
+            @case (2) {
+                <app-my-account-settings></app-my-account-settings>
+            }
+            @case (3) {
+                <app-notification-settings></app-notification-settings>
+            }
+            @case (4) {
+                <app-security-settings></app-security-settings>
+            }
+            @default {
+                <div class="flex justify-center items-center flex-1">
+                    <p class="text-gray-400">Aucune paramètre trouvée</p>
+                </div>
+            }
+        }
+    </div>
+</p-drawer>

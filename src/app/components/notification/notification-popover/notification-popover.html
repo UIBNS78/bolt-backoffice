@@ -83,7 +83,7 @@
         </div>
     </div>
 </p-popover>
-<div (click)="handleOpen($event)" class="p-3 flex justify-center items-center rounded-lg transition-all w-12 cursor-pointer">
+<div (click)="handleOpen($event)" class="p-3 flex justify-center items-center rounded-lg transition-all w-12 cursor-pointer" pTooltip="Notifications">
     <p-overlaybadge [badgeDisabled]="!hasNewNotification()" severity="danger">
         <i class="pi pi-bell text-gray-400"></i>
     </p-overlaybadge>
