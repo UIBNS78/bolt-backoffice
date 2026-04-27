@@ -28,10 +28,10 @@ import { DriverInformationDialog } from './driver-information-dialog/driver-info
   styleUrl: './delivery-package-status-editable.css',
 })
 export class DeliveryPackageStatusEditable {
-  @Output() onStatusChangeEmitter: EventEmitter<PackageStatus> = new EventEmitter<PackageStatus>();
+  @Output() onStatusChangeEmitter: EventEmitter<FormData> = new EventEmitter<FormData>();
   
   package: InputSignal<Package> = input.required<Package>();
-  protected openCooperativePackageInformation: WritableSignal<boolean> = signal(false);
+  protected openDriverInformationDialog: WritableSignal<boolean> = signal(false);
 
   protected items: MenuItem[] = [
     {
@@ -48,7 +48,7 @@ export class DeliveryPackageStatusEditable {
       icon: 'pi pi-check',
       command: () => {
         if (this.package().type === packageTypeObj.outCity) {
-          this.openCooperativePackageInformation.set(true);
+          this.openDriverInformationDialog.set(true);
         } else {
           this.handleStatusChange(PACKAGE_STATUS.delivered);
         }
@@ -76,12 +76,21 @@ export class DeliveryPackageStatusEditable {
     return this.items.filter(s => s.id !== this.package().status.toString());
   });
 
-  handleCloseCooperativePackageInformation(): void {
-    this.openCooperativePackageInformation.set(false);
+  handleSubmitDriverInformation(formData: FormData): void {
+    this.onStatusChangeEmitter.emit(formData);
+    this.handleCloseDriverInformationDialog();
+  }
+
+  handleCloseDriverInformationDialog(): void {
+    this.openDriverInformationDialog.set(false);
   }
   
   private handleStatusChange(newStatus: PackageStatus): void {
     if (newStatus === this.package().status) return;
-    this.onStatusChangeEmitter.emit(newStatus);
+    
+    const formData: FormData = new FormData();
+    formData.append("status", newStatus.toString());
+    
+    this.onStatusChangeEmitter.emit(formData);
   }
 }

@@ -16,4 +16,4 @@
     </div>
 </p-tag>
 
-<app-driver-information-dialog [visible]="openCooperativePackageInformation()" (closeEmitter)="handleCloseCooperativePackageInformation()"></app-driver-information-dialog>
+<app-driver-information-dialog [visible]="openDriverInformationDialog()" (submitEmitter)="handleSubmitDriverInformation($event)" (closeEmitter)="handleCloseDriverInformationDialog()"></app-driver-information-dialog>

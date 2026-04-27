@@ -23,6 +23,7 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
 import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { FormatImageSizePipe } from '@shared/pipes/format-image-size-pipe';
+import { ImageModule } from 'primeng/image';
 
 @Component({
   selector: 'app-delivery-package-form',
@@ -40,7 +41,7 @@ import { FormatImageSizePipe } from '@shared/pipes/format-image-size-pipe';
     InputMaskModule,
     FileUploadModule,
     FormatImageSizePipe,
-    NgClass
+    ImageModule
   ],
   templateUrl: './delivery-package-form.html',
   styleUrl: './delivery-package-form.css',

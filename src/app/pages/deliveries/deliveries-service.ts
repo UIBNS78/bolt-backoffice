@@ -73,8 +73,8 @@ export class DeliveriesService {
     return this.http.put<void>(`${environment.apiURL}/deliveries/package/${id}`, pkg)
   }
 
-  updatePackageStatus(id: number, status: PackageStatus): Observable<void> {
-    return this.http.patch<void>(`${environment.apiURL}/deliveries/package/${id}/status`, { status });
+  updatePackageStatus(id: number, data: FormData): Observable<void> {
+    return this.http.patch<void>(`${environment.apiURL}/deliveries/package/${id}/status`, data);
   }
   
   deletePackage(id: number): Observable<void> {

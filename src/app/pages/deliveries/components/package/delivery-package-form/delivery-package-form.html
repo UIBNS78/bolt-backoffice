@@ -187,6 +187,17 @@
                                                         <p-button icon="pi pi-trash" (click)="removeFileCallback($event)" [rounded]="true" [text]="true" severity="danger" />
                                                     </div>
                                                 }
+                                            } @else if (driverInformationControl.value) {
+                                                <div class="flex items-center justify-center">
+                                                    <p-image 
+                                                        [src]="driverInformationControl.value.thumbnail" 
+                                                        [previewImageSrc]="driverInformationControl.value.original"
+                                                        [preview]="true"
+                                                        alt="driver-information"
+                                                        appendTo="body"
+                                                        width="100"
+                                                    />
+                                                </div>
                                             }
                                         </ng-template>
                                         <ng-template #empty>

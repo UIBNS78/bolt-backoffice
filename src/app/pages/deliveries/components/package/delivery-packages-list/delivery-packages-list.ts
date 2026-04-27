@@ -190,9 +190,9 @@ export class DeliveryPackagesList implements OnDestroy {
     this.packages.set(packages);
   }
 
-  handlePackageStatus(newStatus: PackageStatus, pkg: Package): void {
+  handlePackageStatus(formData: FormData, pkg: Package): void {
     pkg.isStatusChanging = true;
-    this.deliveriesService.updatePackageStatus(pkg.id, newStatus).pipe(
+    this.deliveriesService.updatePackageStatus(pkg.id, formData).pipe(
       take(1),
       takeUntil(this.unsubscribe$),
       finalize(() => pkg.isStatusChanging = false)
