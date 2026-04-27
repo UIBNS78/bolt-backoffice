@@ -153,6 +153,65 @@
                                 }
                             </div>
                         </div>
+                        @if (packageStatusControl.value === 2 && packageTypeSignal() === 2) {
+                            <div [ngClass]="['bg-[#F1F5F9] p-3 rounded-xl', form.get('driverInformation')?.invalid && (form.get('driverInformation')?.touched || form.get('driverInformation')?.dirty) ? 'border border-red-500' : '']">
+                                <div class="flex flex-col pb-3">
+                                    <p class="font-bold">Coordonnée Obligatoire</p>
+                                    <p class="text-gray-400">Insérez un image qui correspond à la coordonnée du coopérative ou du chauffeur responsable du colis.</p>
+                                </div>
+                                <div class="flex flex-col gap-4">
+                                    <p-fileupload #fub name="documents" (onSelect)="handleOnSelectFile($event)" (onRemove)="handleOnRemoveFile()" [customUpload]="true" accept="image/*" maxFileSize="1000000" mode="advanced">
+                                        <ng-template #header let-chooseCallback="chooseCallback">
+                                            <div class="flex items-center justify-center w-full gap-2">
+                                                <p-button [label]="driverInformationControl.value ? 'Modifier la coordonnée' : 'Ajouter la coordonnée'" (click)="chooseCallback($event, chooseCallback)" icon="pi pi-plus" size="small" severity="contrast" />
+                                            </div>
+                                        </ng-template>
+                                        <ng-template #content let-files let-uploadedFiles="uploadedFiles" let-removeFileCallback="removeFileCallback" let-removeUploadedFileCallback="removeUploadedFileCallback">
+                                            <div class="flex flex-col gap-2">
+                                                @if (fub.msgs && fub.msgs.length > 0) {
+                                                    @for (msg of fub.msgs; track $index) {
+                                                        <p-message [severity]="msg.severity" icon="pi pi-exclamation-circle" size="small">{{ msg.text }}</p-message>
+                                                    }
+                                                }
+                                            </div>
+                                            @if (files.length > 0) {
+                                                @for (file of files; track file.name) {
+                                                    <div class="flex justify-between items-center">
+                                                        <div class="flex items-center gap-3">
+                                                            <img role="presentation" [alt]="file.name" [src]="file.objectURL" width="100" height="50" />
+                                                            <div class="flex flex-col">
+                                                                <span class="font-semibold text-ellipsis max-w-30 whitespace-nowrap overflow-hidden">{{ file.name }}</span>
+                                                                <p class="text-gray-400">{{ file.size | formatImageSize }}</p>
+                                                            </div>
+                                                        </div>
+                                                        <p-button icon="pi pi-trash" (click)="removeFileCallback($event)" [rounded]="true" [text]="true" severity="danger" />
+                                                    </div>
+                                                }
+                                            } @else if (driverInformationControl.value) {
+                                                <div class="flex items-center justify-center">
+                                                    <p-image 
+                                                        [src]="driverInformationControl.value.thumbnail" 
+                                                        [previewImageSrc]="driverInformationControl.value.original"
+                                                        [preview]="true"
+                                                        alt="driver-information"
+                                                        appendTo="body"
+                                                        width="100"
+                                                    />
+                                                </div>
+                                            }
+                                        </ng-template>
+                                        <ng-template #empty>
+                                            <div class="h-30 flex items-center justify-center w-full">
+                                                <p class="text-gray-400 text-center">Glissez-déposez la coordonnée ici ou cliquez sur ajouter.</p>
+                                            </div>
+                                        </ng-template>
+                                    </p-fileupload>
+                                </div>
+                            </div>
+                            @if (form.get('driverInformation')?.invalid && (form.get('driverInformation')?.touched || form.get('driverInformation')?.dirty)) {
+                                <p-message severity="error" size="small" variant="simple">Corrdonnée requis.</p-message>
+                            }
+                        }
                     </div>
                 </p-fieldset>
             </div>

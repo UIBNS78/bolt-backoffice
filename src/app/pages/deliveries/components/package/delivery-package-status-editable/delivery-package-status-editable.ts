@@ -1,13 +1,15 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, EventEmitter, input, InputSignal, Output, Signal } from '@angular/core';
+import { Component, computed, EventEmitter, input, InputSignal, Output, signal, Signal, WritableSignal } from '@angular/core';
 import { PackageStatusIconPipe } from '@shared/pipes/package-pipes/package-status-icon-pipe';
 import { PackageStatusPipe } from '@shared/pipes/package-pipes/package-status-pipe';
 import { PackageStatusSeverityPipe } from '@shared/pipes/package-pipes/package-status-severity-pipe';
-import { Package, PACKAGE_STATUS, PackageStatus } from '@shared/types/package';
+import { Package, PACKAGE_STATUS, PackageStatus, packageTypeObj } from '@shared/types/package';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 import { TagModule } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DialogModule } from 'primeng/dialog';
+import { DriverInformationDialog } from './driver-information-dialog/driver-information-dialog';
 
 @Component({
   selector: 'app-delivery-package-status-editable',
@@ -18,15 +20,18 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     PackageStatusSeverityPipe,
     PackageStatusIconPipe,
     PackageStatusPipe,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    DialogModule,
+    DriverInformationDialog
   ],
   templateUrl: './delivery-package-status-editable.html',
   styleUrl: './delivery-package-status-editable.css',
 })
 export class DeliveryPackageStatusEditable {
-  @Output() onStatusChangeEmitter: EventEmitter<PackageStatus> = new EventEmitter<PackageStatus>();
+  @Output() onStatusChangeEmitter: EventEmitter<FormData> = new EventEmitter<FormData>();
   
   package: InputSignal<Package> = input.required<Package>();
+  protected openDriverInformationDialog: WritableSignal<boolean> = signal(false);
 
   protected items: MenuItem[] = [
     {
@@ -42,7 +47,11 @@ export class DeliveryPackageStatusEditable {
       label: 'Livrés',
       icon: 'pi pi-check',
       command: () => {
-        this.handleStatusChange(PACKAGE_STATUS.delivered);
+        if (this.package().type === packageTypeObj.outCity) {
+          this.openDriverInformationDialog.set(true);
+        } else {
+          this.handleStatusChange(PACKAGE_STATUS.delivered);
+        }
       }
     },
     {
@@ -67,8 +76,21 @@ export class DeliveryPackageStatusEditable {
     return this.items.filter(s => s.id !== this.package().status.toString());
   });
 
-  handleStatusChange(newStatus: PackageStatus): void {
+  handleSubmitDriverInformation(formData: FormData): void {
+    this.onStatusChangeEmitter.emit(formData);
+    this.handleCloseDriverInformationDialog();
+  }
+
+  handleCloseDriverInformationDialog(): void {
+    this.openDriverInformationDialog.set(false);
+  }
+  
+  private handleStatusChange(newStatus: PackageStatus): void {
     if (newStatus === this.package().status) return;
-    this.onStatusChangeEmitter.emit(newStatus);
+    
+    const formData: FormData = new FormData();
+    formData.append("status", newStatus.toString());
+    
+    this.onStatusChangeEmitter.emit(formData);
   }
 }

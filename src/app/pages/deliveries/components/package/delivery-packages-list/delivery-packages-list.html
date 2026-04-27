@@ -94,7 +94,15 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="flex items-center gap-1">
+                                    <div class="flex justify-center items-center gap-1">
+                                        @if (package.driverInformation.publicId) {
+                                             <p-image [src]="package.driverInformation.thumbnail" [previewImageSrc]="package.driverInformation.original" [preview]="true" alt="Image" width="50" style="border-radius: 5px;" pTooltip="Coordonnée du chauffeur" tooltipPosition="top">
+                                                <ng-template #indicator></ng-template>
+                                                <ng-template #image>
+                                                    <p-button icon="pi pi-image" [rounded]="true" [text]="true" severity="secondary" size="small" />
+                                                </ng-template>
+                                            </p-image>
+                                        }
                                         <p-button (click)="handleOpenPackageActivity(package)" icon="pi pi-history" [rounded]="true" [text]="true" severity="info" [loading]="package.isUpdating" size="small" pTooltip="Voir l'historique" tooltipPosition="top" />
                                         <p-button (click)="handleOpenPackageForm(package)" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" [loading]="package.isUpdating" size="small" pTooltip="Modifier" tooltipPosition="top" />
                                         <p-button (click)="handleDelete(package)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="package.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />

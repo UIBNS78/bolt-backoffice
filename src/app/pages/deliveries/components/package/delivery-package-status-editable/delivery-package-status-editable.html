@@ -15,3 +15,5 @@
         </div>
     </div>
 </p-tag>
+
+<app-driver-information-dialog [visible]="openDriverInformationDialog()" (submitEmitter)="handleSubmitDriverInformation($event)" (closeEmitter)="handleCloseDriverInformationDialog()"></app-driver-information-dialog>

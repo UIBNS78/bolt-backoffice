@@ -27,6 +27,7 @@ import { Delivery } from '@shared/types/delivery';
 import { PackageActivities } from '../package-activities/package-activities';
 import { DeliveryDetailsDrawer } from '../../delivery/delivery-details-drawer/delivery-details-drawer';
 import { ActivatedRoute } from '@angular/router';
+import { ImageModule } from 'primeng/image';
 
 @Component({
   selector: 'app-delivery-packages-list',
@@ -49,7 +50,8 @@ import { ActivatedRoute } from '@angular/router';
     NgClass,
     CivilityPipe,
     PackageActivities,
-    DeliveryDetailsDrawer
+    DeliveryDetailsDrawer,
+    ImageModule
   ],
   templateUrl: './delivery-packages-list.html',
   styleUrl: './delivery-packages-list.css',
@@ -190,9 +192,9 @@ export class DeliveryPackagesList implements OnDestroy {
     this.packages.set(packages);
   }
 
-  handlePackageStatus(newStatus: PackageStatus, pkg: Package): void {
+  handlePackageStatus(formData: FormData, pkg: Package): void {
     pkg.isStatusChanging = true;
-    this.deliveriesService.updatePackage(pkg.id, { status: newStatus }).pipe(
+    this.deliveriesService.updatePackageStatus(pkg.id, formData).pipe(
       take(1),
       takeUntil(this.unsubscribe$),
       finalize(() => pkg.isStatusChanging = false)

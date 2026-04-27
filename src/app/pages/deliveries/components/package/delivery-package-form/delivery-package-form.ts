@@ -1,10 +1,10 @@
-import { Component, EventEmitter, inject, Input, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, inject, Input, OnDestroy, Output, Signal, signal, ViewChild, viewChild, WritableSignal } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService, SelectItemGroup } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
 import { distinctUntilChanged, finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveriesService } from '../../../deliveries-service';
-import { PackageType, packageTypeObj, Package, PACKAGE_STATUS, PackageForm } from '@shared/types/package';
+import { PackageType, packageTypeObj, Package, PACKAGE_STATUS, PackageForm, PackageStatus } from '@shared/types/package';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
@@ -21,6 +21,9 @@ import { packageStatusOptions as packageStatusOpt } from '@shared/constants/pack
 import { NgClass } from '@angular/common';
 import { InputMaskModule } from 'primeng/inputmask';
 import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
+import { FormatImageSizePipe } from '@shared/pipes/format-image-size-pipe';
+import { ImageModule } from 'primeng/image';
 
 @Component({
   selector: 'app-delivery-package-form',
@@ -35,7 +38,10 @@ import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service'
     FieldsetModule,
     ToggleSwitchModule,
     NgClass,
-    InputMaskModule
+    InputMaskModule,
+    FileUploadModule,
+    FormatImageSizePipe,
+    ImageModule
   ],
   templateUrl: './delivery-package-form.html',
   styleUrl: './delivery-package-form.css',
@@ -90,10 +96,12 @@ export class DeliveryPackageForm implements OnDestroy {
       deliveryPrice: [{ value: data?.deliveryPrice ?? '', disabled: true }, [Validators.required, Validators.min(0)]],
       isFragile: [data?.isFragile ?? false, [Validators.required]],
       status: [data?.status ?? PACKAGE_STATUS.inProgress, [Validators.required, Validators.min(1), Validators.max(4)]],
+      driverInformation: [{ value: data?.driverInformation ?? null, disabled: true }],
     });
 
     
     this.packageTypeListener();
+    this.packageStatusListener();
     this.locationInCityListener();
     this.locationOutCityListener();
 
@@ -103,6 +111,12 @@ export class DeliveryPackageForm implements OnDestroy {
   }
   get form(): FormGroup {
     return this._form;
+  }
+  get packageStatusControl(): FormControl {
+    return this.form.get('status') as FormControl;
+  }
+  get driverInformationControl(): FormControl {
+    return this.form.get('driverInformation') as FormControl;
   }
 
   ngOnDestroy(): void {
@@ -118,32 +132,42 @@ export class DeliveryPackageForm implements OnDestroy {
 
     this.loading.set(true);
     const values = this.form.getRawValue();
-    const rawValue: PackageForm = {
-      deliveryId: this.deliveryId,
-      type: values.type,
-      gender: values.gender,
-      customer: values.customer,
-      phone: values.phone,
-      deliveryManId: values.deliveryManId,
-      placeId: values.location.placeId,
-      precision: values.location.precision,
-      destination: values.location.destination,
-      cooperativeId: values.location.cooperativeId,
-      price: values.price,
-      deliveryPrice: values.deliveryPrice,
-      isFragile: values.isFragile,
-      status: values.status,
-    } as PackageForm;
+    const formData: FormData = new FormData();
+    formData.append("deliveryId", this.deliveryId!.toString());
+    formData.append("type", values.type);
+    formData.append("gender", values.gender);
+    formData.append("customer", values.customer);
+    formData.append("phone", values.phone);
+    formData.append("deliveryManId", values.deliveryManId);
+    formData.append("price", values.price);
+    formData.append("deliveryPrice", values.deliveryPrice);
+    formData.append("isFragile", values.isFragile);
+    formData.append("status", values.status);
+    // append place city
+    if (values.type === packageTypeObj.inCity) {
+    formData.append("placeId", values.location.placeId);
+      formData.append("precision", values.location.precision);
+    }
+    // append cooperative
+    if (values.type === packageTypeObj.outCity) {
+      formData.append("destination", values.location.destination);
+      formData.append("cooperativeId", values.location.cooperativeId);
+    }
+    // append image
+    const file: File = values.driverInformation as File;
+    if (file) {
+      formData.append("driverInformation", file, file.name);
+    }
 
     if (this.isUpdate()) {
-      this.update(rawValue);
+      this.update(formData);
       return;
     }
 
-    this.create(rawValue, close);
+    this.create(formData, close);
   }
 
-  create(data: PackageForm, close: boolean): void {
+  create(data: FormData, close: boolean): void {
     this.deliveriesService.createPackage(data).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
@@ -158,7 +182,7 @@ export class DeliveryPackageForm implements OnDestroy {
     });
   }
 
-  update(data: PackageForm): void {
+  update(data: FormData): void {
     this.deliveriesService.updatePackage(this._data()!.id, data).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
@@ -173,6 +197,21 @@ export class DeliveryPackageForm implements OnDestroy {
     });
   }
 
+  handleOnSelectFile(event: FileSelectEvent): void {
+    const file = event.currentFiles[0];
+    this.form.patchValue({
+      driverInformation: file
+    });
+    this.form.get("driverInformation")?.markAsTouched();
+  }
+
+  handleOnRemoveFile(): void {
+    this.form.patchValue({
+      driverInformation: null
+    });
+    this.form.get("driverInformation")?.markAsTouched();
+  }
+  
   handleClose(isCancel: boolean = false): void {
     this.form.reset(this.initialFormValues());
     this.onCloseEmitter.emit(isCancel);
@@ -188,6 +227,25 @@ export class DeliveryPackageForm implements OnDestroy {
     });
   }
 
+  private packageStatusListener(): void {
+    this.form.get("status")?.valueChanges.pipe(
+      takeUntil(this.unsubscribe$),
+      distinctUntilChanged()
+    ).subscribe((value: PackageStatus) => {
+      if (value === PACKAGE_STATUS.delivered && this.packageTypeSignal() === packageTypeObj.outCity) {
+        this.form.setControl("driverInformation", this.formBuilder.control('', [Validators.required]));
+        this.form.get("driverInformation")?.enable();
+      } else {
+        this.form.get("driverInformation")?.disable();
+        this.form.removeControl("driverInformation");
+        this.form.patchValue({
+          driverInformation: null
+        });
+        this.form.get("driverInformation")?.markAsTouched();
+      }
+    });
+  }
+  
   private rebuildForm(packageType: PackageType): void {
     let locationControl: FormGroup = this.formBuilder.group({});
     

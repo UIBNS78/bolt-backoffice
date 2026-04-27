@@ -5,7 +5,7 @@ import { DeliveryList } from './types/delivery-list';
 import { environment } from 'environments/environment';
 import { DeliveryCount } from './types/delivery-count';
 import { DeliveryForm } from './types/delivery-form';
-import { Package, PackageForm } from '@shared/types/package';
+import { Package, PackageForm, PackageStatus } from '@shared/types/package';
 import { DeliveryDrawerForm } from './types/delivery-drawer-form';
 import { DeliveryDetails } from './types/delivery-details';
 import { DateRange } from '@shared/types/common';
@@ -65,12 +65,16 @@ export class DeliveriesService {
     );
   }
 
-  createPackage(pkg: PackageForm): Observable<void> {
+  createPackage(pkg: FormData): Observable<void> {
     return this.http.post<void>(`${environment.apiURL}/deliveries/package`, pkg);
   }
 
-  updatePackage(id: number, pkg: Partial<PackageForm>): Observable<void> {
-    return this.http.patch<void>(`${environment.apiURL}/deliveries/package/${id}`, pkg)
+  updatePackage(id: number, pkg: FormData): Observable<void> {
+    return this.http.put<void>(`${environment.apiURL}/deliveries/package/${id}`, pkg)
+  }
+
+  updatePackageStatus(id: number, data: FormData): Observable<void> {
+    return this.http.patch<void>(`${environment.apiURL}/deliveries/package/${id}/status`, data);
   }
   
   deletePackage(id: number): Observable<void> {

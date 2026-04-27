@@ -1,3 +1,4 @@
+import { CloudinaryImage } from "./common";
 import { Customer } from "./customer";
 import { DeliveryMan } from "./delivery-men";
 import { LoadingState } from "./loading-state";
@@ -36,6 +37,7 @@ export type Package = {
     fixedTime?: string;
     description?: string;
     status: PackageStatus;
+    driverInformation: CloudinaryImage;
     deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName" | "gender">;
 } & { isStatusChanging?: boolean } & Pick<LoadingState, "isDeleting">
 
