@@ -114,6 +114,9 @@ export class DeliveryPackageForm implements OnDestroy {
   get packageStatusControl(): FormControl {
     return this.form.get('status') as FormControl;
   }
+  get driverInformationControl(): FormControl {
+    return this.form.get('driverInformation') as FormControl;
+  }
 
   ngOnDestroy(): void {
     this.unsubscribe$.next();
@@ -128,33 +131,42 @@ export class DeliveryPackageForm implements OnDestroy {
 
     this.loading.set(true);
     const values = this.form.getRawValue();
-    const rawValue: PackageForm = {
-      deliveryId: this.deliveryId,
-      type: values.type,
-      gender: values.gender,
-      customer: values.customer,
-      phone: values.phone,
-      deliveryManId: values.deliveryManId,
-      placeId: values.location.placeId,
-      precision: values.location.precision,
-      destination: values.location.destination,
-      cooperativeId: values.location.cooperativeId,
-      price: values.price,
-      deliveryPrice: values.deliveryPrice,
-      isFragile: values.isFragile,
-      status: values.status,
-      driverInformation: values.driverInformation
-    } as PackageForm;
+    const formData: FormData = new FormData();
+    formData.append("deliveryId", this.deliveryId!.toString());
+    formData.append("type", values.type);
+    formData.append("gender", values.gender);
+    formData.append("customer", values.customer);
+    formData.append("phone", values.phone);
+    formData.append("deliveryManId", values.deliveryManId);
+    formData.append("price", values.price);
+    formData.append("deliveryPrice", values.deliveryPrice);
+    formData.append("isFragile", values.isFragile);
+    formData.append("status", values.status);
+    // append place city
+    if (values.type === packageTypeObj.inCity) {
+    formData.append("placeId", values.location.placeId);
+      formData.append("precision", values.location.precision);
+    }
+    // append cooperative
+    if (values.type === packageTypeObj.outCity) {
+      formData.append("destination", values.location.destination);
+      formData.append("cooperativeId", values.location.cooperativeId);
+    }
+    // append image
+    const file: File = values.driverInformation as File;
+    if (file) {
+      formData.append("driverInformation", file, file.name);
+    }
 
     if (this.isUpdate()) {
-      this.update(rawValue);
+      this.update(formData);
       return;
     }
 
-    this.create(rawValue, close);
+    this.create(formData, close);
   }
 
-  create(data: PackageForm, close: boolean): void {
+  create(data: FormData, close: boolean): void {
     this.deliveriesService.createPackage(data).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
@@ -169,7 +181,7 @@ export class DeliveryPackageForm implements OnDestroy {
     });
   }
 
-  update(data: PackageForm): void {
+  update(data: FormData): void {
     this.deliveriesService.updatePackage(this._data()!.id, data).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))

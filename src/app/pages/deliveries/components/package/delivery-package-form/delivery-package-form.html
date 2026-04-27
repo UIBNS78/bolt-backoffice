@@ -163,7 +163,7 @@
                                     <p-fileupload #fub name="documents" (onSelect)="handleOnSelectFile($event)" (onRemove)="handleOnRemoveFile()" [customUpload]="true" accept="image/*" maxFileSize="1000000" mode="advanced">
                                         <ng-template #header let-chooseCallback="chooseCallback">
                                             <div class="flex items-center justify-center w-full gap-2">
-                                                <p-button label="Ajouter la coordonnée" (click)="chooseCallback($event, chooseCallback)" icon="pi pi-plus" size="small" severity="contrast" />
+                                                <p-button [label]="driverInformationControl.value ? 'Modifier la coordonnée' : 'Ajouter la coordonnée'" (click)="chooseCallback($event, chooseCallback)" icon="pi pi-plus" size="small" severity="contrast" />
                                             </div>
                                         </ng-template>
                                         <ng-template #content let-files let-uploadedFiles="uploadedFiles" let-removeFileCallback="removeFileCallback" let-removeUploadedFileCallback="removeUploadedFileCallback">
