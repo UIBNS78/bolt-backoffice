@@ -39,7 +39,7 @@
                             </tr>
                             <tr class="h-8">
                                 <td class="font-bold">Date de livraison</td>
-                                <td>{{ data()!.deliveryDate | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
+                                <td>{{ data()?.deliveryDate ? (data()!.deliveryDate | todayYesterdayTomorrow:"dd MMMM yyyy") : '' }}</td>
                             </tr>
                         </table>
                     </p-fieldset>
