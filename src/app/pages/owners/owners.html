@@ -24,6 +24,7 @@
                         <th>Email</th>
                         <th>Phone</th>
                         <th style="text-align: center;">Nombre de colis</th>
+                        <th style="text-align: center;">Etat du compte</th>
                         <th>Date de création</th>
                         <th style="text-align: center;">Action</th>
                     </tr>
@@ -43,6 +44,9 @@
                         <td>{{ owner.email }}</td>
                         <td><p-chip [label]="'0' + (owner.phone | mask:'00 00 000 00')" icon="pi pi-phone" /></td>
                         <td style="text-align: center;">{{ owner.totalPackages }}</td>
+                        <td style="text-align: center;">
+                            <app-owner-state-editable [state]="owner.state" [id]="owner.id"></app-owner-state-editable>
+                        </td>
                         <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
                         <td>
                             <div class="flex items-center justify-center">

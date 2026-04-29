@@ -23,6 +23,7 @@ import { MessageService } from 'primeng/api';
 import { OwnerForm } from './components/owner-form/owner-form';
 import { OwnerCounts } from './components/owner-counts/owner-counts';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
+import { OwnerStateEditable } from './components/owner-state-editable/owner-state-editable';
 
 @Component({
   selector: 'app-owners',
@@ -42,8 +43,9 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
     OwnerForm,
     OwnerCounts,
     TooltipModule,
-    CivilityPipe
-  ],
+    CivilityPipe,
+    OwnerStateEditable
+],
   templateUrl: './owners.html',
   styleUrl: './owners.css',
 })
