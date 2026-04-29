@@ -61,6 +61,10 @@ export class OwnersService {
     );
   }
 
+  updateState(userId: number, state: boolean): Observable<void> {
+    return this.http.patch<void>(`${environment.apiURL}/owners/${userId}/state`, { state });
+  }
+
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${environment.apiURL}/owners/${id}`).pipe(
       map(() => {

@@ -45,7 +45,11 @@
                         <td><p-chip [label]="'0' + (owner.phone | mask:'00 00 000 00')" icon="pi pi-phone" /></td>
                         <td style="text-align: center;">{{ owner.totalPackages }}</td>
                         <td style="text-align: center;">
-                            <app-owner-state-editable [state]="owner.state" [id]="owner.id"></app-owner-state-editable>
+                            <app-owner-state-editable 
+                                [owner]="owner" 
+                                [userId]="owner.userId"
+                                (onStateChangeEmitter)="handleUpdateState($event, owner)"
+                            ></app-owner-state-editable>
                         </td>
                         <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
                         <td>

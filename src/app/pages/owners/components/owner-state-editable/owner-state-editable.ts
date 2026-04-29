@@ -1,11 +1,10 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, inject, input, InputSignal, signal, Signal, WritableSignal } from '@angular/core';
-import { OWNER_STATE } from '@shared/types/owner';
+import { Component, computed, EventEmitter, input, InputSignal, Output, signal, Signal, WritableSignal } from '@angular/core';
+import { Owner, OWNER_STATE } from '@shared/types/owner';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
-import { OwnersService } from '../../owners-service';
 
 @Component({
   selector: 'app-owner-state-editable',
@@ -20,16 +19,16 @@ import { OwnersService } from '../../owners-service';
 })
 export class OwnerStateEditable {
   // vars
-  state: InputSignal<boolean> = input.required<boolean>();
-  id: InputSignal<number> = input.required<number>();
-  protected loading: WritableSignal<boolean> = signal(false);
-
-  // services
-  private readonly ownersService: OwnersService = inject(OwnersService);
+  @Output() onStateChangeEmitter: EventEmitter<{ userId: number; newState: boolean; }> = new EventEmitter<{ userId: number; newState: boolean; }>();
+  owner: InputSignal<Owner> = input.required<Owner>();
+  protected state: Signal<boolean> = computed(() => {
+    return this.owner().state;
+  });
+  userId: InputSignal<number> = input.required<number>();
 
   protected items: MenuItem[] = [
     {
-      id: OWNER_STATE.inactive.toString(),
+      id: "false",
       label: 'Inactif',
       icon: 'pi pi-times',
       command: () => {
@@ -37,7 +36,7 @@ export class OwnerStateEditable {
       }
     },
     {
-      id: OWNER_STATE.active.toString(),
+      id: "true",
       label: 'Actif',
       icon: 'pi pi-check',
       command: () => {
@@ -47,10 +46,15 @@ export class OwnerStateEditable {
   ];
 
   protected states: Signal<MenuItem[]> = computed(() => {
-    return this.items.filter(s => s.id !== this.state().toString());
+    return this.items.filter(s => s.id  !== this.state().toString());
   });
 
   private handleChangeState(newState: boolean): void {
     if (newState === this.state()) return;
+
+    this.onStateChangeEmitter.emit({
+      userId: this.userId(),
+      newState: newState
+    });
   }
 }

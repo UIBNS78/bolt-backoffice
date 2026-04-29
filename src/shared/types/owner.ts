@@ -19,5 +19,5 @@ export type Owner =
         commercialName: string;
         totalPackages: number;
         planId: OwnerPlan;
-    } & 
-    Pick<LoadingState, "isDeleting">
+    } & { isStateChanging?: boolean } 
+    & Pick<LoadingState, "isDeleting">

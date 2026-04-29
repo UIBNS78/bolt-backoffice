@@ -102,6 +102,16 @@ export class Owners implements OnInit, OnDestroy {
     });
   }
 
+  handleUpdateState({ userId, newState }: { userId: number; newState: boolean; }, owner: Owner): void {
+    owner.isStateChanging = true;
+    this.ownersService.updateState(userId, newState).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => owner.isStateChanging = false)
+    ).subscribe(() => {
+      this.loadData();
+    });
+  }
+  
   handleDelete(owner: Owner): void {
     const modalRef: DynamicDialogRef<DialogConfirm> | null = this.dialogService.open(DialogConfirm, {
       inputValues: {

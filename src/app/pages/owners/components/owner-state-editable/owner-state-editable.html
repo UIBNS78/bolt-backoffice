@@ -3,7 +3,7 @@
 <p-tag (click)="menu.toggle($event)" [severity]="state() ? 'success' : 'danger'" [rounded]="true">
     <div class="flex items-center justify-between gap-2 cursor-pointer">
         <div class="flex items-center gap-1">
-            @if (loading()) {
+            @if (owner().isStateChanging) {
                 <p-progress-spinner [style]="{ width: '15px', height: '15px' }" />
             } @else {
                 <i [ngClass]="[state() ? 'pi pi-check' : 'pi pi-times']" style="font-size: 0.7rem;"></i>
