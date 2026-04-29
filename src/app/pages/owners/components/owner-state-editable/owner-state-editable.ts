@@ -25,9 +25,6 @@ export class OwnerStateEditable {
   protected state: Signal<UserState> = computed(() => {
     return this.owner().state;
   });
-  protected currentState: Signal<MenuItem> = computed(() => {
-    return this.items.find(i => i.id === this.state())!;
-  });
   userId: InputSignal<number> = input.required<number>();
 
   protected items: MenuItem[] = [
@@ -41,7 +38,7 @@ export class OwnerStateEditable {
     },
     {
       id: USER_STATE.confirmed,
-      label: 'Confirmé',
+      label: 'Confirmer',
       icon: 'pi pi-check',
       command: () => {
         this.handleChangeState(USER_STATE.confirmed);
@@ -49,7 +46,7 @@ export class OwnerStateEditable {
     },
     {
       id: USER_STATE.rejected,
-      label: 'Rejeté',
+      label: 'Rejeter',
       icon: 'pi pi-times',
       command: () => {
         this.handleChangeState(USER_STATE.rejected);

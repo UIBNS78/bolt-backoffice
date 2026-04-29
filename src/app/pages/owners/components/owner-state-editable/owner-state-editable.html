@@ -1,14 +1,14 @@
 <p-menu #menu [model]="states()" [popup]="true" appendTo="body" />
 
-<p-tag (click)="menu.toggle($event)" [severity]="currentState().id === 'PENDING' ? 'info' : currentState().id === 'CONFIRMED' ? 'success' : 'danger'" [rounded]="true">
+<p-tag (click)="menu.toggle($event)" [severity]="state() === 'PENDING' ? 'info' : state() === 'CONFIRMED' ? 'success' : 'danger'" [rounded]="true">
     <div class="flex items-center justify-between gap-2 cursor-pointer">
         <div class="flex items-center gap-1">
             @if (owner().isStateChanging) {
                 <p-progress-spinner [style]="{ width: '15px', height: '15px' }" />
             } @else {
-                <i [ngClass]="[currentState().icon ? 'pi pi-check' : 'pi pi-times']" style="font-size: 0.7rem;"></i>
+                <i [ngClass]="[state() === 'PENDING' ? 'pi pi-hourglass' : state() === 'CONFIRMED' ? 'pi pi-check' : 'pi pi-times']" style="font-size: 0.7rem;"></i>
             }
-            <small style="font-size: 0.6rem;">{{ currentState().label }}</small>
+            <small style="font-size: 0.6rem;">{{ state() === 'PENDING' ? 'En attente' : state() === 'CONFIRMED' ? 'Confirmé' : 'Refusé'}}</small>
         </div>
         <div class="flex items-center justify-center">
             <i class="pi pi-sort-down-fill" style="font-size: 0.6rem;"></i>
