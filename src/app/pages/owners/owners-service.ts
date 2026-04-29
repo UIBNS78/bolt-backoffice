@@ -6,6 +6,7 @@ import { environment } from 'environments/environment';
 import { OwnerOptionsResponse } from './types/owner-options-response';
 import { Owner } from '@shared/types/owner';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
+import { UserState } from '@shared/types/user';
 
 @Injectable({
   providedIn: 'root',
@@ -61,7 +62,7 @@ export class OwnersService {
     );
   }
 
-  updateState(userId: number, state: boolean): Observable<void> {
+  updateState(userId: number, state: UserState): Observable<void> {
     return this.http.patch<void>(`${environment.apiURL}/owners/${userId}/state`, { state });
   }
 

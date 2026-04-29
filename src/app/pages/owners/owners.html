@@ -36,7 +36,7 @@
                         <td>
                             <div class="flex items-center gap-2">
                                 <p>{{ owner.commercialName }}</p>
-                                @if (!owner.state && (owner.createdAt | recent)) {
+                                @if (owner.state === "PENDING" && (owner.createdAt | recent)) {
                                     <p-tag value="Nouveau" severity="info" pTooltip="Créer récemment" tooltipPosition="top" />
                                 }
                                 @if (owner.planId === 2) {

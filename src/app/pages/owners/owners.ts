@@ -26,6 +26,7 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { OwnerStateEditable } from './components/owner-state-editable/owner-state-editable';
 import { TagModule } from 'primeng/tag';
 import { RecentPipe } from '@shared/pipes/recent-pipe';
+import { UserState } from '@shared/types/user';
 
 @Component({
   selector: 'app-owners',
@@ -106,7 +107,7 @@ export class Owners implements OnInit, OnDestroy {
     });
   }
 
-  handleUpdateState({ userId, newState }: { userId: number; newState: boolean; }, owner: Owner): void {
+  handleUpdateState({ userId, newState }: { userId: number; newState: UserState; }, owner: Owner): void {
     owner.isStateChanging = true;
     this.ownersService.updateState(userId, newState).pipe(
       takeUntil(this.unsubscribe$),
