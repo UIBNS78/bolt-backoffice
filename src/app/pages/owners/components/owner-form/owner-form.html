@@ -71,6 +71,16 @@
                     }
                 </div>
 
+                <div class="flex items-center justify-between">
+                    <div class="flex flex-col max-w-[80%]">
+                        <p class="font-bold">Etat du compte</p>
+                        <p class="text-gray-400">En activant cette option, le propriétaire pourra accéder à son espace personnel et gérer ses colis.</p>
+                    </div>
+                    <div>
+                        <p-toggleswitch name="state" formControlName="state" size="small" [invalid]="form.get('state')?.invalid && (form.get('state')?.touched || form.get('state')?.dirty)" />
+                    </div>
+                </div>
+
                 <div class="flex flex-col gap-1">
                     <label for="planId">Plan</label>
                     <p-select [options]="ownerPlanOptions" formControlName="planId" size="small" optionLabel="label" optionValue="id"[invalid]="form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)" required />

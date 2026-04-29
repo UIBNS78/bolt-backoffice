@@ -17,6 +17,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 import { genderOptions as genderOpts } from '@shared/constants/user';
 import { GENDER } from '@shared/types/user';
 import { InputMaskModule } from 'primeng/inputmask';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 @Component({
   selector: 'app-owner-form',
@@ -29,7 +30,8 @@ import { InputMaskModule } from 'primeng/inputmask';
     InputIconModule,
     SelectModule,
     ButtonModule,
-    InputMaskModule
+    InputMaskModule,
+    ToggleSwitchModule
   ],
   templateUrl: './owner-form.html',
   styleUrl: './owner-form.css',
@@ -65,6 +67,7 @@ export class OwnerForm implements OnDestroy {
 			email: [data?.email ?? '', [Validators.required, Validators.email]],
       phone: [data?.phone ?? '', [Validators.required]],
 			password: [{ value: this.isUpdate ? '' : DEFAULT_USER_PASSWORD, disabled: true }, [Validators.minLength(8)]],
+      state: [data?.state ?? false, [Validators.required]],
       planId: [data?.planId ?? 1, [Validators.required, Validators.max(3)]]
     });
     this._initialValues.set(this._form.getRawValue());
