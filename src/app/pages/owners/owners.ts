@@ -24,6 +24,8 @@ import { OwnerForm } from './components/owner-form/owner-form';
 import { OwnerCounts } from './components/owner-counts/owner-counts';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { OwnerStateEditable } from './components/owner-state-editable/owner-state-editable';
+import { TagModule } from 'primeng/tag';
+import { RecentPipe } from '@shared/pipes/recent-pipe';
 
 @Component({
   selector: 'app-owners',
@@ -44,7 +46,9 @@ import { OwnerStateEditable } from './components/owner-state-editable/owner-stat
     OwnerCounts,
     TooltipModule,
     CivilityPipe,
-    OwnerStateEditable
+    OwnerStateEditable,
+    TagModule,
+    RecentPipe
 ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',
