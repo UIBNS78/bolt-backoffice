@@ -23,6 +23,10 @@ import { MessageService } from 'primeng/api';
 import { OwnerForm } from './components/owner-form/owner-form';
 import { OwnerCounts } from './components/owner-counts/owner-counts';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
+import { OwnerStateEditable } from './components/owner-state-editable/owner-state-editable';
+import { TagModule } from 'primeng/tag';
+import { RecentPipe } from '@shared/pipes/recent-pipe';
+import { UserState } from '@shared/types/user';
 
 @Component({
   selector: 'app-owners',
@@ -42,8 +46,11 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
     OwnerForm,
     OwnerCounts,
     TooltipModule,
-    CivilityPipe
-  ],
+    CivilityPipe,
+    OwnerStateEditable,
+    TagModule,
+    RecentPipe
+],
   templateUrl: './owners.html',
   styleUrl: './owners.css',
 })
@@ -100,6 +107,16 @@ export class Owners implements OnInit, OnDestroy {
     });
   }
 
+  handleUpdateState({ userId, newState }: { userId: number; newState: UserState; }, owner: Owner): void {
+    owner.isStateChanging = true;
+    this.ownersService.updateState(userId, newState).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => owner.isStateChanging = false)
+    ).subscribe(() => {
+      this.loadData();
+    });
+  }
+  
   handleDelete(owner: Owner): void {
     const modalRef: DynamicDialogRef<DialogConfirm> | null = this.dialogService.open(DialogConfirm, {
       inputValues: {

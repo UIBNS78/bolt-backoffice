@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DEFAULT_USER_PASSWORD } from '@shared/constants/user';
+import { DEFAULT_USER_PASSWORD, userStateOptions as userStateOpt } from '@shared/constants/user';
 import { Owner } from '@shared/types/owner';
 import { DrawerModule } from 'primeng/drawer';
 import { OwnersService } from '../../owners-service';
@@ -15,7 +15,7 @@ import { planObj } from '@shared/types/owner-plan';
 import { ButtonModule } from 'primeng/button';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { genderOptions as genderOpts } from '@shared/constants/user';
-import { GENDER } from '@shared/types/user';
+import { GENDER, USER_STATE } from '@shared/types/user';
 import { InputMaskModule } from 'primeng/inputmask';
 
 @Component({
@@ -45,6 +45,7 @@ export class OwnerForm implements OnDestroy {
 
   // vars
   protected genderOptions: { value: string; label: string }[] = genderOpts;
+  protected userStateOptions: { value: string; label: string }[]= userStateOpt;
   private _initialValues: WritableSignal<Partial<Owner>> = signal({});
   protected loading: WritableSignal<boolean> = signal(false);
   protected ownerPlanOptions: InputSelectOptions[] = [
@@ -65,6 +66,7 @@ export class OwnerForm implements OnDestroy {
 			email: [data?.email ?? '', [Validators.required, Validators.email]],
       phone: [data?.phone ?? '', [Validators.required]],
 			password: [{ value: this.isUpdate ? '' : DEFAULT_USER_PASSWORD, disabled: true }, [Validators.minLength(8)]],
+      state: [data?.state ?? USER_STATE.pending, [Validators.required]],
       planId: [data?.planId ?? 1, [Validators.required, Validators.max(3)]]
     });
     this._initialValues.set(this._form.getRawValue());

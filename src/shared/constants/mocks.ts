@@ -1,4 +1,4 @@
-import { User } from "@shared/types/user";
+import { User, USER_STATE } from "@shared/types/user";
 
 export const mockUser: User = {
     id: 1,
@@ -8,6 +8,7 @@ export const mockUser: User = {
     email: "lova.razaf@example.mg",
     phone: "+261 34 00 000 00",
     profilePicture: "https://api.boltmg.mg/uploads/profiles/lova_1.jpg", // Optionnel
+    state: USER_STATE.confirmed,
     createdAt: new Date("2024-01-15T08:30:00Z"),
     modifiedAt: new Date()
 };

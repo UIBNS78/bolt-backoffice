@@ -24,6 +24,7 @@
                         <th>Email</th>
                         <th>Phone</th>
                         <th style="text-align: center;">Nombre de colis</th>
+                        <th style="text-align: center;">Etat du compte</th>
                         <th>Date de création</th>
                         <th style="text-align: center;">Action</th>
                     </tr>
@@ -35,6 +36,9 @@
                         <td>
                             <div class="flex items-center gap-2">
                                 <p>{{ owner.commercialName }}</p>
+                                @if (owner.createdAt | recent) {
+                                    <p-tag value="Nouveau" severity="info" pTooltip="Créer récemment" tooltipPosition="top" />
+                                }
                                 @if (owner.planId === 2) {
                                     <i class="pi pi-star-fill" style="color: orange" pTooltip="Premium"></i>
                                 }
@@ -43,6 +47,13 @@
                         <td>{{ owner.email }}</td>
                         <td><p-chip [label]="'0' + (owner.phone | mask:'00 00 000 00')" icon="pi pi-phone" /></td>
                         <td style="text-align: center;">{{ owner.totalPackages }}</td>
+                        <td style="text-align: center;">
+                            <app-owner-state-editable 
+                                [owner]="owner" 
+                                [userId]="owner.userId"
+                                (onStateChangeEmitter)="handleUpdateState($event, owner)"
+                            ></app-owner-state-editable>
+                        </td>
                         <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
                         <td>
                             <div class="flex items-center justify-center">

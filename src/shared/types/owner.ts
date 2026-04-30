@@ -1,5 +1,5 @@
 import type { LoadingState } from "./loading-state";
-import type { OwnerPlan } from "./owner-plan";
+import type { OwnerPlan, ValueOf } from "./owner-plan";
 import type { User } from "./user";
 
 export type Owner = 
@@ -10,5 +10,5 @@ export type Owner =
         commercialName: string;
         totalPackages: number;
         planId: OwnerPlan;
-    } & 
-    Pick<LoadingState, "isDeleting">
+    } & { isStateChanging?: boolean } 
+    & Pick<LoadingState, "isDeleting">

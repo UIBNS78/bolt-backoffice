@@ -71,12 +71,22 @@
                     }
                 </div>
 
-                <div class="flex flex-col gap-1">
-                    <label for="planId">Plan</label>
-                    <p-select [options]="ownerPlanOptions" formControlName="planId" size="small" optionLabel="label" optionValue="id"[invalid]="form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)" required />
-                    @if (form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)) {
-                        <p-message severity="error" size="small" variant="simple">Plan requis.</p-message>
-                    }
+                <div class="flex items-baseline gap-3">
+                    <div class="flex flex-col gap-1 w-full">
+                        <label for="planId">Etat du compte</label>
+                        <p-select [options]="userStateOptions" formControlName="state" size="small" optionLabel="label" optionValue="value" [invalid]="form.get('state')?.invalid && (form.get('state')?.touched || form.get('state')?.dirty)" required />
+                        @if (form.get('state')?.invalid && (form.get('state')?.touched || form.get('state')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Etat du compte requis.</p-message>
+                        }
+                    </div>
+
+                    <div class="flex flex-col gap-1 w-full">
+                        <label for="planId">Plan</label>
+                        <p-select [options]="ownerPlanOptions" formControlName="planId" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)" required />
+                        @if (form.get('planId')?.invalid && (form.get('planId')?.touched || form.get('planId')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Plan requis.</p-message>
+                        }
+                    </div>
                 </div>
             </div>
 
