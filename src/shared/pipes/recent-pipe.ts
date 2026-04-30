@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { isValid, isWithinInterval, subDays } from 'date-fns';
+import { addDays, isValid, isWithinInterval, subDays } from 'date-fns';
 
 const today: Date = new Date();
 
@@ -17,7 +17,7 @@ export class RecentPipe implements PipeTransform {
     
     return isWithinInterval(date, {
       start: subDays(today, 7),
-      end: today
+      end: addDays(today, 1)
     });
   }
 }
