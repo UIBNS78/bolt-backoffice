@@ -1,6 +1,6 @@
 <p-drawer [visible]="open()" position="right" header="Fiche du livreur" (onHide)="handleClose()" styleClass="!w-[30rem] rounded-l-2xl">
     @if (loading()) {
-        <span>chargement...</span>
+        <app-delivery-man-details-placeholder></app-delivery-man-details-placeholder>
     } @else {
         @defer (on idle) {
             @if (data()) {
@@ -57,7 +57,7 @@
                 </div>
             }
         } @placeholder (minimum 600ms) {
-            <span>chargement...</span>
+            <app-delivery-man-details-placeholder></app-delivery-man-details-placeholder>
         }
     }
 </p-drawer>

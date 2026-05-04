@@ -10,6 +10,7 @@ import { DeliveryMenService } from '../../delivery-men-service';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { DeliveryManDetails as DMDetails } from '@shared/types/delivery-men';
 import { SeniorityPipe } from '@shared/pipes/seniority.pipe';
+import { DeliveryManDetailsPlaceholder } from './delivery-man-details-placeholder/delivery-man-details-placeholder';
 
 @Component({
   selector: 'app-delivery-man-details',
@@ -21,7 +22,8 @@ import { SeniorityPipe } from '@shared/pipes/seniority.pipe';
     DeliveryManInformations,
     DeliveryManData,
     DeliveryManHistory,
-    SeniorityPipe
+    SeniorityPipe,
+    DeliveryManDetailsPlaceholder
   ],
   templateUrl: './delivery-man-details.html',
   styleUrl: './delivery-man-details.css',
