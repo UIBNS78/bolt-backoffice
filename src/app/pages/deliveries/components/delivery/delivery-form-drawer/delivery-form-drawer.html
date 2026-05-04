@@ -74,7 +74,7 @@
                                 <p class="text-gray-400">Choisissez le statut da livraison.</p>
                             </div>
                             <div>
-                                <p-select [options]="deliveryStatusOptions" formControlName="status" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('status')?.invalid && (form.get('status')?.touched || form.get('status')?.dirty)" required>
+                                <p-select [options]="deliveryStatusOptions" formControlName="status" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('status')?.invalid && (form.get('status')?.touched || form.get('status')?.dirty)" required appendTo="body">
                                     <ng-template #selectedItem let-selectedStatus>
                                         @if (selectedStatus) {
                                             <div class="flex items-center gap-2">
