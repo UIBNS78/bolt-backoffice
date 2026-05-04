@@ -35,6 +35,22 @@
                         <td>{{ owner.gender | civility }} {{ owner.name + ' ' + owner.firstName }}</td>
                         <td>
                             <div class="flex items-center gap-2">
+                                <p-image [preview]="owner.profilePicture" alt="Profile picture" width="30">
+                                    <ng-template #indicator>
+                                        <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
+                                    </ng-template>
+                                    <ng-template #image>
+                                        <p-avatar 
+                                            [label]="!owner.profilePicture ? ((owner.name + ' ' + owner.firstName) | bigram) : undefined"
+                                            [image]="owner.profilePicture ? owner.profilePicture.thumbnail: undefined"
+                                            shape="circle" 
+                                            style="font-size: 12px; width: 30px; height: 30px" 
+                                        />
+                                    </ng-template>
+                                    <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                                        <img [src]="owner.profilePicture.original" alt="Profile picture" [style]="style" (click)="previewCallback()" />
+                                    </ng-template>
+                                </p-image>
                                 <p>{{ owner.commercialName }}</p>
                                 @if (owner.createdAt | recent) {
                                     <p-tag value="Nouveau" severity="info" pTooltip="Créer récemment" tooltipPosition="top" />

@@ -27,6 +27,9 @@ import { OwnerStateEditable } from './components/owner-state-editable/owner-stat
 import { TagModule } from 'primeng/tag';
 import { RecentPipe } from '@shared/pipes/recent-pipe';
 import { UserState } from '@shared/types/user';
+import { AvatarModule } from 'primeng/avatar';
+import { ImageModule } from 'primeng/image';
+import { BigramPipe } from '@shared/pipes/bigram.pipe';
 
 @Component({
   selector: 'app-owners',
@@ -49,7 +52,10 @@ import { UserState } from '@shared/types/user';
     CivilityPipe,
     OwnerStateEditable,
     TagModule,
-    RecentPipe
+    RecentPipe,
+    ImageModule,
+    AvatarModule,
+    BigramPipe
 ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',
