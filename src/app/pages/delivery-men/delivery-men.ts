@@ -16,7 +16,7 @@ import { ChipModule } from 'primeng/chip';
 import { DeliveryMenPlaceholder } from './components/delivery-men-placeholder/delivery-men-placeholder';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { SkeletonModule } from 'primeng/skeleton';
-import { DatePipe, NgClass } from '@angular/common';
+import { DatePipe, NgClass, UpperCasePipe } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { AgePipe } from '@shared/pipes/age.pipe';
 import { ImageModule } from 'primeng/image';
@@ -54,7 +54,8 @@ import { BigramPipe } from '@shared/pipes/bigram.pipe';
     DeliveryManForm,
     ImageModule,
     CivilityPipe,
-    BigramPipe
+    BigramPipe,
+    UpperCasePipe
 ],
   templateUrl: './delivery-men.html',
   styleUrl: './delivery-men.css',
