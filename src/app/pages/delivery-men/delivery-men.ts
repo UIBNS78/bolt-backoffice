@@ -27,6 +27,7 @@ import { DeliveryManForm } from './components/delivery-man-form/delivery-man-for
 import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
 import { TagModule } from 'primeng/tag';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
+import { BigramPipe } from '@shared/pipes/bigram.pipe';
 
 @Component({
   selector: 'app-delivery-men',
@@ -52,7 +53,8 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
     DeliveryManDetails,
     DeliveryManForm,
     ImageModule,
-    CivilityPipe
+    CivilityPipe,
+    BigramPipe
 ],
   templateUrl: './delivery-men.html',
   styleUrl: './delivery-men.css',

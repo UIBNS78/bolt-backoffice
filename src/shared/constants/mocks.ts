@@ -7,7 +7,12 @@ export const mockUser: User = {
     gender: "male",
     email: "lova.razaf@example.mg",
     phone: "+261 34 00 000 00",
-    profilePicture: "https://api.boltmg.mg/uploads/profiles/lova_1.jpg", // Optionnel
+    profilePicture: {
+        publicId: "publicId",
+        thumbnail: "https://api.boltmg.mg/uploads/profiles/lova_1.jpg",
+        original: "https://api.boltmg.mg/uploads/profiles/lova_1.jpg",
+        download: "https://api.boltmg.mg/uploads/profiles/lova_1.jpg"
+    },
     state: USER_STATE.confirmed,
     createdAt: new Date("2024-01-15T08:30:00Z"),
     modifiedAt: new Date()
