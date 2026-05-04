@@ -30,6 +30,7 @@ import { UserState } from '@shared/types/user';
 import { AvatarModule } from 'primeng/avatar';
 import { ImageModule } from 'primeng/image';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
+import { UpperCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-owners',
@@ -55,7 +56,8 @@ import { BigramPipe } from '@shared/pipes/bigram.pipe';
     RecentPipe,
     ImageModule,
     AvatarModule,
-    BigramPipe
+    BigramPipe,
+    UpperCasePipe
 ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',

@@ -32,7 +32,7 @@
                 <ng-template #body let-owner>
                     <tr>
                         <td>{{ owner.id }}</td>
-                        <td>{{ owner.gender | civility }} {{ owner.name + ' ' + owner.firstName }}</td>
+                        <td>{{ owner.gender | civility }} {{ (owner.name | uppercase) + ' ' + owner.firstName }}</td>
                         <td>
                             <div class="flex items-center gap-2">
                                 <p-image [preview]="owner.profilePicture" alt="Profile picture" width="30">
