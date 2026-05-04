@@ -4,9 +4,8 @@ import { map, Observable } from 'rxjs';
 import { OwnerList } from './types/owner-list';
 import { environment } from 'environments/environment';
 import { OwnerOptionsResponse } from './types/owner-options-response';
-import { Owner } from '@shared/types/owner';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
-import { UserState } from '@shared/types/user';
+import { Gender, UserState } from '@shared/types/user';
 
 @Injectable({
   providedIn: 'root',
@@ -47,16 +46,16 @@ export class OwnersService {
     );
   }
 
-  create(data: Owner): Observable<void> {
+  create(data: FormData): Observable<void> {
     return this.http.post<{ ownerId: number; userId: number }>(`${environment.apiURL}/owners`, data).pipe(
       map(({ ownerId, userId }) => {
         this._owners.update(owners => [...owners, {
           id: ownerId,
           userId: userId,
-          name: data.name,
-          firstName: data.firstName,
-          gender: data.gender,
-          commercialName: data.commercialName
+          name: data.get("name") as string,
+          firstName: data.get("firstName") as string,
+          gender: data.get("gender") as Gender,
+          commercialName: data.get("commercialName") as string
         }]);
       })
     );

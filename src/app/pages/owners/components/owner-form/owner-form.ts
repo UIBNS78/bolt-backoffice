@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DEFAULT_USER_PASSWORD, userStateOptions as userStateOpt } from '@shared/constants/user';
 import { Owner } from '@shared/types/owner';
 import { DrawerModule } from 'primeng/drawer';
@@ -17,6 +17,11 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 import { genderOptions as genderOpts } from '@shared/constants/user';
 import { GENDER, USER_STATE } from '@shared/types/user';
 import { InputMaskModule } from 'primeng/inputmask';
+import { NgClass } from '@angular/common';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
+import { ImageModule } from 'primeng/image';
+import { FieldsetModule } from 'primeng/fieldset';
+import { FormatImageSizePipe } from '@shared/pipes/format-image-size-pipe';
 
 @Component({
   selector: 'app-owner-form',
@@ -29,7 +34,12 @@ import { InputMaskModule } from 'primeng/inputmask';
     InputIconModule,
     SelectModule,
     ButtonModule,
-    InputMaskModule
+    InputMaskModule,
+    FieldsetModule,
+    NgClass,
+    FileUploadModule,
+    ImageModule,
+    FormatImageSizePipe
   ],
   templateUrl: './owner-form.html',
   styleUrl: './owner-form.css',
@@ -67,7 +77,8 @@ export class OwnerForm implements OnDestroy {
       phone: [data?.phone ?? '', [Validators.required]],
 			password: [{ value: this.isUpdate ? '' : DEFAULT_USER_PASSWORD, disabled: true }, [Validators.minLength(8)]],
       state: [data?.state ?? USER_STATE.pending, [Validators.required]],
-      planId: [data?.planId ?? 1, [Validators.required, Validators.max(3)]]
+      planId: [data?.planId ?? 1, [Validators.required, Validators.max(3)]],
+      profilePicture: [null, [Validators.required]],
     });
     this._initialValues.set(this._form.getRawValue());
   }  
@@ -75,6 +86,10 @@ export class OwnerForm implements OnDestroy {
     return this._form;
   }
 
+  get profilePictureControl(): FormControl {
+    return this.form.get('profilePicture') as FormControl;
+  }
+  
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -87,7 +102,23 @@ export class OwnerForm implements OnDestroy {
     }
 
     this.loading.set(true);
-    this.ownerService.create(this.form.getRawValue() as Owner).pipe(
+    const values = this.form.getRawValue();
+    const formData: FormData = new FormData();
+    formData.append("commercialName", values.commercialName);
+    formData.append("name", values.name);
+    formData.append("firstName", values.firstName);
+    formData.append("gender", values.gender);
+    formData.append("email", values.email);
+    formData.append("phone", values.phone);
+    formData.append("state", values.state);
+    formData.append("planId", values.planId);
+    // append image
+    if (values.profilePicture instanceof File) {
+      const file: File = values.profilePicture as File;
+      formData.append("profilePicture", file, file.name);
+    }
+
+    this.ownerService.create(formData).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(() => {
@@ -98,6 +129,21 @@ export class OwnerForm implements OnDestroy {
       });
       this.handleClose();
     });
+  }
+
+  handleOnSelectFile(event: FileSelectEvent): void {
+    const file = event.currentFiles[0];
+    this.form.patchValue({
+      profilePicture: file
+    });
+    this.form.get("profilePicture")?.markAsTouched();
+  }
+
+  handleOnRemoveFile(): void {
+    this.form.patchValue({
+      profilePicture: null
+    });
+    this.form.get("profilePicture")?.markAsTouched();
   }
 
   handleClose(): void {
