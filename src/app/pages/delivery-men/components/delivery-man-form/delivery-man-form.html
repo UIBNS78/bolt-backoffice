@@ -1,7 +1,7 @@
 <p-drawer [(visible)]="open" [dismissible]="false" position="right" [header]="isUpdate() ? 'Modification' : 'Nouveau livreur'" (onHide)="handleClose()" styleClass="!w-[35rem] rounded-l-2xl">
     <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="h-full">
         <div class="flex flex-col justify-between gap-2 h-full">
-            <div class="flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
+            <div class="flex flex-col gap-3 overflow-y-auto overflow-x-hidden">
                 <p-fieldset legend="Informations générales">
                     <div class="flex flex-col gap-4">
                         <div class="flex items-baseline gap-3">
@@ -83,22 +83,183 @@
                         </div>
                     </div>
                 </p-fieldset>
-                <p-fieldset legend="Documents">
-                    <div class="flex flex-col gap-4">
-                        <p-fileupload name="documents" url="https://www.primefaces.org/cdn/api/upload.php" (onUpload)="onUpload($event)" [multiple]="true" accept="image/*" maxFileSize="1000000" mode="advanced">
-                            <ng-template #header let-chooseCallback="chooseCallback">
-                                <div class="flex items-center justify-center w-full gap-2">
-                                    <p-button label="Ajouter des fichiers" (onClick)="chooseCallback($event, chooseCallback)" icon="pi pi-plus" size="small" severity="secondary" />
-                                </div>
-                            </ng-template>
-                            <ng-template #empty>
-                                <div class="h-10 flex items-center justify-center w-full">
-                                    <p class="text-gray-400">Glissez-déposez vos documents ici ou cliquez sur ajouter.</p>
-                                </div>
-                            </ng-template>
-                        </p-fileupload>
+                <div>
+                    <div [ngClass]="['bg-[#F1F5F9] p-3 rounded-md', profilePictureControl.invalid && (profilePictureControl.touched || profilePictureControl.dirty) ? 'border border-red-500' : '']">
+                        <div class="flex flex-col pb-3">
+                            <p class="font-bold">Photo de profile Obligatoire</p>
+                            <p class="text-gray-400">Insérez une image qui servira de photo de profil pour le livreur.</p>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <p-fileupload #fub name="profilePicture" (onSelect)="handleOnSelectFile($event, 'profilePicture')" (onRemove)="handleOnRemoveFile('profilePicture')" [multiple]="false" accept="image/*" maxFileSize="1000000" mode="advanced">
+                                <ng-template #header let-chooseCallback="chooseCallback">
+                                    <div class="flex items-center justify-center w-full gap-2">
+                                        <p-button [label]="profilePictureControl.value ? 'Modifier la photo' : 'Ajouter une photo'" (click)="chooseCallback($event, chooseCallback)" icon="pi pi-plus" size="small" severity="contrast" />
+                                    </div>
+                                </ng-template>
+                                <ng-template #content let-files let-uploadedFiles="uploadedFiles" let-removeFileCallback="removeFileCallback" let-removeUploadedFileCallback="removeUploadedFileCallback">
+                                    <div class="flex flex-col gap-2">
+                                        @if (fub.msgs && fub.msgs.length > 0) {
+                                            @for (msg of fub.msgs; track $index) {
+                                                <p-message [severity]="msg.severity" icon="pi pi-exclamation-circle" size="small">{{ msg.text }}</p-message>
+                                            }
+                                        }
+                                    </div>
+                                    @if (files.length > 0) {
+                                        @for (file of files; track file.name) {
+                                            <div class="flex justify-between items-center">
+                                                <div class="flex items-center gap-3">
+                                                    <img role="presentation" [alt]="file.name" [src]="file.objectURL" width="100" height="50" />
+                                                    <div class="flex flex-col">
+                                                        <span class="font-semibold text-ellipsis max-w-30 whitespace-nowrap overflow-hidden">{{ file.name }}</span>
+                                                        <p class="text-gray-400">{{ file.size | formatImageSize }}</p>
+                                                    </div>
+                                                </div>
+                                                <p-button icon="pi pi-trash" (click)="removeFileCallback($event)" [rounded]="true" [text]="true" severity="danger" />
+                                            </div>
+                                        }
+                                    } @else if (profilePictureControl.value) {
+                                        <div class="flex items-center justify-center">
+                                            <p-image 
+                                                [src]="profilePictureControl.value.thumbnail" 
+                                                [previewImageSrc]="profilePictureControl.value.original"
+                                                [preview]="true"
+                                                alt="delivery-man-profile-picture"
+                                                appendTo="body"
+                                                width="100"
+                                            />
+                                        </div>
+                                    }
+                                </ng-template>
+                                <ng-template #empty>
+                                    <div class="h-10 flex items-center justify-center w-full">
+                                        <p class="text-gray-400">Glissez-déposez la photo ici ou cliquez sur ajouter.</p>
+                                    </div>
+                                </ng-template>
+                            </p-fileupload>
+                        </div>
                     </div>
-                </p-fieldset>
+                    @if (profilePictureControl.invalid && (profilePictureControl.touched || profilePictureControl.dirty)) {
+                        <p-message severity="error" size="small" variant="simple">Photo de profil requise.</p-message>
+                    }
+                </div>
+                <div>
+                    <div [ngClass]="['bg-[#F1F5F9] p-3 rounded-md', cinControl.invalid && (cinControl.touched || cinControl.dirty) ? 'border border-red-500' : '']">
+                        <div class="flex flex-col pb-3">
+                            <p class="font-bold">Copie du CIN Obligatoire</p>
+                            <p class="text-gray-400">Insérez une image qui servira de copie de la carte d'identité nationale du livreur.</p>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <p-fileupload #fub name="cin" (onSelect)="handleOnSelectFile($event, 'cin')" (onRemove)="handleOnRemoveFile('cin')" [multiple]="false" accept="image/*" maxFileSize="1000000" mode="advanced">
+                                <ng-template #header let-chooseCallback="chooseCallback">
+                                    <div class="flex items-center justify-center w-full gap-2">
+                                        <p-button [label]="cinControl.value ? 'Modifier la copie' : 'Ajouter une copie CIN'" (click)="chooseCallback($event, chooseCallback)" icon="pi pi-plus" size="small" severity="contrast" />
+                                    </div>
+                                </ng-template>
+                                <ng-template #content let-files let-uploadedFiles="uploadedFiles" let-removeFileCallback="removeFileCallback" let-removeUploadedFileCallback="removeUploadedFileCallback">
+                                    <div class="flex flex-col gap-2">
+                                        @if (fub.msgs && fub.msgs.length > 0) {
+                                            @for (msg of fub.msgs; track $index) {
+                                                <p-message [severity]="msg.severity" icon="pi pi-exclamation-circle" size="small">{{ msg.text }}</p-message>
+                                            }
+                                        }
+                                    </div>
+                                    @if (files.length > 0) {
+                                        @for (file of files; track file.name) {
+                                            <div class="flex justify-between items-center">
+                                                <div class="flex items-center gap-3">
+                                                    <img role="presentation" [alt]="file.name" [src]="file.objectURL" width="100" height="50" />
+                                                    <div class="flex flex-col">
+                                                        <span class="font-semibold text-ellipsis max-w-30 whitespace-nowrap overflow-hidden">{{ file.name }}</span>
+                                                        <p class="text-gray-400">{{ file.size | formatImageSize }}</p>
+                                                    </div>
+                                                </div>
+                                                <p-button icon="pi pi-trash" (click)="removeFileCallback($event)" [rounded]="true" [text]="true" severity="danger" />
+                                            </div>
+                                        }
+                                    } @else if (cinControl.value) {
+                                        <div class="flex items-center justify-center">
+                                            <p-image 
+                                                [src]="cinControl.value.thumbnail" 
+                                                [previewImageSrc]="cinControl.value.original"
+                                                [preview]="true"
+                                                alt="delivery-man-copy-of-cin"
+                                                appendTo="body"
+                                                width="100"
+                                            />
+                                        </div>
+                                    }
+                                </ng-template>
+                                <ng-template #empty>
+                                    <div class="h-10 flex items-center justify-center w-full">
+                                        <p class="text-gray-400">Glissez-déposez la copie ici ou cliquez sur ajouter.</p>
+                                    </div>
+                                </ng-template>
+                            </p-fileupload>
+                        </div>
+                    </div>
+                    @if (cinControl.invalid && (cinControl.touched || cinControl.dirty)) {
+                        <p-message severity="error" size="small" variant="simple">Copie CIN requise.</p-message>
+                    }
+                </div>
+                <div>
+                    <div [ngClass]="['bg-[#F1F5F9] p-3 rounded-md', residenceControl.invalid && (residenceControl.touched || residenceControl.dirty) ? 'border border-red-500' : '']">
+                        <div class="flex flex-col pb-3">
+                            <p class="font-bold">Certificat de résidence Obligatoire</p>
+                            <p class="text-gray-400">Insérez une image qui servira de certificat de résidence pour le livreur.</p>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <p-fileupload #fub name="residence" (onSelect)="handleOnSelectFile($event, 'residence')" (onRemove)="handleOnRemoveFile('residence')" [multiple]="false" accept="image/*" maxFileSize="1000000" mode="advanced">
+                                <ng-template #header let-chooseCallback="chooseCallback">
+                                    <div class="flex items-center justify-center w-full gap-2">
+                                        <p-button [label]="residenceControl.value ? 'Modifier la résidence' : 'Ajouter une résidence'" (click)="chooseCallback($event, chooseCallback)" icon="pi pi-plus" size="small" severity="contrast" />
+                                    </div>
+                                </ng-template>
+                                <ng-template #content let-files let-uploadedFiles="uploadedFiles" let-removeFileCallback="removeFileCallback" let-removeUploadedFileCallback="removeUploadedFileCallback">
+                                    <div class="flex flex-col gap-2">
+                                        @if (fub.msgs && fub.msgs.length > 0) {
+                                            @for (msg of fub.msgs; track $index) {
+                                                <p-message [severity]="msg.severity" icon="pi pi-exclamation-circle" size="small">{{ msg.text }}</p-message>
+                                            }
+                                        }
+                                    </div>
+                                    @if (files.length > 0) {
+                                        @for (file of files; track file.name) {
+                                            <div class="flex justify-between items-center">
+                                                <div class="flex items-center gap-3">
+                                                    <img role="presentation" [alt]="file.name" [src]="file.objectURL" width="100" height="50" />
+                                                    <div class="flex flex-col">
+                                                        <span class="font-semibold text-ellipsis max-w-30 whitespace-nowrap overflow-hidden">{{ file.name }}</span>
+                                                        <p class="text-gray-400">{{ file.size | formatImageSize }}</p>
+                                                    </div>
+                                                </div>
+                                                <p-button icon="pi pi-trash" (click)="removeFileCallback($event)" [rounded]="true" [text]="true" severity="danger" />
+                                            </div>
+                                        }
+                                    } @else if (residenceControl.value) {
+                                        <div class="flex items-center justify-center">
+                                            <p-image 
+                                                [src]="residenceControl.value.thumbnail" 
+                                                [previewImageSrc]="residenceControl.value.original"
+                                                [preview]="true"
+                                                alt="delivery-man-residence-certificate"
+                                                appendTo="body"
+                                                width="100"
+                                            />
+                                        </div>
+                                    }
+                                </ng-template>
+                                <ng-template #empty>
+                                    <div class="h-10 flex items-center justify-center w-full">
+                                        <p class="text-gray-400">Glissez-déposez la résidence ici ou cliquez sur ajouter.</p>
+                                    </div>
+                                </ng-template>
+                            </p-fileupload>
+                        </div>
+                    </div>
+                    @if (residenceControl.invalid && (residenceControl.touched || residenceControl.dirty)) {
+                        <p-message severity="error" size="small" variant="simple">Certificat de résidence requis.</p-message>
+                    }
+                </div>
                 <p-fieldset legend="Compte">
                     <div class="flex flex-col gap-1">
                         <label for="password">Mot de passe <small class="text-gray-500">(par défaut)</small></label>

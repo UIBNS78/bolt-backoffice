@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DEFAULT_USER_PASSWORD } from '@shared/constants/user';
 import { transportOptions as tOptions, type DeliveryMan } from '@shared/types/delivery-men';
 import { ButtonModule } from 'primeng/button';
@@ -18,8 +18,11 @@ import { genderOptions as genderOpts } from '@shared/constants/user';
 import { GENDER } from '@shared/types/user';
 import { InputMaskModule } from 'primeng/inputmask';
 import { FieldsetModule } from 'primeng/fieldset';
-import { FileUploadEvent, FileUploadModule } from 'primeng/fileupload';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { format } from 'date-fns';
+import { ImageModule } from 'primeng/image';
+import { FormatImageSizePipe } from '@shared/pipes/format-image-size-pipe';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-delivery-man-form',
@@ -37,7 +40,10 @@ import { format } from 'date-fns';
     ReactiveFormsModule,
     InputMaskModule,
     FieldsetModule,
-    FileUploadModule
+    FileUploadModule,
+    ImageModule,
+    FormatImageSizePipe,
+    NgClass
   ],
   templateUrl: './delivery-man-form.html',
   styleUrl: './delivery-man-form.css',
@@ -73,9 +79,12 @@ export class DeliveryManForm implements OnDestroy {
       birthday: [data && data.birthday ? format(data.birthday, "dd MMMM yyyy") : new Date(), [Validators.required]],
       phone: [data?.phone ?? '', [Validators.required]],
       address: [data?.address ?? '', [Validators.required, Validators.minLength(3)]],
-      password: [{ value: data !== null ? '' : DEFAULT_USER_PASSWORD, disabled: true }, [Validators.minLength(8)]],
+      password: [{ value: this.isUpdate() ? null : DEFAULT_USER_PASSWORD, disabled: true }, [Validators.minLength(8)]],
       totalPackages: [data?.totalPackages ?? 0, [Validators.pattern("[0-9]*"), Validators.min(0)]],
-      transport: [data?.transport ?? 1, [Validators.required, Validators.max(3)]]
+      transport: [data?.transport ?? 1, [Validators.required, Validators.max(3)]],
+      profilePicture: [data?.profilePicture ?? null, [Validators.required]],
+      cin: [data?.cin ?? null, [Validators.required]],
+      residence: [data?.residence ?? null, [Validators.required]],
     });
     this._initialValues.set(this._form.getRawValue());
   };
@@ -83,6 +92,18 @@ export class DeliveryManForm implements OnDestroy {
     return this._form;
   }
 
+  get profilePictureControl(): FormControl {
+    return this.form.get('profilePicture') as FormControl;
+  }
+
+  get cinControl(): FormControl {
+    return this.form.get('cin') as FormControl;
+  }
+
+  get residenceControl(): FormControl {
+    return this.form.get('residence') as FormControl;
+  }
+  
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -95,24 +116,84 @@ export class DeliveryManForm implements OnDestroy {
     }
 
     this.loading.set(true);
-    this.deliveryManService[this.isUpdate() ? 'update' : 'create']({
-      ...this.form.getRawValue(),
-      birthday: new Date(this.form.get('birthday')?.value),
-    } as DeliveryMan).pipe(
+    const values = this.form.getRawValue();
+    const formData: FormData = new FormData();
+    formData.append("name", values.name);
+    formData.append("firstName", values.firstName);    
+    formData.append("gender", values.gender);
+    formData.append("email", values.email);
+    formData.append("birthday", new Date(values.birthday).toISOString());
+    formData.append("phone", values.phone);
+    formData.append("address", values.address);
+    formData.append("totalPackages", values.totalPackages);
+    formData.append("transport", values.transport);
+    // append profile picture
+    if (values.profilePicture instanceof File) {
+      const file: File = values.profilePicture as File;
+      formData.append("profilePicture", file, file.name);
+    }
+    // append CIN
+    if (values.cin instanceof File) {
+      const file: File = values.cin as File;
+      formData.append("cin", file, file.name);
+    }
+    // append residence
+    if (values.residence instanceof File) {
+      const file: File = values.residence as File;
+      formData.append("residence", file, file.name);
+    }
+    
+    if (this.isUpdate()) {
+      this.update(values.id, formData);
+      return;
+    }
+
+    this.create(formData);
+  }
+
+  update(id: number, data: FormData): void {
+    this.deliveryManService.update(id, data).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(() => {
       this.messageService.add({
         severity: 'success',
-        summary: this.isUpdate() ? 'Mise à jour réussie' : 'Création réussie',
-        detail: `Le livreur a été ${this.isUpdate() ? 'mis à jour' : 'créé'} avec succès.`
+        summary: 'Mise à jour réussie',
+        detail: `Le livreur a été mis à jour avec succès.`
       });
+      
       this.handleClose();
     });
   }
 
-  onUpload(file: FileUploadEvent): void {
+  create(data: FormData): void {
+    this.deliveryManService.create(data).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.loading.set(false))
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Création réussie',
+        detail: `Le livreur a été créé avec succès.`
+      });
+      
+      this.handleClose();
+    });
+  }
+  
+  handleOnSelectFile(event: FileSelectEvent, field: string): void {
+    const file = event.currentFiles[0];
+    this.form.patchValue({
+      [field]: file
+    });
+    this.form.get(field)?.markAsTouched();
+  }
 
+  handleOnRemoveFile(field: string): void {
+    this.form.patchValue({
+      [field]: null
+    });
+    this.form.get(field)?.markAsTouched();
   }
 
   handleClose(): void {

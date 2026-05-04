@@ -1,3 +1,4 @@
+import { CloudinaryImage } from "./common";
 import { ValueOf } from "./owner-plan";
 
 export const GENDER: {
@@ -27,7 +28,7 @@ export type User = {
     gender: Gender;
     email: string;
     phone: string;
-    profilePicture?: string;
+    profilePicture: CloudinaryImage;
     state: UserState;
     createdAt: Date;
     modifiedAt: Date;

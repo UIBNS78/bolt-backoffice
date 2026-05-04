@@ -1,49 +1,63 @@
-<p-drawer [(visible)]="open" position="right" header="Fiche du livreur" (onHide)="handleClose()" styleClass="!w-[30rem] rounded-l-2xl">
-    <div class="flex flex-col gap-4">
-        <div class="flex gap-3">
-            <p-avatar image="images/delivery-man-1.jpg" style="width: 120px; height: 120px;" />
-            <div class="flex flex-col justify-between">
-                <div class="flex flex-col">
-                    <h1 class="text-xl font-bold">RAKOTOARISOA</h1>
-                    <p class="text-gray-500">Gabriel Parany</p>
-                    <p class="text-blue-400">Livreur il y a 6 mois</p>
-                </div>
-                <div class="flex flex-col">
-                    <p class="text-gray-500">Note</p>
-                    <div class="flex items-center gap-1">
-                        <i class="pi pi-star-fill text-amber-300"></i>
-                        <i class="pi pi-star-fill text-amber-300"></i>
-                        <i class="pi pi-star-fill text-amber-300"></i>
-                        <i class="pi pi-star text-amber-300"></i>
-                        <i class="pi pi-star text-amber-300"></i>
+<p-drawer [visible]="open()" position="right" header="Fiche du livreur" (onHide)="handleClose()" styleClass="!w-[30rem] rounded-l-2xl">
+    @if (loading()) {
+        <app-delivery-man-details-placeholder></app-delivery-man-details-placeholder>
+    } @else {
+        @defer (on idle) {
+            @if (data()) {
+                <div class="flex flex-col gap-4">
+                    <div class="flex gap-3">
+                        <p-avatar [image]="data()!.about.profilePicture.thumbnail ?? undefined" style="width: 120px; height: 120px;" />
+                        <div class="flex flex-col justify-between">
+                            <div class="flex flex-col">
+                                <h1 class="text-xl font-bold">{{ data()!.about.name.toLocaleUpperCase() }} </h1>
+                                <p class="text-gray-500">{{ data()!.about.firstName }}</p>
+                                <p class="text-blue-400">Livreur {{ data()!.about.createdAt | seniority }}</p>
+                            </div>
+                            <div class="flex flex-col">
+                                <p class="text-gray-500">Note</p>
+                                <div class="flex items-center gap-1">
+                                    <i class="pi pi-star-fill text-amber-300"></i>
+                                    <i class="pi pi-star-fill text-amber-300"></i>
+                                    <i class="pi pi-star-fill text-amber-300"></i>
+                                    <i class="pi pi-star text-amber-300"></i>
+                                    <i class="pi pi-star text-amber-300"></i>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    <p-selectbutton 
+                        [options]="[
+                            { id: 1, label: 'A propos' }, 
+                            { id: 2, label: 'Données' }, 
+                            { id: 3, label: 'Historique' }
+                        ]" 
+                        [(ngModel)]="selected" 
+                        optionLabel="label" 
+                        optionValue="id" 
+                        size="small"
+                        [unselectable]="true"
+                    >
+                        <ng-template #item let-item>
+                            <small class="font-bold">{{ item.label }}</small>
+                        </ng-template>
+                    </p-selectbutton>
+                    @if (selected === 1) {
+                        <app-delivery-man-informations [deliveryMan]="data()!.about"></app-delivery-man-informations>
+                    } 
+                    @if (selected === 2) {
+                        <app-delivery-man-data></app-delivery-man-data>
+                    }
+                    @if (selected === 3) {
+                        <app-delivery-man-history></app-delivery-man-history>            
+                    }
                 </div>
-            </div>
-        </div>
-        <p-selectbutton 
-            [options]="[
-                { id: 1, label: 'A propos' }, 
-                { id: 2, label: 'Données' }, 
-                { id: 3, label: 'Historique' }
-            ]" 
-            [(ngModel)]="selected" 
-            optionLabel="label" 
-            optionValue="id" 
-            size="small"
-            [unselectable]="true"
-        >
-            <ng-template #item let-item>
-                <small class="font-bold">{{ item.label }}</small>
-            </ng-template>
-        </p-selectbutton>
-        @if (selected === 1) {
-            <app-delivery-man-informations></app-delivery-man-informations>
-        } 
-        @if (selected === 2) {
-            <app-delivery-man-data></app-delivery-man-data>
+            } @else {
+                <div class="flex justify-center items-center flex-1">
+                    <p class="text-gray-400">Livreur introuvable</p>
+                </div>
+            }
+        } @placeholder (minimum 600ms) {
+            <app-delivery-man-details-placeholder></app-delivery-man-details-placeholder>
         }
-        @if (selected === 3) {
-            <app-delivery-man-history></app-delivery-man-history>            
-        }
-    </div>
+    }
 </p-drawer>

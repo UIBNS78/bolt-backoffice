@@ -2,6 +2,7 @@ import { InputSelectOptions } from "@shared/components/types/input-select-option
 import { ValueOf } from "./owner-plan";
 import { User } from "./user";
 import { LoadingState } from "./loading-state";
+import { CloudinaryImage } from "./common";
 
 export const transportOptions: InputSelectOptions[] = [
     { id: 1, label: "A pied" },
@@ -29,6 +30,8 @@ export type DeliveryMan =
         address: string;
         totalPackages: number;
         transport: DeliveryManTransport;
+        cin: CloudinaryImage;
+        residence: CloudinaryImage;
         isActive: boolean;
     } &
     Pick<LoadingState, "isUpdating" | "isDeleting">

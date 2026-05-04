@@ -28,7 +28,7 @@
                     <label for="places">Lieu de livraison</label>
                     <input type="text" pInputText pSize="small" id="places" formControlName="places" [invalid]="form.get('places')?.invalid && (form.get('places')?.touched || form.get('places')?.dirty)">
                 </div>
-                <div class="flex justify-center items-center gap-3 flex-wrap overflow-y-auto max-h-100">
+                <div class="flex justify-center items-center gap-3 flex-wrap overflow-y-auto max-h-[calc(100vh-370px)]">
                     @for (p of places(); track p.id) {
                         <p-chip [label]="p.name" [removable]="true" (onRemove)="removePlace(p.id)" />
                     }

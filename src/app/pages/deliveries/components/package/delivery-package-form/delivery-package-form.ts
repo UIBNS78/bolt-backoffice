@@ -145,7 +145,7 @@ export class DeliveryPackageForm implements OnDestroy {
     formData.append("status", values.status);
     // append place city
     if (values.type === packageTypeObj.inCity) {
-    formData.append("placeId", values.location.placeId);
+      formData.append("placeId", values.location.placeId);
       formData.append("precision", values.location.precision);
     }
     // append cooperative
@@ -154,8 +154,8 @@ export class DeliveryPackageForm implements OnDestroy {
       formData.append("cooperativeId", values.location.cooperativeId);
     }
     // append image
-    const file: File = values.driverInformation as File;
-    if (file) {
+    if (values.driverInformation instanceof File) {
+      const file: File = values.driverInformation as File;
       formData.append("driverInformation", file, file.name);
     }
 
