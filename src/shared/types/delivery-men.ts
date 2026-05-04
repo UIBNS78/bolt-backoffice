@@ -29,6 +29,8 @@ export type DeliveryMan =
         address: string;
         totalPackages: number;
         transport: DeliveryManTransport;
+        cin: string | null;
+        residence: string | null;
         isActive: boolean;
     } &
     Pick<LoadingState, "isUpdating" | "isDeleting">

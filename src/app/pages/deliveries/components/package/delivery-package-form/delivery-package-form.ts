@@ -145,7 +145,7 @@ export class DeliveryPackageForm implements OnDestroy {
     formData.append("status", values.status);
     // append place city
     if (values.type === packageTypeObj.inCity) {
-    formData.append("placeId", values.location.placeId);
+      formData.append("placeId", values.location.placeId);
       formData.append("precision", values.location.precision);
     }
     // append cooperative

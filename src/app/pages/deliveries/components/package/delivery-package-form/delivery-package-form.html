@@ -157,7 +157,7 @@
                             <div [ngClass]="['bg-[#F1F5F9] p-3 rounded-xl', form.get('driverInformation')?.invalid && (form.get('driverInformation')?.touched || form.get('driverInformation')?.dirty) ? 'border border-red-500' : '']">
                                 <div class="flex flex-col pb-3">
                                     <p class="font-bold">Coordonnée Obligatoire</p>
-                                    <p class="text-gray-400">Insérez un image qui correspond à la coordonnée du coopérative ou du chauffeur responsable du colis.</p>
+                                    <p class="text-gray-400">Insérez une image qui correspond à la coordonnée du coopérative ou du chauffeur responsable du colis.</p>
                                 </div>
                                 <div class="flex flex-col gap-4">
                                     <p-fileupload #fub name="documents" (onSelect)="handleOnSelectFile($event)" (onRemove)="handleOnRemoveFile()" [customUpload]="true" accept="image/*" maxFileSize="1000000" mode="advanced">
