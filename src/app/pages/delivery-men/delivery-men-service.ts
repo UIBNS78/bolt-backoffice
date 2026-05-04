@@ -46,7 +46,7 @@ export class DeliveryMenService {
   }
 
   getDetails(id: number): Observable<DeliveryManDetails> {
-    return this.http.get<{ deliveryMan: DeliveryManDetails }>(`${environment.apiURL}/${id}`).pipe(
+    return this.http.get<{ deliveryMan: DeliveryManDetails }>(`${environment.apiURL}/delivery-men/details/${id}`).pipe(
       map(data => data.deliveryMan)
     );
   }

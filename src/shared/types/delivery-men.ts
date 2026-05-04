@@ -30,8 +30,8 @@ export type DeliveryMan =
         address: string;
         totalPackages: number;
         transport: DeliveryManTransport;
-        cin: CloudinaryImage | null;
-        residence: CloudinaryImage | null;
+        cin: CloudinaryImage;
+        residence: CloudinaryImage;
         isActive: boolean;
     } &
     Pick<LoadingState, "isUpdating" | "isDeleting">

@@ -3,27 +3,27 @@
         <table class="w-full">
             <tr class="h-8">
                 <td class="font-bold">Nom</td>
-                <td>RAKOTOARISOA</td>
+                <td>{{ deliveryMan().name }}</td>
             </tr>
             <tr class="h-8">                            
                 <td class="font-bold">Prénom</td>
-                <td>Gabriel Parany</td>
+                <td>{{ deliveryMan().firstName }}</td>
             </tr>
             <tr class="h-8">                            
                 <td class="font-bold">Date de naissance</td>
-                <td>01 Octobre 2000</td>
+                <td>{{ deliveryMan().birthday | date:"dd MMM yyyy" }}</td>
             </tr>
             <tr class="h-8">
                 <td class="font-bold">Age</td>
-                <td>25 ans</td>
+                <td>{{ deliveryMan().birthday | age }}</td>
             </tr>
             <tr class="h-8">
                 <td class="font-bold">Adresse</td>
-                <td>Mandroseza</td>
+                <td>{{ deliveryMan().address }}</td>
             </tr>
             <tr class="h-8">
                 <td class="font-bold">Mode de transport</td>
-                <td>Velo</td>
+                <td>{{ deliveryMan().transport | transport }}</td>
             </tr>
         </table>
     </div>
@@ -32,15 +32,17 @@
             <p class="text-gray-400">Contact</p>
         </p-divider>
         <table class="w-full">
-            <tr class="h-8">
-                <td class="font-bold">Adresse email</td>
-                <td>
-                    <p-button label="parany@gmail.com" size="small" link pTooltip="Envoyer un mail" tooltipPosition="top" />
-                </td>
-            </tr>
+            @if (deliveryMan().email) {
+                <tr class="h-8">
+                    <td class="font-bold">Adresse email</td>
+                    <td>
+                        <p-button [label]="deliveryMan().email" size="small" link pTooltip="Envoyer un mail" tooltipPosition="top" />
+                    </td>
+                </tr>
+            }
             <tr class="h-8">
                 <td class="font-bold">Numéro téléphone</td>
-                <td>038 71 963 22</td>
+                <td>{{ deliveryMan().phone | mask:'+999 99 99 999 99'}}</td>
             </tr>
         </table>
     </div>
@@ -49,26 +51,26 @@
             <p class="text-gray-400">Documents</p>
         </p-divider>
         <div class="flex items-center gap-2">
-            <p-image src="images/CIN.jpg" [preview]="true" alt="Image" width="100" style="border-radius: 5px;" pTooltip="Voir la copie du CIN" tooltipPosition="top" appendTo="body">
+            <p-image [preview]="true" alt="CIN" width="100" style="border-radius: 5px;" pTooltip="Voir la copie du CIN" tooltipPosition="top" appendTo="body">
                 <ng-template #indicator>
                     <i class="pi pi-eye" style="font-size: 0.8rem;"></i>
                 </ng-template>
                 <ng-template #image>
-                    <img src="images/CIN.jpg" alt="image" width="100" style="border-radius: 5px;" />
+                    <img [src]="deliveryMan().cin!.thumbnail" alt="CIN" width="100" style="border-radius: 5px;" />
                 </ng-template>
                 <ng-template #preview let-style="style" let-previewCallback="previewCallback">
-                    <img src="images/CIN.jpg" alt="image" [style]="style" (click)="previewCallback()" />
+                    <img [src]="deliveryMan().cin!.original" alt="CIN" [style]="style" (click)="previewCallback()" />
                 </ng-template>
             </p-image>
-            <p-image src="images/certificat-residence.png" [preview]="true" alt="Image" width="100" style="border-radius: 5px;" pTooltip="Voir le certicat de résidence" tooltipPosition="top" appendTo="body">
+            <p-image [preview]="true" alt="Residence certificate" width="100" style="border-radius: 5px;" pTooltip="Voir le certicat de résidence" tooltipPosition="top" appendTo="body">
                 <ng-template #indicator>
                     <i class="pi pi-eye" style="font-size: 0.8rem;"></i>
                 </ng-template>
                 <ng-template #image>
-                    <img src="images/certificat-residence.png" alt="image" width="100" style="border-radius: 5px;" />
+                    <img [src]="deliveryMan().residence!.thumbnail" alt="Residence certificate" width="100" style="border-radius: 5px;" />
                 </ng-template>
                 <ng-template #preview let-style="style" let-previewCallback="previewCallback">
-                    <img src="images/certificat-residence.png" alt="image" [style]="style" (click)="previewCallback()" />
+                    <img [src]="deliveryMan().residence!.original" alt="Residence certificate" [style]="style" (click)="previewCallback()" />
                 </ng-template>
             </p-image>
         </div>

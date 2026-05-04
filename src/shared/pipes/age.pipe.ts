@@ -7,10 +7,10 @@ import { differenceInYears, isDate, isValid } from 'date-fns';
 })
 export class AgePipe implements PipeTransform {
 
-  transform(value: string, type: "full" | "short" = "full"): string {
+  transform(value: string | Date, type: "full" | "short" = "full"): string {
     const date: Date = new Date(value);
     if (!isValid(date)) {
-      return value;
+      return value.toString();
     }
 
     const today: Date = new Date();
