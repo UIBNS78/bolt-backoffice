@@ -44,8 +44,8 @@
                             <div (click)="handleOnClick(notification)" class="flex justify-between items-center cursor-pointer py-3 px-3 rounded-md hover:bg-gray-100">
                                 <div class="flex items-center gap-3">
                                     <p-avatar 
-                                        [image]="notification.sender.profilePicture ?? undefined" 
                                         [label]="!notification.sender.profilePicture ? ((notification.sender.commercialName ?? (notification.sender.name + ' ' + notification.sender.firstName)) | bigram) : undefined" 
+                                        [image]="notification.sender.profilePicture ? notification.sender.profilePicture.thumbnail : undefined" 
                                         shape="circle" 
                                     />
                                     <div class="flex flex-col gap-1 max-w-[85%]">
