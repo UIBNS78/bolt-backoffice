@@ -34,3 +34,8 @@ export type User = {
     createdAt: Date;
     modifiedAt: Date;
 }
+
+export type UserConnectivitySocketData = {
+    userId: number;
+    isOnline: boolean;
+}

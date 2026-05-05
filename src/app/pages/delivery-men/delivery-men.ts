@@ -29,6 +29,9 @@ import { TagModule } from 'primeng/tag';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { SocketService } from 'core/services/socket-service';
+import { SOCKET_EVENT } from '@shared/types/socket';
+import { UserConnectivitySocketData } from '@shared/types/user';
 
 @Component({
   selector: 'app-delivery-men',
@@ -67,8 +70,9 @@ export class DeliveryMen implements OnInit, OnDestroy {
 
   // services
   private deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
-  protected dialogService: DialogService = inject(DialogService);
-  protected messageService: MessageService = inject(MessageService);
+  private readonly dialogService: DialogService = inject(DialogService);
+  private readonly messageService: MessageService = inject(MessageService);
+  private readonly socketService: SocketService = inject(SocketService);
   // vars
   protected first: WritableSignal<number> = signal(0);
   protected rows: WritableSignal<number> = signal(10);
@@ -84,6 +88,9 @@ export class DeliveryMen implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
+    // socket listenner
+    this.socketListenner();
+
     this.isLoading.set(true);
     this.loadData();
   }
@@ -162,5 +169,18 @@ export class DeliveryMen implements OnInit, OnDestroy {
 
   private countActive(): void {
     this.acitveCounts.set(this.data().deliveryMen.filter(d => d.isActive).length);
+  }
+
+  private socketListenner(): void {
+    // auto refresh data on man is online/offline
+    this.socketService.onEvent(SOCKET_EVENT.userConnectivity, ({ userId, isOnline }: UserConnectivitySocketData) => {
+      this.data.update(data => {
+        const index = data.deliveryMen.findIndex(d => d.userId === userId);
+        if (index !== -1) {
+          data.deliveryMen[index].isOnline = isOnline;
+        }
+        return { ...data };
+      })        
+    })
   }
 }
