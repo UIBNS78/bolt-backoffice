@@ -30,7 +30,7 @@
                     </tr>
                 </ng-template>
                 <ng-template #body let-owner>
-                    <tr>
+                    <tr [class.row-flash]="flashingOwnerId() === owner.id">
                         <td>{{ owner.id }}</td>
                         <td>{{ owner.gender | civility }} {{ (owner.name | uppercase) + ' ' + owner.firstName }}</td>
                         <td>

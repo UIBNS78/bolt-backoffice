@@ -34,6 +34,7 @@ import { UpperCasePipe } from '@angular/common';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { SocketService } from 'core/services/socket-service';
 import { SOCKET_EVENT } from '@shared/types/socket';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-owners',
@@ -69,12 +70,14 @@ import { SOCKET_EVENT } from '@shared/types/socket';
 export class Owners implements OnInit, OnDestroy {
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   // services
-  private ownersService: OwnersService = inject(OwnersService);
-  private dialogService: DialogService = inject(DialogService);
-  private messageService: MessageService = inject(MessageService);
+  private readonly ownersService: OwnersService = inject(OwnersService);
+  private readonly dialogService: DialogService = inject(DialogService);
+  private readonly messageService: MessageService = inject(MessageService);
   private readonly socketService: SocketService = inject(SocketService);
+  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   
   // vars
+  protected flashingOwnerId: WritableSignal<number | null> = signal<number | null>(null);
   protected showForm: WritableSignal<boolean> = signal(false);
   protected first: WritableSignal<number> = signal(0);
   protected rows: WritableSignal<number> = signal(10);
@@ -110,6 +113,8 @@ export class Owners implements OnInit, OnDestroy {
     ).subscribe((response: OwnerList) => {
       this.data.set(response);
       this.countOwners();
+
+      this.triggerFlash();
     });
   }
 
@@ -194,5 +199,27 @@ export class Owners implements OnInit, OnDestroy {
         return { ...data };
       })        
     })
+  }
+
+  private triggerFlash() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params["owner"]) {
+        const ownerId: number = parseInt(params["owner"]!, 10);
+
+        // check owner id
+        if (Number.isNaN(ownerId)) {
+          return;
+        }
+
+        this.flashingOwnerId.set(ownerId);
+        
+        // remove class after animation (2s)
+        setTimeout(() => {
+          if (this.flashingOwnerId() === ownerId) {
+            this.flashingOwnerId.set(null);
+          }
+        }, 2000);
+      }
+    });
   }
 }

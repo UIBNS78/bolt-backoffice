@@ -1,8 +1,0 @@
-@keyframes flash-bg {
-  0% { background-color: var(--p-primary-100); }
-  100% { background-color: transparent; }
-}
-
-.row-flash {
-  animation: flash-bg 2s ease-out;
-}

@@ -107,6 +107,17 @@ export class NotificationPopover implements OnInit, OnDestroy {
     }
     
     switch(notification.type) {
+      case NOTIFICATION_TYPES.newOwner: {
+        this.router.navigate(
+          ['/owners'], 
+          {
+            queryParams: {
+              owner: notification.targetId
+            }
+          }
+        );
+        break;
+      }
       case NOTIFICATION_TYPES.newDelivery:
       case NOTIFICATION_TYPES.cancelledDelivery: {
         this.router.navigate(
