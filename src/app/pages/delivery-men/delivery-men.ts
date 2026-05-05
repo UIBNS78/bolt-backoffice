@@ -88,11 +88,11 @@ export class DeliveryMen implements OnInit, OnDestroy {
   });
 
   ngOnInit(): void {
-    // socket listenner
-    this.socketListenner();
-
     this.isLoading.set(true);
     this.loadData();
+    
+    // socket listenner
+    this.socketListenner();
   }
 
   ngOnDestroy(): void {
