@@ -8,11 +8,22 @@
                     <p-panel>
                         <ng-template #header>
                             <div class="flex items-center gap-2">
-                                <p-avatar 
-                                    [label]="!data()!.owner.profilePicture ? (data()!.owner.commercialName | bigram) : undefined"
-                                    [image]="data()!.owner.profilePicture ?? undefined" 
-                                    shape="circle" 
-                                />
+                                <p-image [preview]="data()!.owner.profilePicture" alt="Owner profile picture" width="30" appendTo="body">
+                                    <ng-template #indicator>
+                                        <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
+                                    </ng-template>
+                                    <ng-template #image>
+                                        <p-avatar 
+                                            [label]="!data()!.owner.profilePicture ? (data()!.owner.commercialName | bigram) : undefined"
+                                            [image]="data()!.owner.profilePicture ? data()!.owner.profilePicture!.thumbnail : undefined"
+                                            shape="circle" 
+                                            style="font-size: 12px;" 
+                                        />
+                                    </ng-template>
+                                    <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                                        <img [src]="data()!.owner.profilePicture!.original" alt="Owner profile picture" [style]="style" (click)="previewCallback()" />
+                                    </ng-template>
+                                </p-image>
                                 <div class="flex flex-col">
                                     <p class="font-bold">{{ data()!.owner.commercialName }}</p>
                                     <small class="text-gray-400">Propriétaire</small>
@@ -20,9 +31,14 @@
                             </div>
                         </ng-template>
                         <ng-template #icons>
-                            @if (data()!.owner.planId === 2) {
-                                <i class="pi pi-star-fill text-orange-300" pTooltip="Propriétaire premium" tooltipPosition="left"></i>
-                            }
+                            <div class="flex items-center gap-2">
+                                @if (data()!.owner.createdAt | recent) {
+                                    <p-tag value="Nouveau" severity="info" pTooltip="Créer récemment" tooltipPosition="top" />
+                                }
+                                @if (data()!.owner.planId === 2) {
+                                    <i class="pi pi-star-fill text-orange-300" pTooltip="Propriétaire premium" tooltipPosition="left"></i>
+                                }
+                            </div>
                         </ng-template>
                         <table class="w-full">
                             <tr class="h-8">
@@ -134,7 +150,22 @@
                     <p-panel>
                         <ng-template #header>
                             <div class="flex items-center gap-2">
-                                <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/xuxuefeng.png" shape="circle" />
+                                <p-image [preview]="data()!.deliveryMan.profilePicture" alt="Owner profile picture" width="30" appendTo="body">
+                                    <ng-template #indicator>
+                                        <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
+                                    </ng-template>
+                                    <ng-template #image>
+                                        <p-avatar 
+                                            [label]="!data()!.deliveryMan.profilePicture ? ((data()!.deliveryMan.name + ' ' + data()!.deliveryMan.firstName) | bigram) : undefined"
+                                            [image]="data()!.deliveryMan.profilePicture ? data()!.deliveryMan.profilePicture!.thumbnail : undefined"
+                                            shape="circle" 
+                                            style="font-size: 12px;" 
+                                        />
+                                    </ng-template>
+                                    <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                                        <img [src]="data()!.deliveryMan.profilePicture!.original" alt="Owner profile picture" [style]="style" (click)="previewCallback()" />
+                                    </ng-template>
+                                </p-image>
                                 <div class="flex flex-col">
                                     <p class="font-bold">Mr Toky</p>
                                     <small class="text-gray-400">Livreur</small>

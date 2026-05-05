@@ -4,8 +4,8 @@ export type DateRange = {
 }
 
 export type CloudinaryImage = {
-    publicId: string | null;
-    thumbnail: string | null;
-    original: string | null;
-    download: string | null;
+    publicId: string;
+    thumbnail: string;
+    original: string;
+    download?: string;
 }

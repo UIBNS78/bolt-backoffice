@@ -28,7 +28,7 @@ export type User = {
     gender: Gender;
     email: string;
     phone: string;
-    profilePicture: CloudinaryImage;
+    profilePicture: CloudinaryImage | null;
     state: UserState;
     createdAt: Date;
     modifiedAt: Date;
