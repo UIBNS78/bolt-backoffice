@@ -13,13 +13,14 @@ import { NotificationSocketData, SOCKET_EVENT } from '@shared/types/socket';
 import { BrowserNotificationService } from 'core/services/browser-notification-service';
 import { NotificationService } from '../notification-service';
 import { format, isSameDay } from 'date-fns';
-import { Notification, NOTIFICATION_TYPES } from '@shared/types/notification';
+import { Notification, NOTIFICATION_TYPES, NotificationType } from '@shared/types/notification';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { DurationPipe } from '@shared/pipes/duration-pipe';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import { NOTIFICATION_MESSAGES as NM } from '@shared/constants/notification';
 
 @Component({
   selector: 'app-notification-popover',
@@ -50,6 +51,7 @@ export class NotificationPopover implements OnInit, OnDestroy {
   
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject();
+  protected NOTIFICATION_MESSAGES: Record<NotificationType, string> = NM;
   protected today: Date = new Date();
   protected selectedDate: WritableSignal<Date> = signal(this.today);
   protected selected: WritableSignal<number> = signal(1);
