@@ -28,8 +28,9 @@
                                         <div class="flex items-center gap-2">
                                             <p-avatar 
                                                 [label]="!delivery.owner.profilePicture ? (delivery.owner.commercialName | bigram) : undefined"
-                                                [image]="delivery.owner.profilePicture ?? undefined" 
+                                                [image]="delivery.owner.profilePicture ? delivery.owner.profilePicture!.thumbnail : undefined"
                                                 shape="circle" 
+                                                style="font-size: 12px;" 
                                             />
                                             <div class="flex flex-col">
                                                 <div class="flex items-center gap-2">

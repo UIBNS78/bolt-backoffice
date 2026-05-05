@@ -1,5 +1,6 @@
 import { ValueOf } from "@shared/types/owner-plan";
 import { Gender } from "./user";
+import { CloudinaryImage } from "./common";
 
 export const NOTIFICATION_TYPES: {
     newDelivery: 'NEW_DELIVERY';
@@ -25,7 +26,7 @@ export type Notification = {
         name: string;
         firstName: string;
         gender: Gender;
-        profilePicture: string | null;
+        profilePicture: CloudinaryImage | null;
         commercialName: string | null;
     };
     type: NotificationType;
