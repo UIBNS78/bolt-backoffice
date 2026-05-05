@@ -32,7 +32,6 @@ export type DeliveryMan =
         transport: DeliveryManTransport;
         cin: CloudinaryImage;
         residence: CloudinaryImage;
-        isActive: boolean;
     } &
     Pick<LoadingState, "isUpdating" | "isDeleting">
 

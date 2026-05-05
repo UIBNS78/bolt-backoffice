@@ -168,7 +168,7 @@ export class DeliveryMen implements OnInit, OnDestroy {
   }
 
   private countActive(): void {
-    this.acitveCounts.set(this.data().deliveryMen.filter(d => d.isActive).length);
+    this.acitveCounts.set(this.data().deliveryMen.filter(d => d.isOnline).length);
   }
 
   private socketListenner(): void {
