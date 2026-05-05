@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { PluralPipe } from '@shared/pipes/plural.pipe';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -76,7 +76,6 @@ export class DeliveryMen implements OnInit, OnDestroy {
   // vars
   protected first: WritableSignal<number> = signal(0);
   protected rows: WritableSignal<number> = signal(10);
-  protected acitveCounts: WritableSignal<number> = signal(0);
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected showForm: WritableSignal<boolean> = signal(false);
   protected showDetails: WritableSignal<boolean> = signal(false);
@@ -86,6 +85,7 @@ export class DeliveryMen implements OnInit, OnDestroy {
     deliveryMen: [],
     totalItems: 0
   });
+  protected acitveCounts: Signal<number> = computed(() => this.data().deliveryMen.filter(d => d.isOnline).length);
 
   ngOnInit(): void {
     this.isLoading.set(true);
@@ -105,8 +105,7 @@ export class DeliveryMen implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe((response: DeliveryMenList) => {
-      this.data.set(response);   
-      this.countActive();
+      this.data.set(response);
     });
   }
   
@@ -165,10 +164,6 @@ export class DeliveryMen implements OnInit, OnDestroy {
   onPageChange(event: PaginatorState) {
     this.first.set(event.first ?? 0);
     this.rows.set(event.rows ?? 10);
-  }
-
-  private countActive(): void {
-    this.acitveCounts.set(this.data().deliveryMen.filter(d => d.isOnline).length);
   }
 
   private socketListenner(): void {

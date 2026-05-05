@@ -52,27 +52,13 @@
                                         <p class="text-gray-400">
                                             <span class="font-bold text-black">
                                                 {{ notification.sender.commercialName ?? (notification.sender.gender | civility) + ' ' + notification.sender.firstName }}
-                                            </span> 
-                                            @switch (notification.type) {
-                                                @case ("NEW_DELIVERY") {
-                                                    <span> a créée une nouvelle livraison</span>
+                                            </span>
+                                            <span>
+                                                {{ NOTIFICATION_MESSAGES[notification.type] }}
+                                                @if (notification.recipientName) {
+                                                    <span class="font-bold text-black"> {{ notification.recipientName }}</span>
                                                 }
-                                                @case ("CANCELLED_DELIVERY") {
-                                                    <span> a annulée une livraison</span>
-                                                }
-                                                @case ("PACKAGE_DELIVERED") {
-                                                    <span> vient de livré le colis de <span class="font-bold text-black">{{ notification.recipientName }}</span></span>
-                                                }
-                                                @case ("PACKAGE_REPORTED") {
-                                                    <span> a reporté le colis de <span class="font-bold text-black">{{ notification.recipientName }}</span></span>
-                                                }
-                                                @case ("PACKAGE_CANCELLED") {
-                                                    <span> a annulé le colis de <span class="font-bold text-black">{{ notification.recipientName }}</span></span>
-                                                }
-                                                @default {
-                                                    <span> - </span>
-                                                }
-                                            }
+                                            </span>
                                         </p>
                                         <small class="text-gray-400">{{ notification.createdAt | duration }}</small>
                                     </div>

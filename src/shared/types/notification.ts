@@ -3,12 +3,14 @@ import { Gender } from "./user";
 import { CloudinaryImage } from "./common";
 
 export const NOTIFICATION_TYPES: {
+    newOwner: 'NEW_OWNER';
     newDelivery: 'NEW_DELIVERY';
     cancelledDelivery: 'CANCELLED_DELIVERY';
     packageDelivered: 'PACKAGE_DELIVERED';
     packageReported: 'PACKAGE_REPORTED';
     packageCancelled: 'PACKAGE_CANCELLED';
 } = {
+    newOwner: 'NEW_OWNER',
     newDelivery: 'NEW_DELIVERY',
     cancelledDelivery: 'CANCELLED_DELIVERY',
     packageDelivered: 'PACKAGE_DELIVERED',
