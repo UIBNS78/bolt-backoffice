@@ -47,12 +47,14 @@
                                         <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
                                     </ng-template>
                                     <ng-template #image>
-                                        <p-avatar 
-                                            [label]="!man.profilePicture ? ((man.name + ' ' + man.firstName) | bigram) : undefined"
-                                            [image]="man.profilePicture ? man.profilePicture.thumbnail: undefined"
-                                            shape="circle" 
-                                            style="font-size: 12px; width: 30px; height: 30px" 
-                                        />
+                                        <p-overlay-badge [badgeDisabled]="!man.isOnline" severity="success">
+                                            <p-avatar 
+                                                [label]="!man.profilePicture ? ((man.name + ' ' + man.firstName) | bigram) : undefined"
+                                                [image]="man.profilePicture ? man.profilePicture.thumbnail: undefined"
+                                                shape="circle" 
+                                                style="font-size: 12px;" 
+                                            />
+                                        </p-overlay-badge>
                                     </ng-template>
                                     <ng-template #preview let-style="style" let-previewCallback="previewCallback">
                                         <img [src]="man.profilePicture.original" alt="Profile picture" [style]="style" (click)="previewCallback()" />
@@ -79,7 +81,7 @@
                         <td style="text-align: center;">{{ man.totalPackages }}</td>
                         <td>
                             <div class="flex items-center justify-center">
-                                <p-tag severity="success" value="actif" [rounded]="true" />
+                                <p-tag [severity]="man.isOnline ? 'success' : 'warn'" [value]="man.isOnline ? 'En ligne' : 'Hors ligne'" [rounded]="true" />
                             </div>
                         </td>
                         <td>{{ man.createdAt | seniority }}</td>

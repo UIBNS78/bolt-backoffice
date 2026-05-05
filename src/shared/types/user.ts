@@ -30,6 +30,7 @@ export type User = {
     phone: string;
     profilePicture: CloudinaryImage | null;
     state: UserState;
+    isOnline: boolean;
     createdAt: Date;
     modifiedAt: Date;
 }

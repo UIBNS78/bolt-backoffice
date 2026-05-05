@@ -28,6 +28,7 @@ import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-
 import { TagModule } from 'primeng/tag';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 @Component({
   selector: 'app-delivery-men',
@@ -55,7 +56,8 @@ import { BigramPipe } from '@shared/pipes/bigram.pipe';
     ImageModule,
     CivilityPipe,
     BigramPipe,
-    UpperCasePipe
+    UpperCasePipe,
+    OverlayBadgeModule
 ],
   templateUrl: './delivery-men.html',
   styleUrl: './delivery-men.css',
