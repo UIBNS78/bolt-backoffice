@@ -10,7 +10,9 @@ export class SocketService {
   private _socket: Socket;
 
   constructor() {
-    this._socket = io(environment.backendUri);
+    this._socket = io(environment.backendUri, {
+      query: { isAdmin: true }
+    });
   }
 
   onEvent(event: SocketEvent, callback: (data: any) => void) {

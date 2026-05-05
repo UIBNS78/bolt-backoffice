@@ -26,11 +26,14 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { OwnerStateEditable } from './components/owner-state-editable/owner-state-editable';
 import { TagModule } from 'primeng/tag';
 import { RecentPipe } from '@shared/pipes/recent-pipe';
-import { UserState } from '@shared/types/user';
+import { UserConnectivitySocketData, UserState } from '@shared/types/user';
 import { AvatarModule } from 'primeng/avatar';
 import { ImageModule } from 'primeng/image';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { UpperCasePipe } from '@angular/common';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { SocketService } from 'core/services/socket-service';
+import { SOCKET_EVENT } from '@shared/types/socket';
 
 @Component({
   selector: 'app-owners',
@@ -57,7 +60,8 @@ import { UpperCasePipe } from '@angular/common';
     ImageModule,
     AvatarModule,
     BigramPipe,
-    UpperCasePipe
+    UpperCasePipe,
+    OverlayBadgeModule
 ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',
@@ -68,6 +72,8 @@ export class Owners implements OnInit, OnDestroy {
   private ownersService: OwnersService = inject(OwnersService);
   private dialogService: DialogService = inject(DialogService);
   private messageService: MessageService = inject(MessageService);
+  private readonly socketService: SocketService = inject(SocketService);
+  
   // vars
   protected showForm: WritableSignal<boolean> = signal(false);
   protected first: WritableSignal<number> = signal(0);
@@ -87,6 +93,9 @@ export class Owners implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isLoading.set(true);
     this.loadData();
+    
+    // socket listenner
+    this.socketListenner();
   }
 
   ngOnDestroy(): void {
@@ -172,5 +181,18 @@ export class Owners implements OnInit, OnDestroy {
       premiumCount: this.data().owners.filter(o => o.planId === planObj.premium).length,
       simpleCount: this.data().owners.filter(o => o.planId === planObj.simple).length,
     });
+  }
+  
+  private socketListenner(): void {
+    // auto refresh data on man is online/offline
+    this.socketService.onEvent(SOCKET_EVENT.userConnectivity, ({ userId, isOnline }: UserConnectivitySocketData) => {
+      this.data.update(data => {
+        const index = data.owners.findIndex(d => d.userId === userId);
+        if (index !== -1) {
+          data.owners[index].isOnline = isOnline;
+        }
+        return { ...data };
+      })        
+    })
   }
 }

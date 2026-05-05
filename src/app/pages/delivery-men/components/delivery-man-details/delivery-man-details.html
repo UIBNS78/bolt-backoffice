@@ -6,7 +6,11 @@
             @if (data()) {
                 <div class="flex flex-col gap-4">
                     <div class="flex gap-3">
-                        <p-avatar [image]="data()!.about.profilePicture.thumbnail ?? undefined" style="width: 120px; height: 120px;" />
+                        <div class="pt-2">
+                            <p-overlay-badge [badgeDisabled]="!data()!.about.isOnline" severity="success">
+                                <p-avatar [image]="data()!.about.profilePicture!.thumbnail" style="width: 120px; height: 120px;" />
+                            </p-overlay-badge>
+                        </div>
                         <div class="flex flex-col justify-between">
                             <div class="flex flex-col">
                                 <h1 class="text-xl font-bold">{{ data()!.about.name.toLocaleUpperCase() }} </h1>

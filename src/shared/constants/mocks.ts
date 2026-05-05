@@ -14,6 +14,7 @@ export const mockUser: User = {
         download: "https://api.boltmg.mg/uploads/profiles/lova_1.jpg"
     },
     state: USER_STATE.confirmed,
+    isOnline: true,
     createdAt: new Date("2024-01-15T08:30:00Z"),
     modifiedAt: new Date()
 };
