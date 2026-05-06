@@ -5,5 +5,5 @@ import { Owner } from "@shared/types/owner"
 export type DeliveryDetails =
     Omit<Delivery, "owner" | "deliveryMan"> & {
     owner: Owner;
-    deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName" | "email" | "gender" | "phone" | "profilePicture">;
+    deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName" | "email" | "gender" | "phone" | "profilePicture" | "isOnline">;
 }

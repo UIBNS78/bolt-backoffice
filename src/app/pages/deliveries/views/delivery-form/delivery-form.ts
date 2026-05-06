@@ -57,6 +57,7 @@ export class DeliveryForm implements OnDestroy {
   handleNextDelivery(delivery: DeliveryFormType): void {
     this.data.set({
       ...delivery,
+      collectDate: new Date(delivery.collectDate + ' 12:00:00'),
       deliveryDate: new Date(delivery.deliveryDate + ' 12:00:00'),
       packages: []
     });

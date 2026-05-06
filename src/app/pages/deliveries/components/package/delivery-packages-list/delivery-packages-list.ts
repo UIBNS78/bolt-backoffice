@@ -28,6 +28,7 @@ import { PackageActivities } from '../package-activities/package-activities';
 import { DeliveryDetailsDrawer } from '../../delivery/delivery-details-drawer/delivery-details-drawer';
 import { ActivatedRoute } from '@angular/router';
 import { ImageModule } from 'primeng/image';
+import { PluralPipe } from '@shared/pipes/plural.pipe';
 
 @Component({
   selector: 'app-delivery-packages-list',
@@ -51,7 +52,8 @@ import { ImageModule } from 'primeng/image';
     CivilityPipe,
     PackageActivities,
     DeliveryDetailsDrawer,
-    ImageModule
+    ImageModule,
+    PluralPipe
   ],
   templateUrl: './delivery-packages-list.html',
   styleUrl: './delivery-packages-list.css',

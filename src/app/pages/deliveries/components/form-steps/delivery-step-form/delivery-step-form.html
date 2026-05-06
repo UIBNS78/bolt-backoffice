@@ -1,5 +1,5 @@
 <form [formGroup]="form" (ngSubmit)="handleSubmit()">
-    <div class="flex flex-col gap-3 items-center h-[calc(100vh-220px)]">
+    <div class="flex flex-col gap-3 items-center h-[calc(100vh-200px)]">
         <div class="flex flex-col gap-3 overflow-y-auto overflow-x-hidden w-150 pr-3">
             <p-fieldset legend="A propos du propriétaire">
                 <div class="flex flex-col gap-4">
@@ -42,6 +42,23 @@
                         <p-select [options]="menOptions()" formControlName="deliveryManId" size="small" [filter]="true" filterBy="label" [showClear]="true" optionLabel="label" optionValue="id" [invalid]="form.get('deliveryManId')?.invalid && (form.get('deliveryManId')?.touched || form.get('deliveryManId')?.dirty)" required appendTo="body" />
                         @if (form.get('deliveryManId')?.invalid && (form.get('deliveryManId')?.touched || form.get('deliveryManId')?.dirty)) {
                             <p-message severity="error" size="small" variant="simple">Récupérateur requis.</p-message>
+                        }
+                    </div>
+                    <div class="flex flex-col gap-1 w-full">
+                        <label for="collectDate">Date de récupération</label>
+                        <p-datepicker 
+                            formControlName="collectDate" 
+                            size="small" 
+                            dateFormat="dd MM yy"
+                            [showClear]="true" 
+                            [iconDisplay]="'input'" 
+                            [showIcon]="true" 
+                            inputId="collectDate" 
+                            [invalid]="form.get('collectDate')?.invalid && (form.get('collectDate')?.touched || form.get('collectDate')?.dirty)"
+                            appendTo="body"
+                        />
+                        @if (form.get('collectDate')?.invalid && (form.get('collectDate')?.touched || form.get('collectDate')?.dirty)) {
+                            <p-message severity="error" size="small" variant="simple">Date de récupération requise.</p-message>
                         }
                     </div>
                     <div class="flex flex-col gap-1 w-full">
