@@ -6,10 +6,10 @@
             </h1>
             @if (delivery()) {
                 <div class="flex items-center gap-2">
-                    <p-tag [value]="packages().filter(p => p.status === 1).length + ' colis en cours'" severity="secondary" [rounded]="true" icon="pi pi-bullseye" />
-                    <p-tag [value]="packages().filter(p => p.status === 2).length + ' colis livrés'" severity="secondary" [rounded]="true" icon="pi pi-check" />
-                    <p-tag [value]="packages().filter(p => p.status === 3).length + ' colis reporté'" severity="secondary" [rounded]="true" icon="pi pi-refresh" />
-                    <p-tag [value]="packages().filter(p => p.status === 4).length + ' colis annulés'" severity="secondary" [rounded]="true" icon="pi pi-times" />
+                    <p-tag [value]="packages().filter(p => p.status === 1).length + ' en cours'" severity="secondary" [rounded]="true" icon="pi pi-bullseye" />
+                    <p-tag [value]="packages().filter(p => p.status === 2).length + ' ' + ('livré' | plural:(packages().filter(p => p.status === 2).length))" severity="secondary" [rounded]="true" icon="pi pi-check" />
+                    <p-tag [value]="packages().filter(p => p.status === 3).length + ' ' + ('reporté' | plural:(packages().filter(p => p.status === 3).length))" severity="secondary" [rounded]="true" icon="pi pi-refresh" />
+                    <p-tag [value]="packages().filter(p => p.status === 4).length + ' ' + ('annulé' | plural:(packages().filter(p => p.status === 4).length))" severity="secondary" [rounded]="true" icon="pi pi-times" />
                 </div>
             }
         </div>
