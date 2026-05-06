@@ -50,10 +50,11 @@ export class DeliveryStepForm {
     this.form = this.formBuilder.group({
       name: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       ownerId: [null, [Validators.required, Validators.min(0)]],
-      recuperationPlace: ["", [Validators.required]],
       packageNumber: [{ value: 0, disabled: true }, [Validators.required, Validators.min(1)]],
       payment: [0, [Validators.required, Validators.min(0)]],
       deliveryManId: [null, [Validators.required, Validators.min(0)]],
+      recuperationPlace: ["", [Validators.required]],
+      collectDate: [format(new Date(), "dd MMMM yyyy"), [Validators.required]],
       deliveryDate: [format(new Date(), "dd MMMM yyyy"), [Validators.required]],
       status: [deliveryStatusObj.pending, [Validators.required, Validators.min(1), Validators.max(4)]]
     });

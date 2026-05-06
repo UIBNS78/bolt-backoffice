@@ -38,6 +38,10 @@
                                 <td>{{ getDeliveryManName(data()!.deliveryManId) }}</td>
                             </tr>
                             <tr class="h-8">
+                                <td class="font-bold">Date de récupération</td>
+                                <td>{{ data()?.collectDate ? (data()!.collectDate | todayYesterdayTomorrow:"dd MMMM yyyy") : '' }}</td>
+                            </tr>
+                            <tr class="h-8">
                                 <td class="font-bold">Date de livraison</td>
                                 <td>{{ data()?.deliveryDate ? (data()!.deliveryDate | todayYesterdayTomorrow:"dd MMMM yyyy") : '' }}</td>
                             </tr>

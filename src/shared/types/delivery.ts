@@ -24,10 +24,11 @@ export type Delivery = {
     id: number;
     name: string;
     owner: DeliveryOwner;
-    recuperationPlace: string;
     packageNumber: number;
     payment: number;
     deliveryMan: DeiveryRecuperator;
+    recuperationPlace: string;
+    collectDate: Date;
     deliveryDate: Date;
     createdAt: Date;
     status: DeliveryStatus;
