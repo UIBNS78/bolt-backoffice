@@ -1,10 +1,10 @@
-import { Component, EventEmitter, inject, Input, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output, Signal, signal, WritableSignal } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DrawerModule } from 'primeng/drawer';
 import { DeliveriesService } from '../../../deliveries-service';
 import { MessageService } from 'primeng/api';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import { Delivery } from '@shared/types/delivery';
+import { Delivery, deliveryStatusObj } from '@shared/types/delivery';
 import { OwnersService } from 'app/pages/owners/owners-service';
 import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
@@ -37,7 +37,7 @@ import { DeliveryDrawerForm } from '../../../types/delivery-drawer-form';
   templateUrl: './delivery-form-drawer.html',
   styleUrl: './delivery-form-drawer.css',
 })
-export class DeliveryFormDrawer implements OnDestroy {
+export class DeliveryFormDrawer implements OnInit, OnDestroy {
   // services
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
   private readonly deliveriesService: DeliveriesService = inject(DeliveriesService);
@@ -55,6 +55,7 @@ export class DeliveryFormDrawer implements OnDestroy {
     packageNumber: [{ value: null, disabled: true }, [Validators.required, Validators.min(1)]],
     payment: [null, [Validators.required, Validators.min(0)]],
     deliveryManId: [null, [Validators.required, Validators.min(0)]],
+    collectDate: [null, [Validators.required]],
     deliveryDate: [null, [Validators.required]],
     status: [null, [Validators.required, Validators.min(1), Validators.max(4)]]
   });
@@ -80,6 +81,7 @@ export class DeliveryFormDrawer implements OnDestroy {
       packageNumber: data.packageNumber,
       payment: data.payment,
       deliveryManId: data.deliveryMan.id,
+      collectDate: format(data.collectDate, "dd MMMM yyyy"),
       deliveryDate: format(data.deliveryDate, "dd MMMM yyyy"),
       status: data.status
     });
@@ -90,6 +92,18 @@ export class DeliveryFormDrawer implements OnDestroy {
     return this._form;
   }
 
+  ngOnInit(): void {
+    this.form.get('status')?.valueChanges.pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(value => {
+      if (value === deliveryStatusObj.pending) {
+        this.form.get('collectDate')?.enable();
+      } else {
+        this.form.get('collectDate')?.disable();
+      }
+    });
+  }
+  
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -102,10 +116,18 @@ export class DeliveryFormDrawer implements OnDestroy {
     }
 
     this.loading.set(true);
-    this.deliveriesService.update({
+
+    const collectDate: Date = new Date(this.form.get('collectDate')!.value);
+    const deliveryDate: Date = new Date(this.form.get('deliveryDate')!.value);
+    collectDate.setHours(12);
+    deliveryDate.setHours(12);
+
+    const delivery: DeliveryDrawerForm = {
       ...this.form.getRawValue(),
-      deliveryDate: new Date(this.form.get('deliveryDate')!.value + ' 12:00:00')
-    } as DeliveryDrawerForm).pipe(
+      collectDate,
+      deliveryDate
+    } as DeliveryDrawerForm;
+    this.deliveriesService.update(delivery).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(() => {
