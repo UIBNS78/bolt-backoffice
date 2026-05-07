@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { finalize, Subject, take, takeUntil } from 'rxjs';
 import { OwnerList } from './types/owner-list';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
@@ -85,10 +85,15 @@ export class Owners implements OnInit, OnDestroy {
     owners: [],
     totalItems: 0
   });
-  protected counts: WritableSignal<OwnersCount> = signal({
-    ownersCount: 0,
-    premiumCount: 0,
-    simpleCount: 0
+  protected counts: Signal<OwnersCount> = computed(() => {
+    const owners: Owner[] = this.data().owners;
+
+    return {
+      onlineCount: owners.filter(o => o.isOnline).length,
+      ownersCount: owners.length,
+      premiumCount: owners.filter(o => o.planId === planObj.premium).length,
+      simpleCount: owners.filter(o => o.planId === planObj.simple).length,
+    };
   });
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected isCreating: WritableSignal<boolean> = signal(false);
@@ -112,7 +117,6 @@ export class Owners implements OnInit, OnDestroy {
       finalize(() => this.isLoading.set(false))
     ).subscribe((response: OwnerList) => {
       this.data.set(response);
-      this.countOwners();
 
       this.triggerFlash();
     });
@@ -178,14 +182,6 @@ export class Owners implements OnInit, OnDestroy {
   onPageChange(event: PaginatorState) {
     this.first.set(event.first ?? 0);
     this.rows.set(event.rows ?? 10);
-  }
-
-  private countOwners(): void {
-    this.counts.set({
-      ownersCount: this.data().owners.length,
-      premiumCount: this.data().owners.filter(o => o.planId === planObj.premium).length,
-      simpleCount: this.data().owners.filter(o => o.planId === planObj.simple).length,
-    });
   }
   
   private socketListenner(): void {
