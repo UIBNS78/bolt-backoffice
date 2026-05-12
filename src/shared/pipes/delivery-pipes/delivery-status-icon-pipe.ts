@@ -7,6 +7,9 @@ import { DeliveryStatus } from '@shared/types/delivery';
 export class DeliveryStatusIconPipe implements PipeTransform {
   transform(value: DeliveryStatus): string {
     switch(value) {
+      case 0:
+        return "pi pi-times-circle";
+
       case 1:
         return "pi pi-hourglass";
 

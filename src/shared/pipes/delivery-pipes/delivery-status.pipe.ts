@@ -9,6 +9,9 @@ export class DeliveryStatusPipe implements PipeTransform {
 
   transform(value: DeliveryStatus): string {
     switch(value) {
+      case 0:
+        return "Annulée";
+
       case 1:
         return "En attente";
 

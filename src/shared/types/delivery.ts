@@ -4,11 +4,13 @@ import type { Owner } from "./owner";
 import { ValueOf } from "./owner-plan";
 
 export const deliveryStatusObj: {
+    cancelled: 0;
     pending: 1;
     recovery: 2;
     delivery: 3;
     finished: 4;
 } = {
+    cancelled: 0,
     pending: 1,
     recovery: 2,
     delivery: 3,
