@@ -7,6 +7,9 @@ import { DeliveryStatus } from '@shared/types/delivery';
 export class DeliveryStatusSeverityPipe implements PipeTransform {
   transform(value: DeliveryStatus): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' {
     switch(value) {
+      case 0:
+        return "danger";
+
       case 1:
         return "contrast";
 
