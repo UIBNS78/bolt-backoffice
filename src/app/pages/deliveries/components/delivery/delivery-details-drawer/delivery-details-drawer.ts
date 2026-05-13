@@ -17,6 +17,7 @@ import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { ImageModule } from 'primeng/image';
 import { RecentPipe } from '@shared/pipes/recent-pipe';
+import { DeliveryStatusTimeline } from '../delivery-status-timeline/delivery-status-timeline';
 
 @Component({
   selector: 'app-delivery-details-drawer',
@@ -36,7 +37,8 @@ import { RecentPipe } from '@shared/pipes/recent-pipe';
     TodayYesterdayTomorrowPipe,
     BigramPipe,
     ImageModule,
-    RecentPipe
+    RecentPipe,
+    DeliveryStatusTimeline
   ],
   templateUrl: './delivery-details-drawer.html',
   styleUrl: './delivery-details-drawer.css',

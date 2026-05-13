@@ -1,4 +1,4 @@
-<p-drawer [visible]="open()" position="right" header="Détails de la livraison" (onHide)="handleClose()" styleClass="!w-[30rem] rounded-l-2xl">
+<p-drawer [visible]="open()" position="right" header="Détails de la livraison" (onHide)="handleClose()" styleClass="!w-[50rem] rounded-l-2xl">
     <div class="flex flex-col gap-3">
         @if (isLoading()) {
             <span></span>
@@ -83,8 +83,9 @@
                             </tr>
                         </table>
                     </p-panel>
-                    <p-panel header="Livraison">
-                        <ng-template #icons>
+                    <div class="bg-[#F1F5F9] p-4 rounded-xl">
+                        <div class="flex justify-between items-center pb-3">
+                            <p class="font-bold">Livraison</p>
                             <p-tag 
                                 [severity]="data()!.status | deliveryStatusSeverity" 
                                 [rounded]="true"
@@ -94,68 +95,80 @@
                                     <small style="font-size: 0.6rem;">{{ data()!.status | deliveryStatus }}</small>
                                 </div>
                             </p-tag>
-                        </ng-template>
-                        <table class="w-full">
-                            <tr class="h-8">
-                                <td class="font-bold">Nom de la livraison</td>
-                                <td>
-                                    <div class="flex items-center gap-1">
-                                        <p>{{ data()!.name }}</p>
-                                        <p class="text-gray-400">#{{ data()!.id }}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="h-8">                            
-                                <td class="font-bold">Date de récupération</td>
-                                <td>
-                                    <div class="flex items-center gap-2">
-                                        <i class="pi pi-calendar" style="font-size: 0.8rem;"></i>
-                                        <p>{{ data()!.collectDate | todayYesterdayTomorrow:"dd MMMM yyyy" }}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="h-8">                            
-                                <td class="font-bold">Date de livraison</td>
-                                <td>
-                                    <div class="flex items-center gap-2">
-                                        <i class="pi pi-calendar" style="font-size: 0.8rem;"></i>
-                                        <p>{{ data()!.deliveryDate | todayYesterdayTomorrow:"dd MMMM yyyy" }}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="h-8">                            
-                                <td class="font-bold">Lieu de récupération</td>
-                                <td>
-                                    <div class="flex items-center gap-2">
-                                        <i class="pi pi-map-marker" style="font-size: 0.8rem;"></i>
-                                        <p>{{ data()!.recuperationPlace }}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="h-8">                            
-                                <td class="font-bold">Nombre de colis</td>
-                                <td>
-                                    <div class="flex items-center gap-2">
-                                        <i class="pi pi-box" style="font-size: 0.8rem;"></i>
-                                        <p>{{ data()!.packageNumber }} colis</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="h-8">
-                                <td class="font-bold">Versement</td>
-                                <td>
-                                    <div class="flex items-center gap-2">
-                                        <i class="pi pi-wallet" style="font-size: 0.8rem;"></i>
-                                        <p>{{  data()!.payment.toLocaleString('fr-FR') }} Ar</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="h-8">
-                                <td class="font-bold">Créé le</td>
-                                <td>{{  data()!.createdAt | date:"dd MMMM yyyy à HH:mm" }}</td>
-                            </tr>
-                        </table>
-                    </p-panel>
+                        </div>
+                        <div class="flex gap-5">
+                            <div class="flex-1 bg-white py-4 rounded-xl">
+                                <app-delivery-status-timeline 
+                                    [dates]="{
+                                        created: data()!.createdAt,
+                                        finished: data()!.finishedAt,
+                                        recovery: data()!.recoveringAt,
+                                        delivery: data()!.deliveringAt
+                                    }"
+                                ></app-delivery-status-timeline>
+                            </div>
+                            <table class="flex-1">
+                                <tr class="h-8">
+                                    <td class="font-bold">Nom de la livraison</td>
+                                    <td>
+                                        <div class="flex items-center gap-1">
+                                            <p>{{ data()!.name }}</p>
+                                            <p class="text-gray-400">#{{ data()!.id }}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="h-8">                            
+                                    <td class="font-bold">Date de récupération</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-calendar" style="font-size: 0.8rem;"></i>
+                                            <p>{{ data()!.collectDate | todayYesterdayTomorrow:"dd MMMM yyyy" }}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="h-8">                            
+                                    <td class="font-bold">Date de livraison</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-calendar" style="font-size: 0.8rem;"></i>
+                                            <p>{{ data()!.deliveryDate | todayYesterdayTomorrow:"dd MMMM yyyy" }}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="h-8">                            
+                                    <td class="font-bold">Lieu de récupération</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-map-marker" style="font-size: 0.8rem;"></i>
+                                            <p>{{ data()!.recuperationPlace }}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="h-8">                            
+                                    <td class="font-bold">Nombre de colis</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-box" style="font-size: 0.8rem;"></i>
+                                            <p>{{ data()!.packageNumber }} colis</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="h-8">
+                                    <td class="font-bold">Versement</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-wallet" style="font-size: 0.8rem;"></i>
+                                            <p>{{  data()!.payment.toLocaleString('fr-FR') }} Ar</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="h-8">
+                                    <td class="font-bold">Créé le</td>
+                                    <td>{{  data()!.createdAt | date:"dd MMMM yyyy à HH:mm" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                     <p-panel>
                         <ng-template #header>
                             <div class="flex items-center gap-2">

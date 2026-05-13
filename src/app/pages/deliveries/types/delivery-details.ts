@@ -6,4 +6,8 @@ export type DeliveryDetails =
     Omit<Delivery, "owner" | "deliveryMan"> & {
     owner: Owner;
     deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName" | "email" | "gender" | "phone" | "profilePicture" | "isOnline">;
+    finishedAt: Date | null;
+    recoveringAt: Date | null;
+    deliveringAt: Date | null;
+    cancelledAt: Date | null;
 }

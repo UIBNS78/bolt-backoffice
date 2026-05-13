@@ -57,7 +57,7 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
     deliveryManId: [null, [Validators.required, Validators.min(0)]],
     collectDate: [null, [Validators.required]],
     deliveryDate: [null, [Validators.required]],
-    status: [null, [Validators.required, Validators.min(1), Validators.max(4)]]
+    status: [null, [Validators.required, Validators.min(0), Validators.max(4)]]
   });
   private _initialValues: WritableSignal<Delivery | null> = signal(null);
   protected loading: WritableSignal<boolean> = signal(false);
