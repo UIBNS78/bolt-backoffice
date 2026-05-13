@@ -5,84 +5,151 @@
         } @else {
             @defer (on idle) {
                 @if (data()) {
-                    <p-panel>
-                        <ng-template #header>
-                            <div class="flex items-center gap-2">
-                                <p-image [preview]="data()!.owner.profilePicture" alt="Owner profile picture" width="30" appendTo="body">
-                                    <ng-template #indicator>
-                                        <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
-                                    </ng-template>
-                                    <ng-template #image>
-                                        <p-avatar 
-                                            [label]="!data()!.owner.profilePicture ? (data()!.owner.commercialName | bigram) : undefined"
-                                            [image]="data()!.owner.profilePicture ? data()!.owner.profilePicture!.thumbnail : undefined"
-                                            shape="circle" 
-                                            style="font-size: 12px;" 
-                                        />
-                                    </ng-template>
-                                    <ng-template #preview let-style="style" let-previewCallback="previewCallback">
-                                        <img [src]="data()!.owner.profilePicture!.original" alt="Owner profile picture" [style]="style" (click)="previewCallback()" />
-                                    </ng-template>
-                                </p-image>
-                                <div class="flex flex-col">
-                                    <p class="font-bold">{{ data()!.owner.commercialName }}</p>
-                                    <small class="text-gray-400">Propriétaire</small>
+                    <div class="flex gap-5 flex-1">
+                        <p-panel class="flex-1">
+                            <ng-template #header>
+                                <div class="flex items-center gap-2">
+                                    <p-image [preview]="data()!.owner.profilePicture" alt="Owner profile picture" width="30" appendTo="body">
+                                        <ng-template #indicator>
+                                            <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
+                                        </ng-template>
+                                        <ng-template #image>
+                                            <p-avatar 
+                                                [label]="!data()!.owner.profilePicture ? (data()!.owner.commercialName | bigram) : undefined"
+                                                [image]="data()!.owner.profilePicture ? data()!.owner.profilePicture!.thumbnail : undefined"
+                                                shape="circle" 
+                                                style="font-size: 12px;" 
+                                            />
+                                        </ng-template>
+                                        <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                                            <img [src]="data()!.owner.profilePicture!.original" alt="Owner profile picture" [style]="style" (click)="previewCallback()" />
+                                        </ng-template>
+                                    </p-image>
+                                    <div class="flex flex-col">
+                                        <p class="font-bold">{{ data()!.owner.commercialName }}</p>
+                                        <small class="text-gray-400">Propriétaire</small>
+                                    </div>
                                 </div>
-                            </div>
-                        </ng-template>
-                        <ng-template #icons>
-                            <div class="flex items-center gap-2">
-                                @if (data()!.owner.createdAt | recent) {
-                                    <p-tag value="Nouveau" severity="info" pTooltip="Créer récemment" tooltipPosition="top" />
-                                }
-                                @if (data()!.owner.planId === 2) {
-                                    <i class="pi pi-star-fill text-orange-300" pTooltip="Propriétaire premium" tooltipPosition="left"></i>
-                                }
-                            </div>
-                        </ng-template>
-                        <table class="w-full">
-                            <tr class="h-8">
-                                <td class="font-bold">Responsable</td>
-                                <td>
-                                    <div class="flex items-center gap-1">
-                                        <p>{{ data()!.owner.gender | civility }} {{ data()!.owner.name + ' ' + data()!.owner.firstName }}</p>
-                                        <p class="text-gray-400">#{{ data()!.owner.id }}</p>
+                            </ng-template>
+                            <ng-template #icons>
+                                <div class="flex items-center gap-2">
+                                    @if (data()!.owner.createdAt | recent) {
+                                        <p-tag value="Nouveau" severity="info" pTooltip="Créer récemment" tooltipPosition="top" />
+                                    }
+                                    @if (data()!.owner.planId === 2) {
+                                        <i class="pi pi-star-fill text-orange-300" pTooltip="Propriétaire premium" tooltipPosition="left"></i>
+                                    }
+                                </div>
+                            </ng-template>
+                            <table class="w-full">
+                                <tr class="h-8">
+                                    <td class="font-bold">Responsable</td>
+                                    <td>
+                                        <div class="flex items-center gap-1">
+                                            <p>{{ data()!.owner.gender | civility }} {{ data()!.owner.name + ' ' + data()!.owner.firstName }}</p>
+                                            <p class="text-gray-400">#{{ data()!.owner.id }}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="h-8">                            
+                                    <td class="font-bold">Nom commercial</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-shop" style="font-size: 0.8rem;"></i>
+                                            <p>{{ data()!.owner.commercialName }}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="h-8">                            
+                                    <td class="font-bold">Email</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-envelope" style="font-size: 0.8rem;"></i>
+                                            <p>{{ data()!.owner.email }}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="h-8">
+                                    <td class="font-bold">Numéro de téléphone</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-phone" style="font-size: 0.8rem;"></i>
+                                            <p>{{ data()!.owner.phone }}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="h-8">
+                                    <td class="font-bold">Membre depuis</td>
+                                    <td>{{ data()!.owner.createdAt | date:"dd MMMM yyyy"}}</td>
+                                </tr>
+                            </table>
+                        </p-panel>
+                        <p-panel class="flex-1">
+                            <ng-template #header>
+                                <div class="flex items-center gap-2">
+                                    <p-image [preview]="data()!.deliveryMan.profilePicture" alt="Delivery man profile picture" width="30" appendTo="body">
+                                        <ng-template #indicator>
+                                            <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
+                                        </ng-template>
+                                        <ng-template #image>
+                                            <p-avatar 
+                                                [label]="!data()!.deliveryMan.profilePicture ? ((data()!.deliveryMan.name + ' ' + data()!.deliveryMan.firstName) | bigram) : undefined"
+                                                [image]="data()!.deliveryMan.profilePicture ? data()!.deliveryMan.profilePicture!.thumbnail : undefined"
+                                                shape="circle" 
+                                                style="font-size: 12px;" 
+                                            />
+                                        </ng-template>
+                                        <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                                            <img [src]="data()!.deliveryMan.profilePicture!.original" alt="Delivery man profile picture" [style]="style" (click)="previewCallback()" />
+                                        </ng-template>
+                                    </p-image>
+                                    <div class="flex flex-col">
+                                        <p class="font-bold">Mr Toky</p>
+                                        <small class="text-gray-400">Livreur</small>
                                     </div>
-                                </td>
-                            </tr>
-                            <tr class="h-8">                            
-                                <td class="font-bold">Nom commercial</td>
-                                <td>
-                                    <div class="flex items-center gap-2">
-                                        <i class="pi pi-shop" style="font-size: 0.8rem;"></i>
-                                        <p>{{ data()!.owner.commercialName }}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="h-8">                            
-                                <td class="font-bold">Email</td>
-                                <td>
-                                    <div class="flex items-center gap-2">
-                                        <i class="pi pi-envelope" style="font-size: 0.8rem;"></i>
-                                        <p>{{ data()!.owner.email }}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="h-8">
-                                <td class="font-bold">Numéro de téléphone</td>
-                                <td>
-                                    <div class="flex items-center gap-2">
-                                        <i class="pi pi-phone" style="font-size: 0.8rem;"></i>
-                                        <p>{{ data()!.owner.phone }}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="h-8">
-                                <td class="font-bold">Membre depuis</td>
-                                <td>{{ data()!.owner.createdAt | date:"dd MMMM yyyy"}}</td>
-                            </tr>
-                        </table>
-                    </p-panel>
+                                </div>
+                            </ng-template>
+                            <ng-template #icons>
+                                <div class="flex items-center">
+                                    <p-tag [severity]="data()!.deliveryMan.isOnline ? 'success' : 'warn'" [value]="data()!.deliveryMan.isOnline ? 'En ligne' : 'Hors ligne'" [rounded]="true" />
+                                </div>
+                            </ng-template>
+                            <table class="w-full">
+                                <tr class="h-8">
+                                    <td class="font-bold">Nom complet</td>
+                                    <td>
+                                        <div class="flex items-center gap-1">
+                                            <p>{{ data()!.deliveryMan.gender | civility }} {{ data()!.deliveryMan.name }} {{ data()!.deliveryMan.firstName }}</p>
+                                            <p class="text-gray-400">#{{ data()!.deliveryMan.id }}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="h-8">                            
+                                    <td class="font-bold">Email</td>
+                                    <td>
+                                        @if (data()!.deliveryMan.email) {
+                                            <div class="flex items-center gap-2">
+                                                <i class="pi pi-envelope" style="font-size: 0.8rem;"></i>
+                                                <p>{{ data()!.deliveryMan.email }}</p>
+                                            </div>
+                                        } @else {
+                                            <p class="text-gray-400">Aucun</p>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr class="h-8">
+                                    <td class="font-bold">Numéro de téléphone</td>
+                                    <td>
+                                        <div class="flex items-center gap-2">
+                                            <i class="pi pi-phone" style="font-size: 0.8rem;"></i>
+                                            <p>{{  data()!.deliveryMan.phone }}</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </p-panel>
+
+                    </div>
                     <div class="bg-[#F1F5F9] p-4 rounded-xl">
                         <div class="flex justify-between items-center pb-3">
                             <p class="font-bold">Livraison</p>
@@ -169,70 +236,6 @@
                             </table>
                         </div>
                     </div>
-                    <p-panel>
-                        <ng-template #header>
-                            <div class="flex items-center gap-2">
-                                <p-image [preview]="data()!.deliveryMan.profilePicture" alt="Delivery man profile picture" width="30" appendTo="body">
-                                    <ng-template #indicator>
-                                        <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
-                                    </ng-template>
-                                    <ng-template #image>
-                                        <p-avatar 
-                                            [label]="!data()!.deliveryMan.profilePicture ? ((data()!.deliveryMan.name + ' ' + data()!.deliveryMan.firstName) | bigram) : undefined"
-                                            [image]="data()!.deliveryMan.profilePicture ? data()!.deliveryMan.profilePicture!.thumbnail : undefined"
-                                            shape="circle" 
-                                            style="font-size: 12px;" 
-                                        />
-                                    </ng-template>
-                                    <ng-template #preview let-style="style" let-previewCallback="previewCallback">
-                                        <img [src]="data()!.deliveryMan.profilePicture!.original" alt="Delivery man profile picture" [style]="style" (click)="previewCallback()" />
-                                    </ng-template>
-                                </p-image>
-                                <div class="flex flex-col">
-                                    <p class="font-bold">Mr Toky</p>
-                                    <small class="text-gray-400">Livreur</small>
-                                </div>
-                            </div>
-                        </ng-template>
-                        <ng-template #icons>
-                            <div class="flex items-center">
-                                <p-tag [severity]="data()!.deliveryMan.isOnline ? 'success' : 'warn'" [value]="data()!.deliveryMan.isOnline ? 'En ligne' : 'Hors ligne'" [rounded]="true" />
-                            </div>
-                        </ng-template>
-                        <table class="w-full">
-                            <tr class="h-8">
-                                <td class="font-bold">Nom complet</td>
-                                <td>
-                                    <div class="flex items-center gap-1">
-                                        <p>{{ data()!.deliveryMan.gender | civility }} {{ data()!.deliveryMan.name }} {{ data()!.deliveryMan.firstName }}</p>
-                                        <p class="text-gray-400">#{{ data()!.deliveryMan.id }}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="h-8">                            
-                                <td class="font-bold">Email</td>
-                                <td>
-                                    @if (data()!.deliveryMan.email) {
-                                        <div class="flex items-center gap-2">
-                                            <i class="pi pi-envelope" style="font-size: 0.8rem;"></i>
-                                            <p>{{ data()!.deliveryMan.email }}</p>
-                                        </div>
-                                    } @else {
-                                        <p class="text-gray-400">Aucun</p>
-                                    }
-                                </td>
-                            </tr>
-                            <tr class="h-8">
-                                <td class="font-bold">Numéro de téléphone</td>
-                                <td>
-                                    <div class="flex items-center gap-2">
-                                        <i class="pi pi-phone" style="font-size: 0.8rem;"></i>
-                                        <p>{{  data()!.deliveryMan.phone }}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </p-panel>
                 } @else {
                     <div class="flex items-center justify-center">
                         <p class="tet-gray-400">Livraison introuvable</p>
