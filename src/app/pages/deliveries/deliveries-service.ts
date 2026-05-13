@@ -55,7 +55,7 @@ export class DeliveriesService {
   }
 
   update(data: DeliveryDrawerForm): Observable<void> {
-    return this.http.patch<void>(`${environment.apiURL}/deliveries/${data.id}`, data);
+    return this.http.put<void>(`${environment.apiURL}/deliveries/${data.id}`, data);
   }
 
   // PACKAGES
