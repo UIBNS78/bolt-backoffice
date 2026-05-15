@@ -1,0 +1,13 @@
+<p-timeline [value]="timelines()"  align="alternate">
+    <ng-template #marker let-timeline>
+        <div [ngClass]="['flex p-2 rounded-full border', timeline.date ? 'bg-green-100 border-green-300' : 'border-gray-300']">
+            <i [ngClass]="[timeline.icon, timeline.date ? 'text-green-500' : '']" style="font-size: 0.7rem;"></i>
+        </div>
+    </ng-template>
+    <ng-template #content let-timeline>
+        <div class="flex flex-col">
+            <span class="text-gray-400">{{ timeline.status | deliveryStatus }}</span>
+            <span>{{ timeline.date ? (timeline.date | date:"dd MMMM yyyy 'à' HH:mm") : "" }}</span>
+        </div>
+    </ng-template>
+</p-timeline>

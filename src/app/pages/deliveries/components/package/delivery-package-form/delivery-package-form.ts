@@ -24,6 +24,8 @@ import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service'
 import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { FormatImageSizePipe } from '@shared/pipes/format-image-size-pipe';
 import { ImageModule } from 'primeng/image';
+import { DatePickerModule } from 'primeng/datepicker';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-delivery-package-form',
@@ -41,7 +43,8 @@ import { ImageModule } from 'primeng/image';
     InputMaskModule,
     FileUploadModule,
     FormatImageSizePipe,
-    ImageModule
+    ImageModule,
+    DatePickerModule,
   ],
   templateUrl: './delivery-package-form.html',
   styleUrl: './delivery-package-form.css',
@@ -97,6 +100,7 @@ export class DeliveryPackageForm implements OnDestroy {
       isFragile: [data?.isFragile ?? false, [Validators.required]],
       status: [data?.status ?? PACKAGE_STATUS.inProgress, [Validators.required, Validators.min(1), Validators.max(4)]],
       driverInformation: [{ value: data?.driverInformation ?? null, disabled: true }],
+      reportedAt: [data?.reportedAt ? format(data.reportedAt, "dd MMMM yyyy") : null],
     });
 
     
@@ -143,6 +147,7 @@ export class DeliveryPackageForm implements OnDestroy {
     formData.append("deliveryPrice", values.deliveryPrice);
     formData.append("isFragile", values.isFragile);
     formData.append("status", values.status);
+    formData.append("reportedAt", values.reportedAt);
     // append place city
     if (values.type === packageTypeObj.inCity) {
       formData.append("placeId", values.location.placeId);
@@ -232,6 +237,17 @@ export class DeliveryPackageForm implements OnDestroy {
       takeUntil(this.unsubscribe$),
       distinctUntilChanged()
     ).subscribe((value: PackageStatus) => {
+      // set reported date required
+      if (value === PACKAGE_STATUS.reported) {
+        this.form.get("reportedAt")?.setValidators([Validators.required]);
+      } else {
+        this.form.get("reportedAt")?.clearValidators();
+        this.form.patchValue({
+          reportedAt: null
+        });
+        this.form.get("reportedAt")?.markAsTouched();
+      }
+      // set driver information required      
       if (value === PACKAGE_STATUS.delivered && this.packageTypeSignal() === packageTypeObj.outCity) {
         this.form.setControl("driverInformation", this.formBuilder.control('', [Validators.required]));
         this.form.get("driverInformation")?.enable();
