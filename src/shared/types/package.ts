@@ -39,6 +39,7 @@ export type Package = {
     status: PackageStatus;
     driverInformation: CloudinaryImage;
     deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName" | "gender">;
+    reportedAt: Date | null;
 } & { isStatusChanging?: boolean } & Pick<LoadingState, "isDeleting">
 
 export type PackageForm = {

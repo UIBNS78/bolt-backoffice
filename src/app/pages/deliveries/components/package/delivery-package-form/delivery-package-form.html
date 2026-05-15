@@ -153,6 +153,25 @@
                                 }
                             </div>
                         </div>
+                        @if (packageStatusControl.value === 3) {
+                            <div class="flex flex-col gap-1 w-full">
+                                <label for="reportedAt">Reporter le</label>
+                                <p-datepicker 
+                                    formControlName="reportedAt" 
+                                    size="small" 
+                                    dateFormat="dd MM yy"
+                                    [showClear]="true" 
+                                    [iconDisplay]="'input'" 
+                                    [showIcon]="true" 
+                                    inputId="reportedAt" 
+                                    [invalid]="form.get('reportedAt')?.invalid && (form.get('reportedAt')?.touched || form.get('reportedAt')?.dirty)"
+                                    appendTo="body"
+                                />
+                                @if (form.get('reportedAt')?.invalid && (form.get('reportedAt')?.touched || form.get('reportedAt')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Date requise.</p-message>
+                                }
+                            </div>
+                        }
                         @if (packageStatusControl.value === 2 && packageTypeSignal() === 2) {
                             <div [ngClass]="['bg-[#F1F5F9] p-3 rounded-xl', form.get('driverInformation')?.invalid && (form.get('driverInformation')?.touched || form.get('driverInformation')?.dirty) ? 'border border-red-500' : '']">
                                 <div class="flex flex-col pb-3">

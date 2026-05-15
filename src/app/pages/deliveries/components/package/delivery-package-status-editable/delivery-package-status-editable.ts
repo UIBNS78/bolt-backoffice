@@ -10,6 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { DriverInformationDialog } from './driver-information-dialog/driver-information-dialog';
+import { DeliveryPackageReportedForm } from './delivery-package-reported-form/delivery-package-reported-form';
 
 @Component({
   selector: 'app-delivery-package-status-editable',
@@ -22,7 +23,8 @@ import { DriverInformationDialog } from './driver-information-dialog/driver-info
     PackageStatusPipe,
     ProgressSpinnerModule,
     DialogModule,
-    DriverInformationDialog
+    DriverInformationDialog,
+    DeliveryPackageReportedForm
   ],
   templateUrl: './delivery-package-status-editable.html',
   styleUrl: './delivery-package-status-editable.css',
@@ -32,6 +34,7 @@ export class DeliveryPackageStatusEditable {
   
   package: InputSignal<Package> = input.required<Package>();
   protected openDriverInformationDialog: WritableSignal<boolean> = signal(false);
+  protected openReportedForm: WritableSignal<boolean> = signal(false);
 
   protected items: MenuItem[] = [
     {
@@ -59,7 +62,7 @@ export class DeliveryPackageStatusEditable {
       label: 'Reportés',
       icon: 'pi pi-refresh',
       command: () => {
-        this.handleStatusChange(PACKAGE_STATUS.reported);
+        this.openReportedForm.set(true);
       }
     },
     {
@@ -83,6 +86,15 @@ export class DeliveryPackageStatusEditable {
 
   handleCloseDriverInformationDialog(): void {
     this.openDriverInformationDialog.set(false);
+  }
+
+  handleSubmitReportedForm(formData: FormData): void {
+    this.onStatusChangeEmitter.emit(formData);
+    this.handleCloseReportedForm();
+  }
+
+  handleCloseReportedForm(): void {
+    this.openReportedForm.set(false);
   }
   
   private handleStatusChange(newStatus: PackageStatus): void {

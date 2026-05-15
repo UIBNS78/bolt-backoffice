@@ -1,0 +1,30 @@
+<p-dialog header="Reporter le colis" [modal]="true" [visible]="visible()" (onHide)="handleClose()" [style]="{ width: '25rem' }">
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()">
+        <div class="flex flex-col gap-3">
+            <div class="flex flex-col gap-2 w-full">
+                <div class="flex flex-col">
+                    <label for="reportedAt">Reporter le</label>
+                    <span class="text-gray-400">Choisissez la date à laquelle le colis sera reporté.</span>
+                </div>
+                <p-datepicker 
+                    formControlName="reportedAt" 
+                    size="small" 
+                    dateFormat="dd MM yy"
+                    [showClear]="true" 
+                    [iconDisplay]="'input'" 
+                    [showIcon]="true" 
+                    inputId="reportedAt" 
+                    [invalid]="form.get('reportedAt')?.invalid && (form.get('reportedAt')?.touched || form.get('reportedAt')?.dirty)"
+                    appendTo="body"
+                />
+                @if (form.get('reportedAt')?.invalid && (form.get('reportedAt')?.touched || form.get('reportedAt')?.dirty)) {
+                    <p-message severity="error" size="small" variant="simple">Date requise.</p-message>
+                }
+            </div>
+            <div class="flex items-center justify-end gap-3">
+                <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" />
+                <p-button type="submit" label="Modifier" severity="contrast" size="small" />
+            </div>
+        </div>
+    </form>
+</p-dialog>
