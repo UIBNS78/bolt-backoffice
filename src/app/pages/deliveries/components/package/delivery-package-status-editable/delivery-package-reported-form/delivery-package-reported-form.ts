@@ -20,16 +20,19 @@ import { MessageModule } from 'primeng/message';
 })
 export class DeliveryPackageReportedForm {
   private formBuilder: FormBuilder = inject(FormBuilder);
+  private _form: FormGroup = new FormGroup({});
 
   @Output() closeEmitter: EventEmitter<void> = new EventEmitter<void>();
   @Output() submitEmitter: EventEmitter<FormData> = new EventEmitter<FormData>();
   visible: InputSignal<boolean> = input.required<boolean>();
-  protected form: FormGroup = new FormGroup({});
-
-  constructor() {
-    this.form = this.formBuilder.group({
-      reportedAt: null
+  @Input() 
+  set defaultDate(date: Date | null) {
+    this._form = this.formBuilder.group({
+      reportedAt: date ? new Date(date) : null
     });
+  };
+  get form(): FormGroup {
+    return this._form;
   }
 
   handleSubmit(): void {

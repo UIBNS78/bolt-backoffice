@@ -79,22 +79,26 @@ export class DeliveryPackageStatusEditable {
     return this.items.filter(s => s.id !== this.package().status.toString());
   });
 
-  handleSubmitDriverInformation(formData: FormData): void {
+  protected handleSubmitDriverInformation(formData: FormData): void {
     this.onStatusChangeEmitter.emit(formData);
     this.handleCloseDriverInformationDialog();
   }
 
-  handleCloseDriverInformationDialog(): void {
+  protected handleCloseDriverInformationDialog(): void {
     this.openDriverInformationDialog.set(false);
   }
 
-  handleSubmitReportedForm(formData: FormData): void {
+  protected handleSubmitReportedForm(formData: FormData): void {
     this.onStatusChangeEmitter.emit(formData);
     this.handleCloseReportedForm();
   }
-
-  handleCloseReportedForm(): void {
+  
+  protected handleCloseReportedForm(): void {
     this.openReportedForm.set(false);
+  }
+
+  public handleOpenReportedForm(): void {
+    this.openReportedForm.set(true);
   }
   
   private handleStatusChange(newStatus: PackageStatus): void {

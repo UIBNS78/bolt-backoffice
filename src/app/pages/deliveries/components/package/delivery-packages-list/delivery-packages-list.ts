@@ -1,4 +1,4 @@
-import { Component, computed, effect, EventEmitter, inject, input, InputSignal, OnDestroy, Output, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, inject, input, InputSignal, OnDestroy, Output, Signal, signal, viewChild, WritableSignal } from '@angular/core';
 import { Package, PackageStatus } from '@shared/types/package';
 import { DeliveriesService } from 'app/pages/deliveries/deliveries-service';
 import { ButtonModule } from 'primeng/button';
@@ -29,6 +29,7 @@ import { DeliveryDetailsDrawer } from '../../delivery/delivery-details-drawer/de
 import { ActivatedRoute } from '@angular/router';
 import { ImageModule } from 'primeng/image';
 import { PluralPipe } from '@shared/pipes/plural.pipe';
+import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
 
 @Component({
   selector: 'app-delivery-packages-list',
@@ -53,7 +54,8 @@ import { PluralPipe } from '@shared/pipes/plural.pipe';
     PackageActivities,
     DeliveryDetailsDrawer,
     ImageModule,
-    PluralPipe
+    PluralPipe,
+    TodayYesterdayTomorrowPipe
   ],
   templateUrl: './delivery-packages-list.html',
   styleUrl: './delivery-packages-list.css',
@@ -66,6 +68,7 @@ export class DeliveryPackagesList implements OnDestroy {
   private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   // vars
+  protected editableStatus: Signal<DeliveryPackageStatusEditable | undefined> = viewChild(DeliveryPackageStatusEditable);
   @Output() loadDeliveryEmitter: EventEmitter<void> = new EventEmitter<void>();
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   protected flashingPackageId: WritableSignal<number | null> = signal<number | null>(null);
@@ -246,6 +249,10 @@ export class DeliveryPackagesList implements OnDestroy {
         });
       }
     });
+  }
+
+  handleOpenReportedDateDialog(): void {
+    this.editableStatus()!.handleOpenReportedForm();
   }
 
   private triggerFlash() {

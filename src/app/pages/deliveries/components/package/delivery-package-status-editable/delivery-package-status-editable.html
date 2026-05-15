@@ -16,5 +16,15 @@
     </div>
 </p-tag>
 
-<app-driver-information-dialog [visible]="openDriverInformationDialog()" (submitEmitter)="handleSubmitDriverInformation($event)" (closeEmitter)="handleCloseDriverInformationDialog()"></app-driver-information-dialog>
-<app-delivery-package-reported-form [visible]="openReportedForm()" (submitEmitter)="handleSubmitReportedForm($event)" (closeEmitter)="handleCloseReportedForm()"></app-delivery-package-reported-form>
+<app-driver-information-dialog 
+    [visible]="openDriverInformationDialog()" 
+    (submitEmitter)="handleSubmitDriverInformation($event)" 
+    (closeEmitter)="handleCloseDriverInformationDialog()"
+></app-driver-information-dialog>
+
+<app-delivery-package-reported-form 
+    [visible]="openReportedForm()" 
+    (submitEmitter)="handleSubmitReportedForm($event)" 
+    (closeEmitter)="handleCloseReportedForm()"
+    [defaultDate]="package().status === 3 ? package().reportedAt : null"
+></app-delivery-package-reported-form>
