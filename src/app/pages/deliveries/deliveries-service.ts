@@ -58,6 +58,10 @@ export class DeliveriesService {
     return this.http.put<void>(`${environment.apiURL}/deliveries/${data.id}`, data);
   }
 
+  publish(id: number): Observable<void> {
+    return this.http.post<void>(`${environment.apiURL}/deliveries/${id}/publish`, {});
+  }
+
   // PACKAGES
   getPackagesByOwnersByDeliveryId(deliveryId: number): Observable<Package[]> {
     return this.http.get<{ packages: Package[] }>(`${environment.apiURL}/deliveries/packages/${deliveryId}`).pipe(

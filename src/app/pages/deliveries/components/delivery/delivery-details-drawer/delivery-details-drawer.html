@@ -5,7 +5,7 @@
         } @else {
             @defer (on idle) {
                 @if (data()) {
-                    <div class="flex gap-5 flex-1">
+                    <div class="flex gap-3 flex-1">
                         <p-panel class="flex-1">
                             <ng-template #header>
                                 <div class="flex items-center gap-2">
@@ -242,7 +242,7 @@
                     </div>
                 }
             } @placeholder (minimum 600ms) {
-                <div class="flex gap-5">
+                <div class="flex gap-3">
                     <p-skeleton height="16rem" />
                     <p-skeleton height="16rem" />
                 </div>

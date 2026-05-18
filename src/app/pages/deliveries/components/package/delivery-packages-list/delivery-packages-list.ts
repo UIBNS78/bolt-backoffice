@@ -81,6 +81,7 @@ export class DeliveryPackagesList implements OnDestroy {
   protected hasFilter: WritableSignal<boolean> = signal(false);
   delivery: InputSignal<Delivery | null> = input<Delivery | null>(null);
   protected isLoading: WritableSignal<boolean> = signal(false);
+  protected isPublishing: WritableSignal<boolean> = signal(false);
   protected packages: WritableSignal<Package[]> = signal([]);
   protected searchValue: Signal<string> = toSignal(
     this.searchControl.valueChanges.pipe(
@@ -253,6 +254,22 @@ export class DeliveryPackagesList implements OnDestroy {
 
   handleOpenReportedDateDialog(): void {
     this.editableStatus()!.handleOpenReportedForm();
+  }
+
+  handlePublishDelivery(): void {
+    this.isPublishing.set(true);
+    this.deliveriesService.publish(this.delivery()!.id).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.isPublishing.set(false))
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Livraison publiée',
+        detail: 'La livraison a été publiée avec succès.'
+      });
+
+      this.loadDeliveryEmitter.emit();
+    });
   }
 
   private triggerFlash() {
