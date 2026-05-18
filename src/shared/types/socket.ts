@@ -19,4 +19,10 @@ export type SocketEvent = ValueOf<typeof SOCKET_EVENT>;
 
 export type NotificationSocketData = {
     title: string;
-    body: string;}
+    body: string;
+    tag: string;
+    data?: {
+        deliveryId?: number;
+        packageId?: number;
+    }
+}

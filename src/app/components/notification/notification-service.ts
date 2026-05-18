@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { DateRange } from '@shared/types/common';
 import { Notification } from '@shared/types/notification';
+import { NotificationSocketData } from '@shared/types/socket';
 import { environment } from 'environments/environment';
 import { map, Observable } from 'rxjs';
 
@@ -11,6 +12,12 @@ import { map, Observable } from 'rxjs';
 export class NotificationService {
   private readonly http: HttpClient = inject(HttpClient);
 
+  init(): Observable<NotificationSocketData[]> {
+    return this.http.get<{ notifications: NotificationSocketData[] }>(`${environment.apiURL}/notifications/init`).pipe(
+      map(data => data.notifications)
+    );
+  }
+  
   getAll(dates: DateRange): Observable<Notification[]> {
     const params = new HttpParams({
       fromObject: dates

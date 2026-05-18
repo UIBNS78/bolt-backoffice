@@ -9,8 +9,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { NotificationPlaceholder } from '../notification-placeholder/notification-placeholder';
 import { SocketService } from 'core/services/socket-service';
-import { NotificationSocketData, SOCKET_EVENT } from '@shared/types/socket';
-import { BrowserNotificationService } from 'core/services/browser-notification-service';
+import { SOCKET_EVENT } from '@shared/types/socket';
 import { NotificationService } from '../notification-service';
 import { format, isSameDay } from 'date-fns';
 import { Notification, NOTIFICATION_TYPES, NotificationType } from '@shared/types/notification';
@@ -45,7 +44,6 @@ import { NOTIFICATION_MESSAGES as NM } from '@shared/constants/notification';
 export class NotificationPopover implements OnInit, OnDestroy {
   // services
   private readonly socketService: SocketService = inject(SocketService);
-  private readonly browserNotificationService: BrowserNotificationService = inject(BrowserNotificationService);
   private readonly notificationService: NotificationService = inject(NotificationService);
   private readonly router: Router = inject(Router);
   
@@ -71,9 +69,8 @@ export class NotificationPopover implements OnInit, OnDestroy {
   datepicker = viewChild<Popover>("datepicker");
 
   ngOnInit(): void {
-    this.socketService.onEvent(SOCKET_EVENT.newNotification, ({ title, body }: NotificationSocketData) => {
+    this.socketService.onEvent(SOCKET_EVENT.newNotification, () => {
       this.hasNewNotification.set(true);
-      this.browserNotificationService.show(title, { body });
     });
   }
 
