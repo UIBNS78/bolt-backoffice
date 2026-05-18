@@ -6,6 +6,9 @@ import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { OwnersService } from 'app/pages/owners/owners-service';
 import { DeliveryPricesService } from 'app/pages/delivery-prices/delivery-prices-service';
 import { BrowserNotificationService } from 'core/services/browser-notification-service';
+import { NotificationService } from 'app/components/notification/notification-service';
+import { NotificationSocketData, SOCKET_EVENT } from '@shared/types/socket';
+import { SocketService } from 'core/services/socket-service';
 
 @Component({
   selector: 'app-app-layout',
@@ -22,6 +25,8 @@ export class AppLayout implements OnInit {
   private readonly ownersService: OwnersService = inject(OwnersService);
   private readonly deliveryPricesSerivce: DeliveryPricesService = inject(DeliveryPricesService);
   private readonly browserNotificationService: BrowserNotificationService = inject(BrowserNotificationService);
+  private readonly notificationService: NotificationService = inject(NotificationService);
+  private readonly socketService: SocketService = inject(SocketService);
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
@@ -29,6 +34,10 @@ export class AppLayout implements OnInit {
   ngOnInit(): void {
     this.loadAllOptions();
     this.browserNotificationService.requestPermission();
+    this.loadNotification();
+
+    // show web notification from socket.io
+    this.notificationListenner();
   }
 
   private loadAllOptions(): void {
@@ -40,5 +49,34 @@ export class AppLayout implements OnInit {
     ]).pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe();
+  }
+
+  private loadNotification(): void {
+    this.notificationService.init().pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(response => {
+      response.forEach((data, i) => {
+        setTimeout(() => {
+          // show directly notifcation
+          this.browserNotificationService.show(data.title, {
+            body: data.body,
+            tag: data.tag
+          });
+        }, i * 200);
+      });
+    });
+  }
+
+  private notificationListenner(): void {
+    this.socketService.onEvent(SOCKET_EVENT.newNotification, (content: NotificationSocketData[]) => {
+      content.forEach((data, i) => {
+        setTimeout(() => {
+          this.browserNotificationService.show(data.title, {
+            body: data.body,
+            tag: data.tag
+          });
+        }, i * 200);
+      });
+    });
   }
 }
