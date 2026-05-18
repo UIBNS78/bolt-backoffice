@@ -267,6 +267,8 @@ export class DeliveryPackagesList implements OnDestroy {
         summary: 'Livraison publiée',
         detail: 'La livraison a été publiée avec succès.'
       });
+
+      this.loadDeliveryEmitter.emit();
     });
   }
 
