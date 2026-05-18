@@ -17,6 +17,16 @@
             <p-button (click)="handleOpenDeliveryDetails()" icon="pi pi-eye" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Détails de la livraison" tooltipPosition="top" />
             <p-button (click)="handleOpenDeliveryForm()" icon="pi pi-pencil" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Modifier la livraison" tooltipPosition="top" />
             <p-button (click)="handleOpenPackageForm()" icon="pi pi-plus" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Ajouter un colis" tooltipPosition="top" />
+            <p-button (click)="handlePublishDelivery()" icon="pi pi-send" size="small" severity="info" [disabled]="isLoading() || isPublishing() || delivery()?.published || packages().length <= 0" [loading]="isPublishing()" [pTooltip]="publishButton" tooltipPosition="top" />
+            <ng-template #publishButton>
+                <div class="flex flex-col gap-1">
+                    <div class="flex items-center gap-2">
+                        <i class="pi pi-send" style="font-size: 0.8rem;"></i>
+                        <p class="text-bold">{{ delivery()?.published ? `Publiée : ${(delivery() && delivery()!.publishedAt) ? (delivery()!.publishedAt! | todayYesterdayTomorrow:"dd MMM yyyy") : ""}` : "Publier la livraison" }}</p>
+                    </div>
+                    <span class="text-gray-400">Le récupérateur et les livreurs {{ delivery()?.published ? "ont déjà été notifiés de cette livraison." : "seront notifiés une fois que cette livraison sera publiée." }}</span>
+                </div>
+            </ng-template>
             <p-divider layout="vertical" />
             <p-button icon="pi pi-window-maximize" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || packages().length <= 0" pTooltip="Agrandir la vue" tooltipPosition="top" />
             <app-delivery-package-filter-button 

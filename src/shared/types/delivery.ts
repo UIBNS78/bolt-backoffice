@@ -34,6 +34,8 @@ export type Delivery = {
     deliveryDate: Date;
     createdAt: Date;
     status: DeliveryStatus;
+    published: boolean;
+    publishedAt: Date | null;
 } & Pick<LoadingState, "isDeleting">
 
 export type DeliveryByDate = {
