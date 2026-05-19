@@ -1,6 +1,7 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { PluralPipe } from '@shared/pipes/plural.pipe';
 import { SkeletonModule } from 'primeng/skeleton';
+import { DeliveryPricesService } from '../../delivery-prices-service';
 
 @Component({
   selector: 'app-delivery-price-counts',
@@ -11,8 +12,18 @@ import { SkeletonModule } from 'primeng/skeleton';
   templateUrl: './delivery-price-counts.html',
   styleUrl: './delivery-price-counts.css',
 })
-export class DeliveryPriceCounts {
+export class DeliveryPriceCounts implements OnInit {
+  // services
+  private readonly deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
+  
+  // vars
   protected loading: WritableSignal<boolean> = signal(false);
+  protected counts = this.deliveryPricesService.counts;
 
-  // TODO: call API for count
+  ngOnInit(): void {
+    // simulate loading
+    setTimeout(() => {
+      this.loading.set(true);
+    }, 2000);
+  }
 }

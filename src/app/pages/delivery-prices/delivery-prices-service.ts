@@ -16,6 +16,12 @@ export class DeliveryPricesService {
   private _cooperatives: WritableSignal<SelectItemGroup[]> = signal<SelectItemGroup[]>([]);
   public cityOptions: Signal<SelectItemGroup[]> = computed(() => this._cities());
   public cooperativeOptions: Signal<SelectItemGroup[]> = computed(() => this._cooperatives());
+  public counts: Signal<{ city: number, cooperative: number }> = computed(() => {
+    return {
+      city: this._cities().flatMap(item => item.items).length,
+      cooperative: this._cooperatives().flatMap(item => item.items).length
+    }
+  })
 
   getAllCity(): Observable<DeliveryPriceCity[]> {    
     return this.http.get<{ deliveryPrices: DeliveryPriceCity[] }>(`${environment.apiURL}/delivery-prices/city`).pipe(
