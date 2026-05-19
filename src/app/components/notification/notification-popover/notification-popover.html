@@ -18,23 +18,23 @@
                 </p-popover>
             </div>
         </div>
+        <p-selectbutton 
+            [options]="[
+                { id: 1, label: 'Tout' }, 
+                { id: 2, label: 'Non-lu' }
+            ]" 
+            [(ngModel)]="selected"
+            optionLabel="label" 
+            optionValue="id" 
+            size="small" 
+            [unselectable]="true"
+            [disabled]="loading()"
+        >
+            <ng-template #item let-item>
+                <small class="font-bold">{{ item.label }}</small>
+            </ng-template>
+        </p-selectbutton>
         <div class="flex flex-col gap-3 overflow-y-auto overflow-x-hidden h-full">
-            <p-selectbutton 
-                [options]="[
-                    { id: 1, label: 'Tout' }, 
-                    { id: 2, label: 'Non-lu' }
-                ]" 
-                [(ngModel)]="selected"
-                optionLabel="label" 
-                optionValue="id" 
-                size="small" 
-                [unselectable]="true"
-                [disabled]="loading()"
-            >
-                <ng-template #item let-item>
-                    <small class="font-bold">{{ item.label }}</small>
-                </ng-template>
-            </p-selectbutton>
             <div class="flex flex-col h-full">
                 @if (loading()) {
                     <app-notification-placeholder></app-notification-placeholder>

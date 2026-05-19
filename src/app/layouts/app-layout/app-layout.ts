@@ -77,6 +77,11 @@ export class AppLayout implements OnInit {
           });
         }, i * 200);
       });
+      // mark all notification as pushed
+      const ids = content.map(n => n.data.notificationId);
+      this.notificationService.markAsPushed(ids).pipe(
+        takeUntil(this.unsubscribe$)
+      ).subscribe();
     });
   }
 }

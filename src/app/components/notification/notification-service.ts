@@ -28,6 +28,10 @@ export class NotificationService {
     );
   }
 
+  markAsPushed(ids: number[]): Observable<void> {
+    return this.http.post<void>(`${environment.apiURL}/notifications/pushed`, { ids });
+  }
+
   markAsRead(id: number): Observable<void> {
     return this.http.get<void>(`${environment.apiURL}/notifications/read/${id}`);
   }

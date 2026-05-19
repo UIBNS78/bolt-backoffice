@@ -152,7 +152,15 @@
                     </div>
                     <div class="bg-[#F1F5F9] p-4 rounded-xl">
                         <div class="flex justify-between items-center pb-3">
-                            <p class="font-bold">Livraison</p>
+                            <div class="flex flex-col gap-1">
+                                <p class="font-bold">Livraison</p>
+                                @if (data()!.published) {
+                                    <div class="flex items-center gap-1">
+                                        <i class="pi pi-send text-gray-400" style="font-size: 0.6rem;"></i>
+                                        <small class="text-gray-400">Publiée : {{ data()!.publishedAt ? (data()!.publishedAt! | todayYesterdayTomorrow:"dd MMMM yyyy à HH:mm") : "" }}</small>
+                                    </div>
+                                }
+                            </div>
                             <p-tag 
                                 [severity]="data()!.status | deliveryStatusSeverity" 
                                 [rounded]="true"

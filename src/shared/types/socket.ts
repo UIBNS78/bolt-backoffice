@@ -21,7 +21,8 @@ export type NotificationSocketData = {
     title: string;
     body: string;
     tag: string;
-    data?: {
+    data: {
+        notificationId: number;
         deliveryId?: number;
         packageId?: number;
     }
