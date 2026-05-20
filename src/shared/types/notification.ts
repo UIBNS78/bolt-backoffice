@@ -4,16 +4,16 @@ import { CloudinaryImage } from "./common";
 
 export const NOTIFICATION_TYPES: {
     newOwner: 'NEW_OWNER';
-    newDelivery: 'NEW_DELIVERY';
-    cancelledDelivery: 'CANCELLED_DELIVERY';
+    newDelivery: 'DELIVERY_NEW';
+    cancelledDelivery: 'DELIVERY_CANCELLED';
     packageInProgress: 'PACKAGE_IN_PROGRESS';
     packageDelivered: 'PACKAGE_DELIVERED';
     packageReported: 'PACKAGE_REPORTED';
     packageCancelled: 'PACKAGE_CANCELLED';
 } = {
     newOwner: 'NEW_OWNER',
-    newDelivery: 'NEW_DELIVERY',
-    cancelledDelivery: 'CANCELLED_DELIVERY',
+    newDelivery: 'DELIVERY_NEW',
+    cancelledDelivery: 'DELIVERY_CANCELLED',
     packageInProgress: 'PACKAGE_IN_PROGRESS',
     packageDelivered: 'PACKAGE_DELIVERED',
     packageReported: 'PACKAGE_REPORTED',
