@@ -35,7 +35,7 @@ export type Notification = {
     };
     type: NotificationType;
     targetId: number;
-    recipientName: string | null;
+    metadata: Record<string, any> | null;
     isRead: boolean;
     createdAt: Date;
 }
