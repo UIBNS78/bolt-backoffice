@@ -17,13 +17,13 @@ export class DeliveryPriceCounts implements OnInit {
   private readonly deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
   
   // vars
-  protected loading: WritableSignal<boolean> = signal(false);
+  protected loading: WritableSignal<boolean> = signal(true);
   protected counts = this.deliveryPricesService.counts;
 
   ngOnInit(): void {
     // simulate loading
     setTimeout(() => {
-      this.loading.set(true);
-    }, 2000);
+      this.loading.set(false);
+    }, 300);
   }
 }

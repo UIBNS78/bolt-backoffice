@@ -55,8 +55,8 @@
                                             </span>
                                             <span>
                                                 {{ NOTIFICATION_MESSAGES[notification.type] }}
-                                                @if (notification.recipientName) {
-                                                    <span class="font-bold text-black"> {{ notification.recipientName }}</span>
+                                                @if (notification.metadata && notification.metadata["customer"]) {
+                                                    <span class="font-bold text-black"> {{ notification.metadata["customer"] }}</span>
                                                 }
                                             </span>
                                         </p>

@@ -127,8 +127,10 @@ export class NotificationPopover implements OnInit, OnDestroy {
         );
         break;
       }
+      case NOTIFICATION_TYPES.packageInProgress:
       case NOTIFICATION_TYPES.packageDelivered:
       case NOTIFICATION_TYPES.packageReported:
+      case NOTIFICATION_TYPES.packageCancelled:
       case NOTIFICATION_TYPES.cancelledDelivery: {
         this.router.navigate(
           ['/deliveries/list'], 
