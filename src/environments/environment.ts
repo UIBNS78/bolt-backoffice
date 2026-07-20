@@ -1,5 +1,5 @@
 export const environment = {
-    production: false,
+    production: true,
     backendUri: "http://localhost:3001",
     apiURL: "http://localhost:3001/api/web",
     googleClientID: ""
