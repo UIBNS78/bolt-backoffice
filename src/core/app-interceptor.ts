@@ -6,7 +6,7 @@ import {
   HttpInterceptor,
   HttpErrorResponse
 } from '@angular/common/http';
-import { catchError, EMPTY, finalize, Observable, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, finalize, Observable, switchMap, take, throwError } from 'rxjs';
 import { Store } from '@ngxs/store';
 import { SetBusyAction, SetRefreshTokenAction, SetTokenAction } from '../store/app/app.action';
 import { AppState } from '../store/app/app.state';
@@ -22,9 +22,11 @@ export class AppInterceptor implements HttpInterceptor {
   private store: Store = inject(Store);
   private messageService: MessageService = inject(MessageService);
 
+  private isRefreshingToken: boolean = false;
+  private refreshTokenSubject$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const token: string | null = this.store.selectSnapshot<string | null>(AppState.token);
-    const refreshToken: string | null = this.store.selectSnapshot<string | null>(AppState.refreshToken);
 
     this.httpCallsBusy();
     
@@ -33,82 +35,22 @@ export class AppInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         switch(error.status) {
           case 400: {
-            this.messageService.add({
-              severity: 'error',
-              summary: "Erreur",
-              detail: error.error.message ?? "Certain champ sont invalide.",
-              life: 5000
-            });
-            console.log(error.error.message ?? "Certain champ sont invalide.", "Erreur");
+            this.showErrorMessage(error.error.message ?? "Certain champ sont invalide.");
             break;
           }
           case 401: {
-            if (refreshToken) {
-              return this.authService.refreshToken(refreshToken).pipe(
-                switchMap(response => {
-                  this.store.dispatch([
-                    new SetUserAction(response.user),
-                    new SetTokenAction(response.token),
-                    new SetRefreshTokenAction(response.refreshToken)
-                  ]).subscribe(() => {
-                    localStorage.setItem(USER, JSON.stringify(response.user));
-                    localStorage.setItem(TOKEN, response.token);
-                    localStorage.setItem(REFRESH_TOKEN, response.refreshToken);
-                  });
-                  return next.handle(this.injectToken(request, response.token))
-                }),
-                catchError(() => {
-                  this.messageService.add({
-                    severity: 'error',
-                    summary: "Session expirée",
-                    detail: "Veuillez vous reconnecter.",
-                    life: 5000
-                  });
-                  console.log("Veuillez vous reconnecter.", "Session expirée");
-                  this.authService.logout();
-                  return EMPTY;
-                })
-              );
-            } else {
-              this.messageService.add({
-                severity: 'error',
-                summary: "Session expirée",
-                detail: "Veuillez vous reconnecter.",
-                life: 5000
-              });
-              console.log("Veuillez vous reconnecter.", "Session expirée");
-              this.authService.logout();
-            }
-            break;
+            return this.handle401Error(request, next, error);
           }
           case 402: {
-            this.messageService.add({
-              severity: 'error',
-              summary: "Erreur",
-              detail: error.error.message,
-              life: 5000
-            });
-            console.log(error.error.message, "Erreur");
+            this.showErrorMessage(error.error.message);
             break;
           }
           case 403: {
-            this.messageService.add({
-              severity: 'error',
-              summary: "Erreur",
-              detail: error.error.message ?? "Forbidden.",
-              life: 5000
-            });
-            console.log(error.error.message ?? "Forbidden.", "Erreur");
+            this.showErrorMessage(error.error.message ?? "Forbidden.");
             break;
           }
           default: 
-            this.messageService.add({
-              severity: 'error',
-              summary: "Erreur",
-              detail: "Une erreur inattendue s'est produite dans le serveur.",
-              life: 5000
-            });
-            console.log("Une erreur inattendue s'est produite dans le serveur.", "Erreur");
+            this.showErrorMessage("Une erreur inattendue s'est produite dans le serveur.");
             break;
         }
 
@@ -128,6 +70,67 @@ export class AppInterceptor implements HttpInterceptor {
     }
 
     return request
+  }
+
+  private handle401Error(request: HttpRequest<unknown>, next: HttpHandler, error: HttpErrorResponse): Observable<HttpEvent<unknown>> {
+    const refreshToken: string | null = this.store.selectSnapshot<string | null>(AppState.refreshToken);
+    
+    if (!refreshToken) {
+      this.triggerLogout();
+      return throwError(() => error);
+    }
+
+    if (this.isRefreshingToken) {
+      return this.refreshTokenSubject$.pipe(
+        filter(token => !!token),
+        take(1),
+        switchMap(token => next.handle(this.injectToken(request, token))),
+        catchError(err => throwError(() => err))
+      );
+    }
+
+    this.isRefreshingToken = true;
+    this.refreshTokenSubject$.next(null);
+
+    return this.authService.refreshToken(refreshToken).pipe(
+      switchMap(response => {
+        this.isRefreshingToken = false;
+
+        this.refreshTokenSubject$.next(response.token);
+
+        this.store.dispatch([
+            new SetUserAction(response.user),
+            new SetTokenAction(response.token),
+            new SetRefreshTokenAction(response.refreshToken)
+          ]).subscribe(() => {
+            localStorage.setItem(USER, JSON.stringify(response.user));
+            localStorage.setItem(TOKEN, response.token);
+            localStorage.setItem(REFRESH_TOKEN, response.refreshToken);
+          });
+
+          return next.handle(this.injectToken(request, response.token));
+      }),
+      catchError(err => {
+        this.isRefreshingToken = false;
+        this.refreshTokenSubject$.error(err);
+        this.triggerLogout();
+        return throwError(() => err);
+      })
+    );
+  }
+
+  private showErrorMessage(detail: string, summary: string = "Erreur"): void {
+    this.messageService.add({
+      severity: "error",
+      summary,
+      detail,
+      life: 5000
+    });
+  }
+
+  private triggerLogout(): void {
+    this.showErrorMessage("Veuillez vous reconnecter.", "Session expirée");
+    this.authService.logout();
   }
 
   private httpCallsBusy(): void {

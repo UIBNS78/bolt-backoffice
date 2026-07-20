@@ -9,8 +9,6 @@ import { REFRESH_TOKEN, TOKEN, USER } from '@shared/constants/storage';
 import { SetUserAction } from 'store/user/user.action';
 import { User } from '@shared/types/user';
 import { ToastModule } from 'primeng/toast';
-import { DeliveryMenService } from './pages/delivery-men/delivery-men-service';
-import { ta } from 'date-fns/locale';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -34,7 +32,7 @@ export class App implements OnInit, OnDestroy {
   constructor() {
     this.connected$ = this.store.select(AppState.token).pipe(map(t => !!t));
     this.busy$ = this.store.select(AppState.isBusy);
-}
+  }
   
   ngOnInit(): void {
     this.initGlobalState();
