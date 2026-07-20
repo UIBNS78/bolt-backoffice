@@ -2,12 +2,12 @@
     <table class="p-datatable-table w-full">
         <thead class="p-datatable-thead">
             <tr>
-                <th class="text-center">ID</th>
+                <th class="text-center hidden 2xl:table-cell">ID</th>
                 <th>Nom complet</th>
                 <th>Date de naissance</th>
                 <th>Phone</th>
                 <th>Nombre de colis</th>
-                <th>Statut</th>
+                <th class="hidden 2xl:table-cell">Statut</th>
                 <th>Date de début</th>
                 <th>Pièce d'identité</th>
                 <th class="text-center">Actions</th>
@@ -16,12 +16,12 @@
         <tbody class="p-datatable-tbody">
             @for (item of [1, 2, 3, 4, 5, 6]; track $index) {
                 <tr>
+                    <td class="hidden 2xl:table-cell"><p-skeleton /></td>
                     <td><p-skeleton /></td>
                     <td><p-skeleton /></td>
                     <td><p-skeleton /></td>
                     <td><p-skeleton /></td>
-                    <td><p-skeleton /></td>
-                    <td><p-skeleton /></td>
+                    <td class="hidden 2xl:table-cell"><p-skeleton /></td>
                     <td><p-skeleton /></td>
                     <td><p-skeleton /></td>
                     <td><p-skeleton /></td>
