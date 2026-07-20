@@ -1,5 +1,4 @@
 import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
-import { PluralPipe } from '@shared/pipes/plural.pipe';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
@@ -45,7 +44,6 @@ import { BadgeModule } from 'primeng/badge';
     PaginatorModule,
     ChipModule,
     BadgeModule,
-    PluralPipe,
     NgxMaskPipe,
     DeliveryMenPlaceholder,
     SkeletonModule,

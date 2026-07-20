@@ -5,9 +5,9 @@
                 <div class="flex justify-between items-center">
                     <h1 class="text-xl font-bold text-blue-950">Livreurs</h1>
                     @defer (when !isLoading()) {
-                        <div class="flex items-center gap-1 py-0.5 px-3 border border-green-100 bg-green-50 rounded-full">
-                            <small class="text-green-500">{{ activeCounts() }}</small>
-                            <small class="text-green-500">{{ 'en ligne' | plural:activeCounts() }}</small>
+                        <div [ngClass]="{'flex items-center gap-1 py-0.5 px-3 border rounded-full': true, 'border-green-100 bg-green-50': activeCounts() > 0, 'border-orange-100 bg-orange-50': activeCounts() === 0}">
+                            <small [ngClass]="activeCounts() > 0 ? 'text-green-500' : 'text-orange-500'">{{ activeCounts() }}</small>
+                            <small [ngClass]="activeCounts() > 0 ? 'text-green-500' : 'text-orange-500'">{{ 'en ligne' | plural:activeCounts() }}</small>
                         </div>
                     } @placeholder (minimum 600ms) {
                         <p-skeleton width="4.3rem" height="1.3rem" borderRadius="16px" />
@@ -26,7 +26,7 @@
                             </div>
                             <p-badge value="24" severity="secondary" badgeSize="small" />
                         </a>
-                        <a routerLink="performance" routerLinkActive="bg-blue-100/70" #performanceLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
+                        <a routerLink="performances" routerLinkActive="bg-blue-100/70" #performanceLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
                             <i style="font-size: small;" [ngClass]="['pi pi-chart-line', performanceLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
                             <p style="font-size: small;" [ngClass]="['', performanceLink.isActive ? 'text-blue-500' : '']">Performances</p>
                         </a>
