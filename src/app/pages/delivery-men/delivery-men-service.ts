@@ -35,6 +35,10 @@ export class DeliveryMenService {
     
     return this.http.get<DeliveryMenList>(`${environment.apiURL}/delivery-men/all`, { params });
   }
+
+  getOnlineCount(): Observable<{ onlineCount: number; totalCount: number }> {
+    return this.http.get<{ onlineCount: number; totalCount: number }>(`${environment.apiURL}/delivery-men/online-count`);
+  }
   
   getAllAsOptions(): Observable<DeliveryMenOptionsResponse[]> {
     return this.http.get<{ deliveryMen: DeliveryMenOptionsResponse[] }>(`${environment.apiURL}/delivery-men/all-options`).pipe(
