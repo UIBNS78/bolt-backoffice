@@ -46,8 +46,43 @@ export const routes: Routes = [
             },
             {
                 path: "delivery-men",
-                title: "Livraisons",
-                loadComponent: () => import("../app/pages/delivery-men/delivery-men").then(c => c.DeliveryMen)
+                title: "Livreurs",
+                loadComponent: () => import("../app/pages/delivery-men/delivery-men").then(c => c.DeliveryMen),
+                children: [
+                    {
+                        path: "",
+                        redirectTo: "list",
+                        pathMatch: "full"
+                    },
+                    {
+                        path: "list",
+                        loadComponent: () => import("../app/pages/delivery-men/views/delivery-man-list/delivery-man-list").then(c => c.DeliveryManList)
+                    },
+                    {
+                        path: "performance",
+                        loadComponent: () => import("../app/pages/delivery-men/views/delivery-man-performances/delivery-man-performances").then(c => c.DeliveryManPerformances)
+                    },
+                    {
+                        path: "docs",
+                        loadComponent: () => import("../app/pages/delivery-men/views/delivery-man-docs/delivery-man-docs").then(c => c.DeliveryManDocs)
+                    },
+                    {
+                        path: "location",
+                        loadComponent: () => import("../app/pages/delivery-men/views/delivery-men-location-map/delivery-men-location-map").then(c => c.DeliveryMenLocationMap)
+                    },
+                    {
+                        path: "salaries",
+                        loadComponent: () => import("../app/pages/delivery-men/views/delivery-man-salaries/delivery-man-salaries").then(c => c.DeliveryManSalaries)
+                    },
+                    {
+                        path: "bonuses",
+                        loadComponent: () => import("../app/pages/delivery-men/views/delivery-man-bonuses/delivery-man-bonuses").then(c => c.DeliveryManBonuses)
+                    },
+                    {
+                        path: "rates",
+                        loadComponent: () => import("../app/pages/delivery-men/views/delivery-man-rates/delivery-man-rates").then(c => c.DeliveryManRates)
+                    }
+                ]
             },
             {
                 path: "owners",

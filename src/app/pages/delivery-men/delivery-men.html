@@ -1,146 +1,66 @@
 <div class="flex flex-col gap-4">
-    <div class="flex justify-between items-center">
-        <div class="flex flex-col">
-            <h1 class="text-xl font-bold text-blue-950">Livreurs</h1>
-            <p class="text-gray-400">Ils représentent le cœur battant de notre service.</p>
+    <div class="flex gap-3 h-[calc(100vh-50px)]">
+        <div class="flex flex-col gap-5 border rounded-xl border-gray-200 flex-1 p-4">
+            <div class="flex flex-col gap-1">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-xl font-bold text-blue-950">Livreurs</h1>
+                    @defer (when !isLoading()) {
+                        <div class="flex items-center gap-1 py-0.5 px-3 border border-green-100 bg-green-50 rounded-full">
+                            <small class="text-green-500">{{ activeCounts() }}</small>
+                            <small class="text-green-500">{{ 'en ligne' | plural:activeCounts() }}</small>
+                        </div>
+                    } @placeholder (minimum 600ms) {
+                        <p-skeleton width="4.3rem" height="1.3rem" borderRadius="16px" />
+                    }
+                </div>
+                <p class="text-gray-400">Ils représentent le cœur battant de notre service.</p>
+            </div>
+            <div class="flex flex-col gap-4 overflow-y-auto">
+                <div class="flex flex-col gap-1">
+                    <p class="text-gray-500 font-semibold">A propos</p>
+                    <div class="flex flex-col">
+                        <a routerLink="list" routerLinkActive="bg-blue-100/70" #listLink="routerLinkActive" class="flex items-center justify-between gap-2 p-3 cursor-pointer rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <i style="font-size: small;" [ngClass]="['pi pi-users', listLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+                                <p style="font-size: small;" [ngClass]="['', listLink.isActive ? 'text-blue-500' : '']">Liste</p>
+                            </div>
+                            <p-badge value="24" severity="secondary" badgeSize="small" />
+                        </a>
+                        <a routerLink="performance" routerLinkActive="bg-blue-100/70" #performanceLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
+                            <i style="font-size: small;" [ngClass]="['pi pi-chart-line', performanceLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+                            <p style="font-size: small;" [ngClass]="['', performanceLink.isActive ? 'text-blue-500' : '']">Performances</p>
+                        </a>
+                        <a routerLink="docs" routerLinkActive="bg-blue-100/70" #docsLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
+                            <i style="font-size: small;" [ngClass]="['pi pi-id-card', docsLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+                            <p style="font-size: small;" [ngClass]="['', docsLink.isActive ? 'text-blue-500' : '']">Pièces d'identité</p>
+                        </a>
+                        <a routerLink="location" routerLinkActive="bg-blue-100/70" #locationLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
+                            <i style="font-size: small;" [ngClass]="['pi pi-map-marker', locationLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+                            <p style="font-size: small;" [ngClass]="['', locationLink.isActive ? 'text-blue-500' : '']">Localisations</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <p class="text-gray-500 font-semibold">Facturation mensuel</p>
+                    <div class="flex flex-col">
+                        <a routerLink="salaries" routerLinkActive="bg-blue-100/70" #salariesLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
+                            <i style="font-size: small;" [ngClass]="['pi pi-wallet', salariesLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+                            <p style="font-size: small;" [ngClass]="['', salariesLink.isActive ? 'text-blue-500' : '']">Salaires</p>
+                        </a>
+                        <a routerLink="bonuses" routerLinkActive="bg-blue-100/70" #bonusesLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
+                            <i style="font-size: small;" [ngClass]="['pi pi-gift', bonusesLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+                            <p style="font-size: small;" [ngClass]="['', bonusesLink.isActive ? 'text-blue-500' : '']">Primes</p>
+                        </a>
+                        <a routerLink="rates" routerLinkActive="bg-blue-100/70" #ratesLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
+                            <i style="font-size: small;" [ngClass]="['pi pi-star', ratesLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+                            <p style="font-size: small;" [ngClass]="['', ratesLink.isActive ? 'text-blue-500' : '']">Notes</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        @defer (when !isLoading()) {
-            <div class="flex items-center gap-2 py-2 px-3 border border-gray-200 rounded-md">
-                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                <p [ngClass]="[acitveCounts() > 0 ? '' : 'text-gray-500']">{{ acitveCounts() > 0 ? acitveCounts() : 'Aucun'}}</p>
-                <p class="text-gray-500">{{ 'livreur' | plural:acitveCounts() }} {{ 'actif' | plural:acitveCounts() }}</p>
-            </div>
-        } @placeholder (minimum 600ms) {
-            <p-skeleton width="9rem" height="2.1rem"/>
-        }
-    </div>
-    <div class="flex justify-end gap-3">
-        <p-button label="Nouveau" (click)="handleOpenForm()" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
-        <p-iconfield>
-            <p-inputicon class="pi pi-search" />
-            <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || data().totalItems <= 0" />
-        </p-iconfield>
-    </div>
-    <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-2">
-        @defer (when !isLoading()) {
-            <p-table [value]="data().deliveryMen" [tableStyle]="{ 'min-width': '50rem' }">
-                <ng-template #header>
-                    <tr>
-                        <th class="text-center">ID</th>
-                        <th>Nom complet</th>
-                        <th>Age</th>
-                        <th>Phone</th>
-                        <th style="text-align: center;">Nombre de colis</th>
-                        <th style="text-align: center;">Statut</th>
-                        <th>Date de début</th>
-                        <th>Pièce d'identité</th>
-                        <th style="text-align: center;">Actions</th>
-                    </tr>
-                </ng-template>
-                <ng-template #body let-man>
-                    <tr>
-                        <td>{{ man.id }}</td>
-                        <td>
-                            <div class="flex items-center gap-2">
-                                <p-image [preview]="man.profilePicture" alt="Profile picture" width="30">
-                                    <ng-template #indicator>
-                                        <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
-                                    </ng-template>
-                                    <ng-template #image>
-                                        <p-overlay-badge [badgeDisabled]="!man.isOnline" severity="success">
-                                            <p-avatar 
-                                                [label]="!man.profilePicture ? ((man.name + ' ' + man.firstName) | bigram) : undefined"
-                                                [image]="man.profilePicture ? man.profilePicture.thumbnail: undefined"
-                                                shape="circle" 
-                                                style="font-size: 12px;" 
-                                            />
-                                        </p-overlay-badge>
-                                    </ng-template>
-                                    <ng-template #preview let-style="style" let-previewCallback="previewCallback">
-                                        <img [src]="man.profilePicture.original" alt="Profile picture" [style]="style" (click)="previewCallback()" />
-                                    </ng-template>
-                                </p-image>
-                                <div class="flex flex-col">
-                                    <p class="font-bold">{{ man.gender | civility }} {{ man.name | uppercase }}</p>
-                                    <p>{{ man.firstName }}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="flex flex-col gap-1">
-                                <p class="font-bold">{{ man.birthday | age }}</p>
-                                <div class="flex items-center gap-1">
-                                    <i class="pi pi-calendar text-gray-500" style="font-size: 0.8rem;"></i>
-                                    <p class="text-gray-500">{{ man.birthday | date:'dd MMM yyyy'}}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <p-chip [label]="man.phone | mask:'+999 99 99 999 99'" icon="pi pi-phone" />
-                        </td>
-                        <td style="text-align: center;">{{ man.totalPackages }}</td>
-                        <td>
-                            <div class="flex items-center justify-center">
-                                <p-tag [severity]="man.isOnline ? 'success' : 'warn'" [value]="man.isOnline ? 'En ligne' : 'Hors ligne'" [rounded]="true" />
-                            </div>
-                        </td>
-                        <td>{{ man.createdAt | seniority }}</td>
-                        <td>
-                            <div class="flex items-center gap-2">
-                                <p-image [preview]="man.cin" alt="CIN" width="50" style="border-radius: 5px;">
-                                    <ng-template #indicator>
-                                        <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
-                                    </ng-template>
-                                    <ng-template #image>
-                                        <img [src]="man.cin.thumbnail" alt="CIN" width="50" style="border-radius: 5px;" />
-                                    </ng-template>
-                                    <ng-template #preview let-style="style" let-previewCallback="previewCallback">
-                                        <img [src]="man.cin.original" alt="CIN" [style]="style" (click)="previewCallback()" />
-                                    </ng-template>
-                                </p-image>
-                                <p-image [preview]="man.residence" alt="Residence certificate" width="50" style="border-radius: 5px;">
-                                    <ng-template #indicator>
-                                        <i class="pi pi-eye text-black" style="font-size: 0.8rem;"></i>
-                                    </ng-template>
-                                    <ng-template #image>
-                                        <img [src]="man.residence.thumbnail" alt="Residence certificate" width="50" style="border-radius: 5px;" />
-                                    </ng-template>
-                                    <ng-template #preview let-style="style" let-previewCallback="previewCallback">
-                                        <img [src]="man.residence.original" alt="Residence certificate" [style]="style" (click)="previewCallback()" />
-                                    </ng-template>
-                                </p-image>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="flex items-center justify-center gap-2">
-                                <p-button (click)="handleOpenDetails(man.id)" icon="pi pi-eye" [rounded]="true" [text]="true" severity="info" [loading]="man.isDeleting" size="small" pTooltip="Ouvrir la fiche" tooltipPosition="top" [disabled]="man.isDeleting" />
-                                <p-button (click)="handleOpenForm(man)" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" [loading]="man.isUpdating" size="small" pTooltip="Modifier" tooltipPosition="top" [disabled]="man.isDeleting" />
-                                <p-button (click)="handleDelete(man)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="man.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" [loading]="man.isDeleting" [disabled]="man.isDeleting" />
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        } @placeholder (minimum 600ms) {
-            <app-delivery-men-placeholder></app-delivery-men-placeholder>
-        }
-
-        @defer (when !isLoading()) {
-            <p-paginator 
-                (onPageChange)="onPageChange($event)" 
-                [first]="first()" 
-                [rows]="rows()" 
-                [totalRecords]="data().totalItems" 
-                [rowsPerPageOptions]="[10, 20, 30]"
-                class="p-paginator-sm"
-            />
-        } @placeholder (minimum 600ms) {
-            <div class="flex justify-center">
-                <p-skeleton width="15%" height="1.5rem" />
-            </div>
-        }
+        <div class="flex-4 2xl:flex-5 border rounded-xl border-gray-200 p-4">
+            <router-outlet></router-outlet>
+        </div>
     </div>
 </div>
-
-<app-delivery-man-details [open]="showDetails()" (onCloseEmitter)="handleOpenDetails()" [deliveryManId]="selectedDeliveryManId()"></app-delivery-man-details>
-<app-delivery-man-form [open]="showForm()" (onCloseEmitter)="handleOpenForm()" [deliveryMan]="selectedDeliveryManEdit()"></app-delivery-man-form>
