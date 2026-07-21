@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-2">
     <div class="flex justify-end gap-3">
-        <p-button label="Assigner un salaire" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
+        <p-button label="Assigner un nouveau salaire" (click)="handleOpenForm()" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
         <p-iconfield>
             <p-inputicon class="pi pi-search" />
             <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || data().totalItems <= 0" />
@@ -64,8 +64,7 @@
                             </td>
                             <td>
                                 <div class="flex justify-center gap-2">
-                                    <p-button icon="pi pi-pencil" size="small" rounded [outlined]="true" />
-                                    <p-button icon="pi pi-trash" size="small" rounded [outlined]="true" severity="danger" />
+                                    <p-button (click)="handleOpenForm(salary)" icon="pi pi-pencil" size="small" rounded [outlined]="true" />
                                 </div>
                             </td>
                         </tr>

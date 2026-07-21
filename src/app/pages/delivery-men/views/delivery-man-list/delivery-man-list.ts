@@ -22,7 +22,7 @@ import { ImageModule } from 'primeng/image';
 import { SeniorityPipe } from '@shared/pipes/seniority.pipe';
 import { TooltipModule } from 'primeng/tooltip';
 import { DeliveryManDetails } from '../../components/delivery-man-details/delivery-man-details';
-import { DeliveryManForm } from '../../components/delivery-man-form/delivery-man-form';
+import { DeliveryManForm } from '../../components/drawers/delivery-man-form/delivery-man-form';
 import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
 import { TagModule } from 'primeng/tag';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';

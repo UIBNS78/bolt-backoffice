@@ -12,7 +12,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { type InputSelectOptions } from '@shared/components/types/input-select-options';
 import { SelectModule } from 'primeng/select';
 import { MessageService } from 'primeng/api';
-import { DeliveryMenService } from '../../delivery-men-service';
+import { DeliveryMenService } from '../../../delivery-men-service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { genderOptions as genderOpts } from '@shared/constants/user';
 import { GENDER } from '@shared/types/user';

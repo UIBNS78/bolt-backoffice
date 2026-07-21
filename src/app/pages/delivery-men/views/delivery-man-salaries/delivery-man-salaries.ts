@@ -4,7 +4,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import { DeliveryMenSalaryList } from '../../types/delivery-men-salary';
+import { DeliveryManSalary, DeliveryMenSalaryList } from '../../types/delivery-men-salary';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -16,6 +16,8 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { DatePipe, UpperCasePipe } from '@angular/common';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { DeliveryManSalariesPlaceholder } from '../../components/placeholders/delivery-man-salaries-placeholder/delivery-man-salaries-placeholder';
+import { DeliveryManSalariesForm } from '../../components/drawers/delivery-man-salaries-form/delivery-man-salaries-form';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-delivery-man-salaries',
@@ -41,12 +43,14 @@ import { DeliveryManSalariesPlaceholder } from '../../components/placeholders/de
 })
 export class DeliveryManSalaries implements OnInit, OnDestroy {
   // services
-  private deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly dialogService: DialogService = inject(DialogService);
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   protected first: WritableSignal<number> = signal(0);
   protected rows: WritableSignal<number> = signal(10);
+  protected showForm: WritableSignal<boolean> = signal(false);
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected data: WritableSignal<DeliveryMenSalaryList> = signal({
     salaries: [],
@@ -61,6 +65,24 @@ export class DeliveryManSalaries implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+    
+  handleOpenForm(salary: DeliveryManSalary | null = null): void {
+    const ref = this.dialogService.open(DeliveryManSalariesForm, {
+      showHeader: false,
+      data: {
+        salary
+      },
+      width: '20rem'
+    });
+
+    ref?.onClose.pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe((refresh: boolean) => {
+      if (refresh) {
+        this.loadData();
+      }
+    });
   }
 
   onPageChange(event: PaginatorState) {
