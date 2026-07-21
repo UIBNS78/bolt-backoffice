@@ -1,1 +1,106 @@
-<p>delivery-man-salaries works!</p>
+<div class="flex flex-col gap-2">
+    <div class="flex justify-end gap-3">
+        <p-button label="Assigner un salaire" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
+        <p-iconfield>
+            <p-inputicon class="pi pi-search" />
+            <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || data().totalItems <= 0" />
+        </p-iconfield>
+    </div>
+    <div class="flex flex-col gap-2">
+        @defer (when !isLoading()) {
+            @if (data().totalItems > 0) {
+                <p-table [value]="data().salaries" [tableStyle]="{ 'min-width': '50rem' }">
+                    <ng-template #header>
+                        <tr>
+                            <th class="text-center hidden 2xl:table-cell">ID</th>
+                            <th>Livreur</th>
+                            <th>Salaire</th>
+                            <th>Modifié le</th>
+                            <th>Créé le</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-salary>
+                        <tr>
+                            <td class="text-center hidden 2xl:table-cell">
+                                {{ salary.deliveryMan.id }}
+                            </td>
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <p-image [preview]="salary.deliveryMan.profilePicture" alt="Profile picture" width="30">
+                                        <ng-template #indicator>
+                                            <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
+                                        </ng-template>
+                                        <ng-template #image>
+                                            <p-overlay-badge [badgeDisabled]="!salary.deliveryMan.isOnline" severity="success">
+                                                <p-avatar 
+                                                    [label]="!salary.deliveryMan.profilePicture ? ((salary.deliveryMan.name + ' ' + salary.deliveryMan.firstName) | bigram) : undefined"
+                                                    [image]="salary.deliveryMan.profilePicture ? salary.deliveryMan.profilePicture.thumbnail: undefined"
+                                                    shape="circle" 
+                                                    style="font-size: 12px;" 
+                                                />
+                                            </p-overlay-badge>
+                                        </ng-template>
+                                        <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                                            <img [src]="salary.deliveryMan.profilePicture.original" alt="Profile picture" [style]="style" (click)="previewCallback()" />
+                                        </ng-template>
+                                    </p-image>
+                                    <div class="flex flex-col">
+                                        <p class="font-bold">{{ salary.deliveryMan.gender | civility }} {{ salary.deliveryMan.name | uppercase }}</p>
+                                        <p>{{ salary.deliveryMan.firstName }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex flex-col items-end">
+                                    <p class="font-bold">{{ salary.amount.toLocaleString('fr-FR') }} Ar</p>
+                                </div>
+                            </td>
+                            <td>
+                                {{ salary.modifiedAt | date: 'dd/MM/yyyy' }}
+                            </td>
+                            <td>
+                                {{ salary.createdAt | date: 'dd/MM/yyyy' }}
+                            </td>
+                            <td>
+                                <div class="flex justify-center gap-2">
+                                    <p-button icon="pi pi-pencil" size="small" rounded [outlined]="true" />
+                                    <p-button icon="pi pi-trash" size="small" rounded [outlined]="true" severity="danger" />
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            } @else {
+                <div class="flex justify-center items-center h-[calc(100vh-150px)]">
+                    <div class="flex flex-col justify-center items-center gap-3 w-80">
+                        <i class="pi pi-credit-card"></i>
+                        <div class="flex flex-col items-center">
+                            <p class="text-center">Aucun salaire enregistré</p>
+                            <p class="text-gray-400 text-center">Aucun salaire n'est enregistré pour le moment. Cliquez sur le bouton "Assigner un salaire" pour en ajouter un.</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        } @placeholder (minimum 600ms) {
+            <p>chargement...</p>
+        }
+
+        @defer (when !isLoading()) {
+            @if (data().totalItems > 0) {
+                <p-paginator 
+                    (onPageChange)="onPageChange($event)" 
+                    [first]="first()" 
+                    [rows]="rows()" 
+                    [totalRecords]="data().totalItems" 
+                    [rowsPerPageOptions]="[10, 20, 30]"
+                    class="p-paginator-sm"
+                />
+            }
+        } @placeholder (minimum 600ms) {
+            <div class="flex justify-center">
+                <p-skeleton width="15%" height="1.5rem" />
+            </div>
+        }
+    </div>
+</div>

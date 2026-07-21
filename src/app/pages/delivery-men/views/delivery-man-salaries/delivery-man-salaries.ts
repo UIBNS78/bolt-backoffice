@@ -1,9 +1,77 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { finalize, Subject, takeUntil } from 'rxjs';
+import { DeliveryMenSalaryList } from '../../types/delivery-men-salary';
+import { TableModule } from 'primeng/table';
+import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { SkeletonModule } from 'primeng/skeleton';
+import { DeliveryMenService } from '../../delivery-men-service';
+import { ImageModule } from 'primeng/image';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { AvatarModule } from 'primeng/avatar';
+import { CivilityPipe } from '@shared/pipes/civility-pipe';
+import { DatePipe, UpperCasePipe } from '@angular/common';
+import { BigramPipe } from '@shared/pipes/bigram.pipe';
 
 @Component({
   selector: 'app-delivery-man-salaries',
-  imports: [],
+  imports: [
+    ButtonModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    TableModule,
+    PaginatorModule,
+    SkeletonModule,
+    ImageModule,
+    OverlayBadgeModule,
+    AvatarModule,
+    CivilityPipe,
+    UpperCasePipe,
+    BigramPipe,
+    DatePipe
+  ],
   templateUrl: './delivery-man-salaries.html',
   styleUrl: './delivery-man-salaries.css',
 })
-export class DeliveryManSalaries {}
+export class DeliveryManSalaries implements OnInit, OnDestroy {
+  // services
+  private deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+
+  // vars
+  private readonly unsubscribe$: Subject<void> = new Subject<void>();
+  protected first: WritableSignal<number> = signal(0);
+  protected rows: WritableSignal<number> = signal(10);
+  protected isLoading: WritableSignal<boolean> = signal(false);
+  protected data: WritableSignal<DeliveryMenSalaryList> = signal({
+    salaries: [],
+    totalItems: 0,
+  });
+
+  ngOnInit(): void {
+    this.isLoading.set(true);
+    this.loadData();
+  }
+  
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  onPageChange(event: PaginatorState) {
+    this.first.set(event.first ?? 0);
+    this.rows.set(event.rows ?? 10);
+  }
+
+  private loadData(): void {
+    this.deliveryMenService.getSalaries({ page: this.first() / this.rows() + 1, itemsPerPage: this.rows()}).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.isLoading.set(false))
+    ).subscribe((response: DeliveryMenSalaryList) => {
+      this.data.set(response);
+    });
+  }
+}

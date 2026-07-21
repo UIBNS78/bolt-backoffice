@@ -7,6 +7,7 @@ import type { DeliveryMenList } from './types/delivery-men-list';
 import type { DeliveryMenOptionsResponse } from './types/delivery-men-options-response';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { Gender, GENDER } from '@shared/types/user';
+import { DeliveryMenSalaryList } from './types/delivery-men-salary';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,20 @@ export class DeliveryMenService {
     return this.http.get<{ deliveryMan: DeliveryManDetails }>(`${environment.apiURL}/delivery-men/details/${id}`).pipe(
       map(data => data.deliveryMan)
     );
+  }
+
+  getSalaries(pagination?: {
+    itemsPerPage: number;
+    page: number;
+}): Observable<DeliveryMenSalaryList> {
+    const params = new HttpParams({
+      fromObject: {
+        page: pagination ? pagination.page : 1,
+        itemsPerPage: pagination ? pagination.itemsPerPage : 10
+      }
+    });
+
+    return this.http.get<DeliveryMenSalaryList>(`${environment.apiURL}/delivery-men/salaries`, { params });
   }
   
   create(data: FormData): Observable<void> {
