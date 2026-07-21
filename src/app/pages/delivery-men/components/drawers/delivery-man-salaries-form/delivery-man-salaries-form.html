@@ -3,7 +3,7 @@
         <i class="pi pi-wallet" style="font-size: 1.5rem;"></i>
         <div class="flex flex-col items-center">
             <p class="text-lg">Nouveau salaire</p>
-            <p class="text-gray-400 text-center">Ce nouveau salaire sera effectif à partir du 1er jour du mois prochain.</p>
+            <p class="text-gray-400 text-center">Ce nouveau salaire sera effectif après paiement du salaire avant la date séléctionnée.</p>
         </div>
     </div>
     
@@ -21,6 +21,27 @@
             <p-inputnumber inputId="integeronly" id="amount" size="small" formControlName="amount" [invalid]="form.get('amount')?.invalid && (form.get('amount')?.touched || form.get('amount')?.dirty)" required />
             @if (form.get('amount')?.invalid && (form.get('amount')?.touched || form.get('amount')?.dirty)) {
                 <p-message severity="error" size="small" variant="simple">Salaire requis.</p-message>
+            }
+        </div>
+
+        <div class="flex flex-col gap-1 w-full">
+            <label for="applyAt">Date d'affectation</label>
+            <p-datepicker 
+                formControlName="applyAt" 
+                size="small" 
+                view="month"
+                dateFormat="dd MM yy"
+                [showClear]="true" 
+                [iconDisplay]="'input'" 
+                [showIcon]="true" 
+                [minDate]="minDate"
+                inputId="applyAt" 
+                [readonlyInput]="true"
+                [invalid]="form.get('applyAt')?.invalid && (form.get('applyAt')?.touched || form.get('applyAt')?.dirty)"
+                appendTo="body"
+            />
+            @if (form.get('applyAt')?.invalid && (form.get('applyAt')?.touched || form.get('applyAt')?.dirty)) {
+                <p-message severity="error" size="small" variant="simple">Date d'affectation requise.</p-message>
             }
         </div>
 

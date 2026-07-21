@@ -13,11 +13,13 @@ import { ImageModule } from 'primeng/image';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { AvatarModule } from 'primeng/avatar';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
-import { DatePipe, UpperCasePipe } from '@angular/common';
+import { DatePipe, NgClass, UpperCasePipe } from '@angular/common';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { DeliveryManSalariesPlaceholder } from '../../components/placeholders/delivery-man-salaries-placeholder/delivery-man-salaries-placeholder';
 import { DeliveryManSalariesForm } from '../../components/drawers/delivery-man-salaries-form/delivery-man-salaries-form';
 import { DialogService } from 'primeng/dynamicdialog';
+import { TooltipModule } from 'primeng/tooltip';
+import { DurationPipe } from '@shared/pipes/duration-pipe';
 
 @Component({
   selector: 'app-delivery-man-salaries',
@@ -32,11 +34,14 @@ import { DialogService } from 'primeng/dynamicdialog';
     ImageModule,
     OverlayBadgeModule,
     AvatarModule,
+    TooltipModule,
     CivilityPipe,
     UpperCasePipe,
     BigramPipe,
     DatePipe,
-    DeliveryManSalariesPlaceholder
+    DurationPipe,
+    DeliveryManSalariesPlaceholder,
+    NgClass
   ],
   templateUrl: './delivery-man-salaries.html',
   styleUrl: './delivery-man-salaries.css',
@@ -88,6 +93,10 @@ export class DeliveryManSalaries implements OnInit, OnDestroy {
   onPageChange(event: PaginatorState) {
     this.first.set(event.first ?? 0);
     this.rows.set(event.rows ?? 10);
+  }
+
+  isApplied(applyAt: Date): boolean {
+    return new Date(applyAt).getTime() < new Date().getTime();
   }
 
   private loadData(): void {

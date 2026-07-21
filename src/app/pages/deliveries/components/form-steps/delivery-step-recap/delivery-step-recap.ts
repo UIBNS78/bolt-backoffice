@@ -61,7 +61,7 @@ export class DeliveryStepRecap {
   }
 
   getDeliveryManName(id: number): string {
-    return this.deliveryMenService.options().find(o => o.id === id)?.label ?? '';
+    return this.deliveryMenService.deliveryMenOptions().find(o => o.id === id)?.label ?? '';
   }
 
   getPlaceName(id: number): string {

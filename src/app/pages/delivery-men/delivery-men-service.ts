@@ -7,7 +7,7 @@ import type { DeliveryMenList } from './types/delivery-men-list';
 import type { DeliveryMenOptionsResponse } from './types/delivery-men-options-response';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { Gender, GENDER } from '@shared/types/user';
-import { DeliveryMenSalaryList } from './types/delivery-men-salary';
+import { DeliveryManSalaryForm, DeliveryMenSalaryList } from './types/delivery-men-salary';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +16,16 @@ export class DeliveryMenService {
   private readonly http: HttpClient = inject(HttpClient);
   private _deliveryMen: WritableSignal<DeliveryMenOptionsResponse[]> = signal<DeliveryMenOptionsResponse[]>([]);
 
-  public options: Signal<InputSelectOptions[]> = computed(() => 
+  public deliveryMenOptions: Signal<InputSelectOptions[]> = computed(() => 
     this._deliveryMen().map(dm => ({
       id: dm.id,
+      label: `${dm.gender === GENDER.WOMAN ? "Mme" : "Mr"} ${dm.firstName}`
+    }))
+  );
+
+  public deliveryMenAsUsersOptions: Signal<InputSelectOptions[]> = computed(() => 
+    this._deliveryMen().map(dm => ({
+      id: dm.userId,
       label: `${dm.gender === GENDER.WOMAN ? "Mme" : "Mr"} ${dm.firstName}`
     }))
   );
@@ -68,6 +75,14 @@ export class DeliveryMenService {
     });
 
     return this.http.get<DeliveryMenSalaryList>(`${environment.apiURL}/delivery-men/salaries`, { params });
+  }
+
+  createSalary(data: DeliveryManSalaryForm): Observable<void> {
+    return this.http.post<void>(`${environment.apiURL}/delivery-men/salaries`, data);
+  }
+
+  updateSalary(id: number, data: DeliveryManSalaryForm): Observable<void> {
+    return this.http.put<void>(`${environment.apiURL}/delivery-men/salaries/${id}`, data);
   }
   
   create(data: FormData): Observable<void> {

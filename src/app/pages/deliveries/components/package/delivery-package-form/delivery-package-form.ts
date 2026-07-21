@@ -54,7 +54,7 @@ export class DeliveryPackageForm implements OnDestroy {
   private formBuilder: FormBuilder = inject(FormBuilder);
   protected deliveriesService: DeliveriesService = inject(DeliveriesService);
   protected deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
-    private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
   protected messageService: MessageService = inject(MessageService);
 
   // vars
@@ -68,7 +68,7 @@ export class DeliveryPackageForm implements OnDestroy {
   protected isUpdate: WritableSignal<boolean> = signal(false);
   protected loading: WritableSignal<boolean> = signal(false);
   protected packageTypeSignal: WritableSignal<PackageType> = signal(packageTypeObj.inCity);
-  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.options;
+  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.deliveryMenOptions;
   protected locationCityOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cityOptions;
   protected locationCooperativeOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cooperativeOptions;
 

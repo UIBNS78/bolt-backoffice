@@ -91,7 +91,7 @@ export class PackageStepForm implements OnChanges, OnDestroy {
   protected packageStatusOptions: InputSelectOptions[] = packageStatusOpt;
   protected genderOptions: { value: string; label: string }[] = genderOpts;
   protected packageTypeSignal: WritableSignal<PackageType> = signal(packageTypeObj.inCity);
-  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.options;
+  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.deliveryMenOptions;
   protected locationCityOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cityOptions;
   protected locationCooperativeOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cooperativeOptions;
   protected packages: FormArray<FormGroup<PackageArrayType>> = new FormArray<FormGroup<PackageArrayType>>([]);

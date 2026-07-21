@@ -4,16 +4,18 @@
             <tr>
                 <th class="text-center hidden 2xl:table-cell">ID</th>
                 <th>Livreur</th>
-                <th>Salaire</th>
-                <th>Modifié le</th>
-                <th>Créé le</th>
-                <th class="text-center">Actions</th>
+                <th style="text-align: end;">Salaire</th>
+                <th style="text-align: center;">Appliqué le</th>
+                <th style="text-align: center;">Modifié le</th>
+                <th style="text-align: center;">Créé le</th>
+                <th style="text-align: center;">Actions</th>
             </tr>
         </thead>
         <tbody class="p-datatable-tbody">
             @for (item of [1, 2, 3, 4, 5, 6]; track $index) {
                 <tr>
                     <td class="hidden 2xl:table-cell"><p-skeleton /></td>
+                    <td><p-skeleton /></td>
                     <td><p-skeleton /></td>
                     <td><p-skeleton /></td>
                     <td><p-skeleton /></td>

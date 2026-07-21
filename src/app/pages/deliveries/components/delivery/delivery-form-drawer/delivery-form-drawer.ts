@@ -62,7 +62,7 @@ export class DeliveryFormDrawer implements OnInit, OnDestroy {
   private _initialValues: WritableSignal<Delivery | null> = signal(null);
   protected loading: WritableSignal<boolean> = signal(false);
   protected ownersOptions: Signal<InputSelectOptions[]> = this.ownersService.options;
-  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.options;
+  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.deliveryMenOptions;
   protected deliveryStatusOptions: InputSelectOptions[] = deliveryStatusOpt;
 
   @Output() onCloseEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
