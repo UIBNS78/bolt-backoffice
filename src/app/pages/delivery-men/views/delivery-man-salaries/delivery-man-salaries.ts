@@ -15,6 +15,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { DatePipe, UpperCasePipe } from '@angular/common';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
+import { DeliveryManSalariesPlaceholder } from '../../components/placeholders/delivery-man-salaries-placeholder/delivery-man-salaries-placeholder';
 
 @Component({
   selector: 'app-delivery-man-salaries',
@@ -32,7 +33,8 @@ import { BigramPipe } from '@shared/pipes/bigram.pipe';
     CivilityPipe,
     UpperCasePipe,
     BigramPipe,
-    DatePipe
+    DatePipe,
+    DeliveryManSalariesPlaceholder
   ],
   templateUrl: './delivery-man-salaries.html',
   styleUrl: './delivery-man-salaries.css',

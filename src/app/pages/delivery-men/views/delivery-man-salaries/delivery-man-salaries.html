@@ -83,7 +83,7 @@
                 </div>
             }
         } @placeholder (minimum 600ms) {
-            <p>chargement...</p>
+            <app-delivery-man-salaries-placeholder />
         }
 
         @defer (when !isLoading()) {
@@ -99,7 +99,7 @@
             }
         } @placeholder (minimum 600ms) {
             <div class="flex justify-center">
-                <p-skeleton width="15%" height="1.5rem" />
+                <p-skeleton width="25%" height="2rem" />
             </div>
         }
     </div>

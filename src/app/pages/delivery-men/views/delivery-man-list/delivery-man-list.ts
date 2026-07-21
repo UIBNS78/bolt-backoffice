@@ -12,7 +12,7 @@ import { DeliveryMenService } from '../../delivery-men-service';
 import { NgxMaskPipe } from 'ngx-mask';
 import { DeliveryMan } from '@shared/types/delivery-men';
 import { ChipModule } from 'primeng/chip';
-import { DeliveryMenPlaceholder } from '../../components/delivery-men-placeholder/delivery-men-placeholder';
+import { DeliveryMenPlaceholder } from '../../components/placeholders/delivery-men-placeholder/delivery-men-placeholder';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { SkeletonModule } from 'primeng/skeleton';
 import { DatePipe, UpperCasePipe } from '@angular/common';
