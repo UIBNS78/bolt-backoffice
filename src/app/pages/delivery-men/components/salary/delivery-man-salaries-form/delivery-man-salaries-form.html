@@ -1,0 +1,67 @@
+<div class="flex flex-col">
+    <div class="pt-5 flex flex-col items-center gap-3">
+        @if (isUpdate() && selectedSalary()) {
+            <p-avatar 
+                [label]="!selectedSalary()?.deliveryMan?.profilePicture ? ((selectedSalary()?.deliveryMan?.name + ' ' + selectedSalary()?.deliveryMan?.firstName) | bigram) : undefined"
+                [image]="selectedSalary()?.deliveryMan?.profilePicture ? selectedSalary()?.deliveryMan?.profilePicture?.thumbnail: undefined"
+                shape="circle" 
+                size="xlarge"
+                style="font-size: 12px;" 
+            />
+        } @else {
+            <i class="pi pi-wallet" style="font-size: 1.5rem;"></i>
+        }
+        <div class="flex flex-col items-center">
+            <p class="text-lg">{{ isUpdate() ? `Salaire de ${ selectedSalary()!.deliveryMan!.gender | civility } ${ selectedSalary()!.deliveryMan!.firstName }` : 'Nouveau salaire' }}</p>
+            <p class="text-gray-400 text-center">
+                {{ isUpdate() ? "La modification sera effective immédiatement." : "Ce nouveau salaire sera effectif après paiement du salaire avant la date séléctionnée." }}
+            </p>
+        </div>
+    </div>
+    
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="mt-4 flex flex-col gap-3">
+        @if (!isUpdate()) {
+            <div class="flex flex-col gap-1">
+                <label for="userId">Livreur</label>
+                <p-select [options]="menOptions()" formControlName="userId" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('userId')?.invalid && (form.get('userId')?.touched || form.get('userId')?.dirty)" required [filter]="true" filterBy="label" [showClear]="true" appendTo="body" />
+                @if (form.get('userId')?.invalid && (form.get('userId')?.touched || form.get('userId')?.dirty)) {
+                    <p-message severity="error" size="small" variant="simple">Livreur requis.</p-message>
+                }
+            </div>
+        }
+
+        <div class="flex flex-col gap-1">
+            <label for="amount">Salaire (en Ariary)</label>
+            <p-inputnumber inputId="integeronly" id="amount" size="small" formControlName="amount" [invalid]="form.get('amount')?.invalid && (form.get('amount')?.touched || form.get('amount')?.dirty)" required />
+            @if (form.get('amount')?.invalid && (form.get('amount')?.touched || form.get('amount')?.dirty)) {
+                <p-message severity="error" size="small" variant="simple">Salaire requis.</p-message>
+            }
+        </div>
+
+        <div class="flex flex-col gap-1 w-full">
+            <label for="applyAt">Date d'affectation</label>
+            <p-datepicker 
+                formControlName="applyAt" 
+                size="small" 
+                view="month"
+                dateFormat="dd MM yy"
+                [showClear]="true" 
+                [iconDisplay]="'input'" 
+                [showIcon]="true" 
+                [minDate]="minDate"
+                inputId="applyAt" 
+                [readonlyInput]="true"
+                [invalid]="form.get('applyAt')?.invalid && (form.get('applyAt')?.touched || form.get('applyAt')?.dirty)"
+                appendTo="body"
+            />
+            @if (form.get('applyAt')?.invalid && (form.get('applyAt')?.touched || form.get('applyAt')?.dirty)) {
+                <p-message severity="error" size="small" variant="simple">Date d'affectation requise.</p-message>
+            }
+        </div>
+
+        <div class="flex justify-end gap-2">
+            <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" [disabled]="loading()" />
+            <p-button type="submit" [label]="isUpdate() ? 'Modifier' : 'Assigner'" severity="contrast" size="small" [loading]="loading()" [disabled]="loading()" />
+        </div>
+    </form>
+</div>

@@ -30,11 +30,12 @@ import { UserConnectivitySocketData, UserState } from '@shared/types/user';
 import { AvatarModule } from 'primeng/avatar';
 import { ImageModule } from 'primeng/image';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
-import { UpperCasePipe } from '@angular/common';
+import { NgClass, UpperCasePipe } from '@angular/common';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { SocketService } from 'core/services/socket-service';
 import { SOCKET_EVENT } from '@shared/types/socket';
 import { ActivatedRoute } from '@angular/router';
+import { PluralPipe } from '@shared/pipes/plural.pipe';
 
 @Component({
   selector: 'app-owners',
@@ -62,7 +63,9 @@ import { ActivatedRoute } from '@angular/router';
     AvatarModule,
     BigramPipe,
     UpperCasePipe,
-    OverlayBadgeModule
+    OverlayBadgeModule,
+    NgClass,
+    PluralPipe
 ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',

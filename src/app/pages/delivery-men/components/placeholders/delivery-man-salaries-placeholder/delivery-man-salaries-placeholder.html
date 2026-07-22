@@ -1,0 +1,28 @@
+<div class="p-datatable p-component">
+    <table class="p-datatable-table w-full">
+        <thead class="p-datatable-thead">
+            <tr>
+                <th class="text-center hidden 2xl:table-cell">ID</th>
+                <th>Livreur</th>
+                <th style="text-align: end;">Salaire</th>
+                <th style="text-align: center;">Date d'affectation</th>
+                <th style="text-align: center;">Dernière modification</th>
+                <th style="text-align: center;">Date d'ajout</th>
+                <th style="text-align: center;">Actions</th>
+            </tr>
+        </thead>
+        <tbody class="p-datatable-tbody">
+            @for (item of [1, 2, 3, 4, 5, 6]; track $index) {
+                <tr>
+                    <td class="hidden 2xl:table-cell"><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td><p-skeleton /></td>
+                    <td class="text-center"><p-skeleton /></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

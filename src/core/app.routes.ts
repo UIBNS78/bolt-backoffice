@@ -71,6 +71,10 @@ export const routes: Routes = [
                         loadComponent: () => import("../app/pages/delivery-men/views/delivery-men-location-map/delivery-men-location-map").then(c => c.DeliveryMenLocationMap)
                     },
                     {
+                        path: "payments",
+                        loadComponent: () => import("../app/pages/delivery-men/views/delivery-man-payments/delivery-man-payments").then(c => c.DeliveryManPayments)
+                    },
+                    {
                         path: "salaries",
                         loadComponent: () => import("../app/pages/delivery-men/views/delivery-man-salaries/delivery-man-salaries").then(c => c.DeliveryManSalaries)
                     },

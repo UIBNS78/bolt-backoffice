@@ -43,7 +43,7 @@ export class DeliveryStepForm {
   protected loading: WritableSignal<boolean> = signal(false);
   protected form: FormGroup = new FormGroup({});
   protected ownersOptions: Signal<InputSelectOptions[]> = this.ownersService.options;
-  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.options;
+  protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.deliveryMenOptions;
   protected deliveryStatusOptions: InputSelectOptions[] = deliveryStatusOpt;
   
   constructor() {

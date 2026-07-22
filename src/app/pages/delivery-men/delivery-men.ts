@@ -6,6 +6,9 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { DeliveryMenService } from './delivery-men-service';
 import { finalize, Subject, takeUntil } from 'rxjs';
+import { SocketService } from 'core/services/socket-service';
+import { SOCKET_EVENT } from '@shared/types/socket';
+import { UserConnectivitySocketData } from '@shared/types/user';
 
 @Component({
   selector: 'app-delivery-men',
@@ -24,6 +27,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 export class DeliveryMen implements OnInit, OnDestroy {
   // services
   private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+    private readonly socketService: SocketService = inject(SocketService);
   
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
@@ -32,6 +36,17 @@ export class DeliveryMen implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isLoading.set(true);
+    
+    this.loadData();
+    this.socketListenner();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  private loadData(): void {
     this.deliveryMenService.getOnlineCount().pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
@@ -39,9 +54,8 @@ export class DeliveryMen implements OnInit, OnDestroy {
       this.data.set(response);
     });
   }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+  
+  private socketListenner(): void {
+    this.socketService.onEvent(SOCKET_EVENT.userConnectivity, () => this.loadData());
   }
 }
