@@ -9,15 +9,35 @@
     <div class="flex flex-col gap-2">
         @defer (when !isLoading()) {
             @if (data().totalItems > 0) {
-                <p-table [value]="data().salaries" [tableStyle]="{ 'min-width': '50rem' }">
+                <p-table [value]="data().salaries" [tableStyle]="{ 'min-width': '50rem' }" sortMode="multiple">
                     <ng-template #header>
                         <tr>
                             <th class="text-center hidden 2xl:table-cell">ID</th>
                             <th>Livreur</th>
-                            <th style="text-align: end;">Salaire</th>
-                            <th style="text-align: center;">Date d'affectation</th>
-                            <th style="text-align: center;">Dernière modification</th>
-                            <th style="text-align: center;">Date d'ajout</th>
+                            <th pSortableColumn="amount">
+                                <div class="flex justify-end gap-2">
+                                    <span>Salaire</span>
+                                    <p-sortIcon field="amount"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th pSortableColumn="applyAt">
+                                <div class="flex justify-center gap-2">
+                                    <span>Date d'affectation</span>
+                                    <p-sortIcon field="applyAt"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th pSortableColumn="modifiedAt">
+                                <div class="flex justify-center gap-2">
+                                    <span>Dernière modification</span>
+                                    <p-sortIcon field="modifiedAt"></p-sortIcon>
+                                </div>
+                            </th>
+                            <th pSortableColumn="createdAt">
+                                <div class="flex justify-center gap-2">
+                                    <span>Date d'ajout</span>
+                                    <p-sortIcon field="createdAt"></p-sortIcon>
+                                </div>
+                            </th>
                             <th style="text-align: center;">Actions</th>
                         </tr>
                     </ng-template>
