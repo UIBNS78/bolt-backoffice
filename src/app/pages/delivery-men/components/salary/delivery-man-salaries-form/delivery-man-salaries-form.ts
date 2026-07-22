@@ -43,18 +43,14 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   protected readonly minDate: Date = startOfMonth(addMonths(new Date(), 1));
-  private _form: FormGroup = new FormGroup({});
+  protected form: FormGroup = new FormGroup({});
   protected isUpdate: WritableSignal<boolean> = signal(false);
   protected selectedSalary: WritableSignal<DeliveryManSalary | null> = signal(null);
   protected loading: WritableSignal<boolean> = signal(false);
   protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.deliveryMenAsUsersOptions;
 
-  get form(): FormGroup {
-    return this._form;
-  }
-  
   constructor() {
-    this._form = this.formBuilder.group({
+    this.form = this.formBuilder.group({
       userId: [null, Validators.required],
       amount: [0, [Validators.required, Validators.pattern("[0-9]*"), Validators.min(0)]],
       applyAt: [format(startOfMonth(addMonths(new Date(), 1)), "dd MMMM yyyy"), [Validators.required]],
@@ -67,7 +63,7 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
 
     this.isUpdate.set(true);
     this.selectedSalary.set(salary);
-    this._form.patchValue({
+    this.form.patchValue({
       id: salary.id,
       userId: salary.deliveryMan.userId,
       amount: salary.amount,
@@ -113,6 +109,11 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Salaire créé avec succès',
+      });
       this.handleClose(true);
     });
   }
@@ -131,6 +132,11 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Salaire mis à jour avec succès',
+      });
       this.handleClose(true);
     });
   }

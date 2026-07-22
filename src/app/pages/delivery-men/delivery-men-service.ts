@@ -7,7 +7,7 @@ import type { DeliveryMenList } from './types/delivery-men-list';
 import type { DeliveryMenOptionsResponse } from './types/delivery-men-options-response';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { Gender, GENDER } from '@shared/types/user';
-import { DeliveryManSalaryForm, DeliveryMenSalaryList } from './types/delivery-men-salary';
+import { DeliveryManSalary, DeliveryManSalaryForm, DeliveryMenSalaryList } from './types/delivery-men-salary';
 
 @Injectable({
   providedIn: 'root'
@@ -62,28 +62,6 @@ export class DeliveryMenService {
       map(data => data.deliveryMan)
     );
   }
-
-  getSalaries(pagination?: {
-    itemsPerPage: number;
-    page: number;
-}): Observable<DeliveryMenSalaryList> {
-    const params = new HttpParams({
-      fromObject: {
-        page: pagination ? pagination.page : 1,
-        itemsPerPage: pagination ? pagination.itemsPerPage : 10
-      }
-    });
-
-    return this.http.get<DeliveryMenSalaryList>(`${environment.apiURL}/delivery-men/salaries`, { params });
-  }
-
-  createSalary(data: DeliveryManSalaryForm): Observable<void> {
-    return this.http.post<void>(`${environment.apiURL}/delivery-men/salaries`, data);
-  }
-
-  updateSalary(id: number, data: DeliveryManSalaryForm): Observable<void> {
-    return this.http.put<void>(`${environment.apiURL}/delivery-men/salaries/${id}`, data);
-  }
   
   create(data: FormData): Observable<void> {
     return this.http.post<{ deliveryManId: number; userId: number }>(`${environment.apiURL}/delivery-men`, data).pipe(
@@ -125,5 +103,34 @@ export class DeliveryMenService {
         this._deliveryMen.update(dm => dm.filter(d => d.id !== id));
       })
     );
+  }
+
+  // SALARIES
+  getSalaries(pagination?: {
+    itemsPerPage: number;
+    page: number;
+}): Observable<DeliveryMenSalaryList> {
+    const params = new HttpParams({
+      fromObject: {
+        page: pagination ? pagination.page : 1,
+        itemsPerPage: pagination ? pagination.itemsPerPage : 10
+      }
+    });
+
+    return this.http.get<DeliveryMenSalaryList>(`${environment.apiURL}/delivery-men/salaries`, { params });
+  }
+
+  getDeliveryManSalaryHistory(id: number): Observable<DeliveryManSalary[]> {
+    return this.http.get<{ salaries: DeliveryManSalary[] }>(`${environment.apiURL}/delivery-men/salaries/history/${id}`).pipe(
+      map(response => response.salaries)
+    );
+  }
+
+  createSalary(data: DeliveryManSalaryForm): Observable<void> {
+    return this.http.post<void>(`${environment.apiURL}/delivery-men/salaries`, data);
+  }
+
+  updateSalary(id: number, data: DeliveryManSalaryForm): Observable<void> {
+    return this.http.put<void>(`${environment.apiURL}/delivery-men/salaries/${id}`, data);
   }
 }

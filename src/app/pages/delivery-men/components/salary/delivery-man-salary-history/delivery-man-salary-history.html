@@ -1,0 +1,34 @@
+<p-drawer [visible]="visible()" position="right" (onHide)="handleClose()" styleClass="!w-[35rem] rounded-l-2xl">
+    <ng-template #header>
+        <div class="flex flex-col gap-1 max-w-[80%]">
+            <p class="text-2xl font-bold">Historique des salaires</p>
+            <p class="text-gray-400">Les salaires de chaque livreur sont sauvegardés et historisés, et s'affichent dans l'ordre décroissant dans cette section.</p>
+        </div>
+    </ng-template>
+    @if (salary()) {
+        <p-fieldset>
+            <ng-template #header>
+                <div class="flex items-center gap-2 px-2">
+                    <p-avatar [image]="salary()!.deliveryMan.profilePicture?.thumbnail" shape="circle" />
+                    <div class="flex flex-col">
+                        <p class="font-bold">{{ salary()!.deliveryMan.gender | civility }} {{ salary()!.deliveryMan.name | uppercase }}</p>
+                        <p>{{ salary()!.deliveryMan.firstName }}</p>
+                    </div>
+                </div>
+            </ng-template>
+            <div class="mt-4">
+                <p-timeline [value]="history()">
+                    <ng-template #opposite let-history>
+                        <small class="text-gray-500">{{ history.createdAt | date:'dd MMMM yyyy à H:mm' }}</small>
+                    </ng-template>
+                    <ng-template #content let-history>
+                        <div class="flex flex-col gap-1">
+                            <span class="font-bold text-lg/5">{{ history.amount.toLocaleString('fr-FR') }} Ar</span>
+                            <span [ngClass]="{ 'text-gray-400': isApplied(history.applyAt), 'text-green-500': !isApplied(history.applyAt) }">{{ isApplied(history.applyAt) ? 'En vigueur le' : 'Applicable à partir du' }} {{ history.applyAt | date:'dd MMMM yyyy' }}</span>
+                        </div>
+                    </ng-template>
+                </p-timeline>
+            </div>
+        </p-fieldset>
+    }
+</p-drawer>

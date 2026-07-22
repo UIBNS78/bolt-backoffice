@@ -16,10 +16,11 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { DatePipe, NgClass, UpperCasePipe } from '@angular/common';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { DeliveryManSalariesPlaceholder } from '../../components/placeholders/delivery-man-salaries-placeholder/delivery-man-salaries-placeholder';
-import { DeliveryManSalariesForm } from '../../components/forms/delivery-man-salaries-form/delivery-man-salaries-form';
+import { DeliveryManSalariesForm } from '../../components/salary/delivery-man-salaries-form/delivery-man-salaries-form';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { DurationPipe } from '@shared/pipes/duration-pipe';
+import { DeliveryManSalaryHistory } from '../../components/salary/delivery-man-salary-history/delivery-man-salary-history';
 
 @Component({
   selector: 'app-delivery-man-salaries',
@@ -41,7 +42,8 @@ import { DurationPipe } from '@shared/pipes/duration-pipe';
     DatePipe,
     DurationPipe,
     DeliveryManSalariesPlaceholder,
-    NgClass
+    NgClass,
+    DeliveryManSalaryHistory
   ],
   templateUrl: './delivery-man-salaries.html',
   styleUrl: './delivery-man-salaries.css',
@@ -56,6 +58,8 @@ export class DeliveryManSalaries implements OnInit, OnDestroy {
   protected first: WritableSignal<number> = signal(0);
   protected rows: WritableSignal<number> = signal(10);
   protected showForm: WritableSignal<boolean> = signal(false);
+  protected showHistory: WritableSignal<boolean> = signal(false);
+  protected selectedSalary: WritableSignal<DeliveryManSalary | null> = signal(null);
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected data: WritableSignal<DeliveryMenSalaryList> = signal({
     salaries: [],
@@ -97,6 +101,11 @@ export class DeliveryManSalaries implements OnInit, OnDestroy {
 
   isApplied(applyAt: Date): boolean {
     return new Date(applyAt).getTime() < new Date().getTime();
+  }
+
+  handleOpenHistory(salary: DeliveryManSalary | null = null): void {
+    this.selectedSalary.set(salary);
+    this.showHistory.set(!!salary);
   }
 
   private loadData(): void {

@@ -89,11 +89,12 @@
                                 {{ salary.createdAt | date: 'dd MMMM yyyy à HH:mm' }}
                             </td>
                             <td>
-                                @if (!isApplied(salary.applyAt)) {
-                                    <div class="flex justify-center gap-2">
-                                        <p-button (click)="handleOpenForm(salary)" icon="pi pi-pencil" size="small" [rounded]="true" [text]="true" severity="info" pTooltip="Modifier le salaire" tooltipPosition="top" />
-                                    </div>
-                                }
+                                <div class="flex justify-center gap-2">
+                                    <p-button (click)="handleOpenHistory(salary)" icon="pi pi-history" size="small" [rounded]="true" [text]="true" severity="secondary" pTooltip="Historique des salaires" tooltipPosition="left" />
+                                    @if (!isApplied(salary.applyAt)) {
+                                        <p-button (click)="handleOpenForm(salary)" icon="pi pi-pencil" size="small" [rounded]="true" [text]="true" severity="info" pTooltip="Modifier le salaire" tooltipPosition="left" />
+                                    }
+                                </div>
                             </td>
                         </tr>
                     </ng-template>
@@ -131,3 +132,10 @@
         }
     </div>
 </div>
+
+<!-- drawers -->
+<app-delivery-man-salary-history
+    [visible]="showHistory()"
+    (onClose)="handleOpenHistory()"
+    [salary]="selectedSalary()!"
+/>

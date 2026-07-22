@@ -20,13 +20,15 @@
     </div>
     
     <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="mt-4 flex flex-col gap-3">
-        <div class="flex flex-col gap-1">
-            <label for="userId">Livreur</label>
-            <p-select [options]="menOptions()" formControlName="userId" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('userId')?.invalid && (form.get('userId')?.touched || form.get('userId')?.dirty)" required [filter]="true" filterBy="label" [showClear]="true" appendTo="body" />
-            @if (form.get('userId')?.invalid && (form.get('userId')?.touched || form.get('userId')?.dirty)) {
-                <p-message severity="error" size="small" variant="simple">Livreur requis.</p-message>
-            }
-        </div>
+        @if (!isUpdate()) {
+            <div class="flex flex-col gap-1">
+                <label for="userId">Livreur</label>
+                <p-select [options]="menOptions()" formControlName="userId" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('userId')?.invalid && (form.get('userId')?.touched || form.get('userId')?.dirty)" required [filter]="true" filterBy="label" [showClear]="true" appendTo="body" />
+                @if (form.get('userId')?.invalid && (form.get('userId')?.touched || form.get('userId')?.dirty)) {
+                    <p-message severity="error" size="small" variant="simple">Livreur requis.</p-message>
+                }
+            </div>
+        }
 
         <div class="flex flex-col gap-1">
             <label for="amount">Salaire (en Ariary)</label>
