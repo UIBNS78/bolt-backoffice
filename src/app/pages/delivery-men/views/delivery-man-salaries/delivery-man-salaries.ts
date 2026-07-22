@@ -16,7 +16,7 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { DatePipe, NgClass, UpperCasePipe } from '@angular/common';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { DeliveryManSalariesPlaceholder } from '../../components/placeholders/delivery-man-salaries-placeholder/delivery-man-salaries-placeholder';
-import { DeliveryManSalariesForm } from '../../components/drawers/delivery-man-salaries-form/delivery-man-salaries-form';
+import { DeliveryManSalariesForm } from '../../components/forms/delivery-man-salaries-form/delivery-man-salaries-form';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { DurationPipe } from '@shared/pipes/duration-pipe';
