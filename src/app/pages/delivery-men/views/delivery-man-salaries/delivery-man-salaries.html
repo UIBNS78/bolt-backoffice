@@ -15,9 +15,9 @@
                             <th class="text-center hidden 2xl:table-cell">ID</th>
                             <th>Livreur</th>
                             <th style="text-align: end;">Salaire</th>
-                            <th style="text-align: center;">Appliqué le</th>
-                            <th style="text-align: center;">Modifié le</th>
-                            <th style="text-align: center;">Créé le</th>
+                            <th style="text-align: center;">Date d'affectation</th>
+                            <th style="text-align: center;">Dernière modification</th>
+                            <th style="text-align: center;">Date d'ajout</th>
                             <th style="text-align: center;">Actions</th>
                         </tr>
                     </ng-template>
@@ -63,15 +63,17 @@
                                 </p>
                             </td>
                             <td style="text-align: center;">
-                                {{ salary.modifiedAt ? (salary.modifiedAt | date: 'dd MMMM yyyy') : '-' }}
+                                {{ salary.modifiedAt ? (salary.modifiedAt | date: 'dd MMMM yyyy à HH:mm') : '' }}
                             </td>
                             <td style="text-align: center;">
-                                {{ salary.createdAt | date: 'dd MMMM yyyy' }}
+                                {{ salary.createdAt | date: 'dd MMMM yyyy à HH:mm' }}
                             </td>
                             <td>
-                                <div class="flex justify-center gap-2">
-                                    <p-button (click)="handleOpenForm(salary)" icon="pi pi-pencil" size="small" [rounded]="true" [text]="true" severity="info" pTooltip="Modifier le salaire" tooltipPosition="top" />
-                                </div>
+                                @if (!isApplied(salary.applyAt)) {
+                                    <div class="flex justify-center gap-2">
+                                        <p-button (click)="handleOpenForm(salary)" icon="pi pi-pencil" size="small" [rounded]="true" [text]="true" severity="info" pTooltip="Modifier le salaire" tooltipPosition="top" />
+                                    </div>
+                                }
                             </td>
                         </tr>
                     </ng-template>

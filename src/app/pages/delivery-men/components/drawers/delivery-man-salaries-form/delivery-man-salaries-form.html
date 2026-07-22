@@ -1,9 +1,21 @@
 <div class="flex flex-col">
     <div class="pt-5 flex flex-col items-center gap-3">
-        <i class="pi pi-wallet" style="font-size: 1.5rem;"></i>
+        @if (isUpdate() && selectedSalary()) {
+            <p-avatar 
+                [label]="!selectedSalary()?.deliveryMan?.profilePicture ? ((selectedSalary()?.deliveryMan?.name + ' ' + selectedSalary()?.deliveryMan?.firstName) | bigram) : undefined"
+                [image]="selectedSalary()?.deliveryMan?.profilePicture ? selectedSalary()?.deliveryMan?.profilePicture?.thumbnail: undefined"
+                shape="circle" 
+                size="xlarge"
+                style="font-size: 12px;" 
+            />
+        } @else {
+            <i class="pi pi-wallet" style="font-size: 1.5rem;"></i>
+        }
         <div class="flex flex-col items-center">
-            <p class="text-lg">Nouveau salaire</p>
-            <p class="text-gray-400 text-center">Ce nouveau salaire sera effectif après paiement du salaire avant la date séléctionnée.</p>
+            <p class="text-lg">{{ isUpdate() ? `Salaire de ${ selectedSalary()!.deliveryMan!.gender | civility } ${ selectedSalary()!.deliveryMan!.firstName }` : 'Nouveau salaire' }}</p>
+            <p class="text-gray-400 text-center">
+                {{ isUpdate() ? "La modification sera effective immédiatement." : "Ce nouveau salaire sera effectif après paiement du salaire avant la date séléctionnée." }}
+            </p>
         </div>
     </div>
     
@@ -47,7 +59,7 @@
 
         <div class="flex justify-end gap-2">
             <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" [disabled]="loading()" />
-            <p-button type="submit" label="Assigner" severity="contrast" size="small" [loading]="loading()" [disabled]="loading()" />
+            <p-button type="submit" [label]="isUpdate() ? 'Modifier' : 'Assigner'" severity="contrast" size="small" [loading]="loading()" [disabled]="loading()" />
         </div>
     </form>
 </div>
