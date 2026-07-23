@@ -7,6 +7,8 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { finalize, Subject, takeUntil } from 'rxjs';
+import { DeliveryManRewardForm } from '../delivery-man-reward-form/delivery-man-reward-form';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-delivery-man-reward-handler',
@@ -15,7 +17,9 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     CardModule,
     TagModule,
     TooltipModule,
-    SkeletonModule
+    SkeletonModule,
+    DeliveryManRewardForm,
+    DatePipe
   ],
   templateUrl: './delivery-man-reward-handler.html',
   styleUrl: './delivery-man-reward-handler.css',
@@ -26,6 +30,8 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
+  protected openForm: WritableSignal<boolean> = signal(false);
+  protected selectedReward: WritableSignal<PackageReward | null> = signal(null);
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected rewards: WritableSignal<PackageReward[]> = signal([]);
 
@@ -37,6 +43,19 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  openRewardForm(reward: PackageReward | null = null): void {
+    this.selectedReward.set(reward);
+    this.openForm.set(true);
+  }
+
+  handleFormClose(refresh: boolean): void {
+    this.openForm.set(false);
+    this.selectedReward.set(null);
+    if (refresh) {
+      this.loadRewards();
+    }
   }
 
   private loadRewards(): void {

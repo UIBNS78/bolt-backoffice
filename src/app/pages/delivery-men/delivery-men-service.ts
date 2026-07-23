@@ -10,7 +10,7 @@ import { Gender, GENDER } from '@shared/types/user';
 import { DeliveryManSalary, DeliveryManSalaryForm, DeliveryMenSalaryList } from './types/delivery-men-salary';
 import { FilterDateType } from '@shared/types/common';
 import { format } from 'date-fns';
-import { DeliveryMenRewardsList, PackageReward } from './types/delivery-men-reward';
+import { DeliveryMenRewardsList, PackageReward, PackageRewardForm } from './types/delivery-men-reward';
 
 @Injectable({
   providedIn: 'root'
@@ -155,5 +155,21 @@ export class DeliveryMenService {
     return this.http.get<{ rewards: PackageReward[] }>(`${environment.apiURL}/delivery-men/rewards/packages`).pipe(
       map(response => response.rewards)
     );
+  }
+
+  createReward(reward: PackageRewardForm): Observable<void> {
+    return this.http.post<void>(`${environment.apiURL}/delivery-men/rewards/packages`, reward);
+  }
+
+  updateReward(id: number, reward: PackageRewardForm): Observable<void> {
+    return this.http.put<void>(`${environment.apiURL}/delivery-men/rewards/packages/${id}`, reward);
+  }
+
+  deleteReward(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiURL}/delivery-men/rewards/packages/${id}`);
+  }
+
+  activateReward(id: number): Observable<void> {
+    return this.http.put<void>(`${environment.apiURL}/delivery-men/rewards/packages/${id}/activate`, null);
   }
 }

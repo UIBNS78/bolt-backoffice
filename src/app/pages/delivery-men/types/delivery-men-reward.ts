@@ -19,10 +19,12 @@ export type PackageReward = {
     id: number;
     title: string;
     motivation: string;
-    minPackage: number;
+    minPackages: number;
     reward: number;
     active: boolean;
-    applyAt: Date;
+    applyAt: Date | null;
     modifiedAt: Date | null;
     createdAt: Date;
 }
+
+export type PackageRewardForm = Omit<PackageReward, "id" | "active" | "applyAt" | "modifiedAt" | "createdAt">;
