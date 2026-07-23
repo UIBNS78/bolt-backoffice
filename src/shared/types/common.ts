@@ -9,3 +9,10 @@ export type CloudinaryImage = {
     original: string;
     download?: string;
 }
+
+export type FilterDateType = {
+    filter: "day" | "week" | "month" | "year";
+    date: Date;
+    page?: number;
+    itemsPerPage?: number;
+}

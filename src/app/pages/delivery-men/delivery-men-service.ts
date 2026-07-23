@@ -8,6 +8,9 @@ import type { DeliveryMenOptionsResponse } from './types/delivery-men-options-re
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { Gender, GENDER } from '@shared/types/user';
 import { DeliveryManSalary, DeliveryManSalaryForm, DeliveryMenSalaryList } from './types/delivery-men-salary';
+import { FilterDateType } from '@shared/types/common';
+import { format } from 'date-fns';
+import { DeliveryMenRewardsList } from './types/delivery-men-reward';
 
 @Injectable({
   providedIn: 'root'
@@ -132,5 +135,19 @@ export class DeliveryMenService {
 
   updateSalary(id: number, data: DeliveryManSalaryForm): Observable<void> {
     return this.http.put<void>(`${environment.apiURL}/delivery-men/salaries/${id}`, data);
+  }
+
+  // REWARDS
+  getDeliveryMenRewards(params: FilterDateType): Observable<DeliveryMenRewardsList> {
+    const queryParams = new HttpParams({
+      fromObject: {
+        filter: params.filter,
+        date: format(params.date, "yyyy-MM-dd"),
+        page: params?.page ?? 1,
+        itemsPerPage: params?.itemsPerPage ?? 10
+      }
+    });
+
+    return this.http.get<DeliveryMenRewardsList>(`${environment.apiURL}/delivery-men/rewards`, { params: queryParams });
   }
 }

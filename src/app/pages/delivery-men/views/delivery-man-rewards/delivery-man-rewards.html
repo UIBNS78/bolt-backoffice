@@ -1,0 +1,37 @@
+<div class="flex flex-col gap-2">
+    <div class="flex items-center justify-between">
+        <p-selectbutton 
+            [options]="[
+                { id: 1, label: 'Récompenses des livreurs' }, 
+                { id: 2, label: 'Gérer les récompenses' }
+            ]" 
+            [(ngModel)]="selected" 
+            optionLabel="label" 
+            optionValue="id" 
+            size="small"
+            [unselectable]="true"
+        >
+            <ng-template #item let-item>
+                <div class="flex gap-2">
+                    @if (item.id === 1) {
+                        <i class="pi pi-gift" style="font-size: 0.9rem;"></i>
+                    } @else {
+                        <i class="pi pi-cog" style="font-size: 0.9rem;"></i>
+                    }
+                    <small class="font-bold">{{ item.label }}</small>
+                </div>
+            </ng-template>
+        </p-selectbutton>
+
+        @if (selected === 2) {
+            <p-button label="Nouvelle récompense" icon="pi pi-plus" size="small" severity="contrast" />
+        }
+    </div>
+
+    @if (selected === 1) {
+        <app-delivery-men-rewards-list></app-delivery-men-rewards-list>
+    }
+    @if (selected === 2) {
+        <app-delivery-man-reward-handler></app-delivery-man-reward-handler>
+    }
+</div>
