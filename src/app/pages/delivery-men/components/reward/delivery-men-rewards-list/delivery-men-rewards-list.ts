@@ -1,4 +1,4 @@
-import { DatePipe, UpperCasePipe } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import { Component, computed, effect, inject, OnDestroy, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
@@ -38,7 +38,6 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     BigramPipe,
     UpperCasePipe,
     CivilityPipe,
-    DatePipe,
     DeliveryMenRewardsListPlaceholder
   ],
   templateUrl: './delivery-men-rewards-list.html',

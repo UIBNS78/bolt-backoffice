@@ -14,3 +14,15 @@ export type DeliveryManReward = {
     deliveryMan: DeliveryMan;
     createdAt: Date | null;
 }
+
+export type PackageReward = {
+    id: number;
+    title: string;
+    motivation: string;
+    minPackage: number;
+    reward: number;
+    active: boolean;
+    applyAt: Date;
+    modifiedAt: Date | null;
+    createdAt: Date;
+}

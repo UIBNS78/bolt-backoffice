@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { DeliveryManRewardHandler } from './delivery-man-reward-handler/delivery-man-reward-handler';
-import { DeliveryMenRewardsList } from './delivery-men-rewards-list/delivery-men-rewards-list';
+import { DeliveryManRewardHandler } from '../../components/reward/delivery-man-reward-handler/delivery-man-reward-handler';
+import { DeliveryMenRewardsList } from '../../components/reward/delivery-men-rewards-list/delivery-men-rewards-list';
 
 @Component({
   selector: 'app-delivery-man-rewards',

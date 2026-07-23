@@ -79,7 +79,7 @@ export const routes: Routes = [
                         loadComponent: () => import("../app/pages/delivery-men/views/delivery-man-salaries/delivery-man-salaries").then(c => c.DeliveryManSalaries)
                     },
                     {
-                        path: "bonuses",
+                        path: "rewards",
                         loadComponent: () => import("../app/pages/delivery-men/views/delivery-man-rewards/delivery-man-rewards").then(c => c.DeliveryManRewards)
                     },
                     {
