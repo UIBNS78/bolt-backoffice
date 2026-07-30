@@ -89,7 +89,7 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
     
     modalRef?.onClose.pipe(
       take(1),
-      filter(response => response),
+      filter(confirmed => confirmed),
       mergeMap(() => this.deliveryMenService.activateReward(reward.id)),
       takeUntil(this.unsubscribe$),
     ).subscribe(() => {
@@ -97,6 +97,36 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
         severity: 'success',
         summary: 'Succès',
         detail: `La récompense a été ${reward.active ? "activée" : "désactivée"}.`
+      });
+      this.loadRewards();
+    });
+  }
+
+  handleDeactivateAll(): void {
+    const modalRef: DynamicDialogRef<DialogConfirm> | null = this.dialogService.open(DialogConfirm, {
+      inputValues: {
+        title: "Désactivation",
+        message: `Voulez-vous vraiment désactiver toutes les récompenses ? Elles peuvent être réactivées a tout moment.`,
+        icon: "pi pi-gift",
+        acceptLabel: `Oui, désactiver`,
+        severity: "danger"
+      },
+      showHeader: false,
+      modal: true,
+      draggable: false,
+      resizable: false
+    });
+    
+    modalRef?.onClose.pipe(
+      take(1),
+      filter(confirmed => confirmed),
+      mergeMap(() => this.deliveryMenService.deactivateRewards()),
+      takeUntil(this.unsubscribe$),
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: `Les récompenses ont été désactivées.`
       });
       this.loadRewards();
     });

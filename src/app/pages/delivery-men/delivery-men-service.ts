@@ -172,4 +172,8 @@ export class DeliveryMenService {
   activateReward(id: number): Observable<void> {
     return this.http.put<void>(`${environment.apiURL}/delivery-men/rewards/packages/${id}/activate`, null);
   }
+
+  deactivateRewards(): Observable<void> {
+    return this.http.put<void>(`${environment.apiURL}/delivery-men/rewards/deactivate`, null);
+  }
 }
