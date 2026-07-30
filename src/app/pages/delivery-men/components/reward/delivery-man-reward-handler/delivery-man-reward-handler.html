@@ -1,5 +1,6 @@
 <div class="flex flex-col gap-4">
-    <div class="flex items-center justify-end">
+    <div class="flex items-center justify-end gap-2">
+        <p-button label="Désactiver toutes" icon="pi pi-ban" size="small" severity="danger" [text]="true" [disabled]="isLoading()" />
         <p-button (click)="openRewardForm()" label="Nouvelle récompense" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
     </div>
 
@@ -38,9 +39,9 @@
                                             [severity]="reward.active ? 'success' : 'secondary'" 
                                             [value]="reward.active ? 'Récompense active' : 'Récompense inactive'"
                                             class="cursor-pointer"
-                                            pTooltip="Cliquez pour activer/désactiver la récompense"
+                                            pTooltip="Cliquez pour activer la récompense"
                                             tooltipPosition="top"
-                                            
+                                            (click)="handleActivateReward(reward)"
                                         />
                                         <p-tag icon="pi pi-box" severity="info" [value]="`${reward.minPackages} colis livrés minimum`" />
                                     </div>

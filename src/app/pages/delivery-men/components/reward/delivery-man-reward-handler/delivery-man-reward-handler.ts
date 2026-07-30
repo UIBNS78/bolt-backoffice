@@ -6,9 +6,12 @@ import { CardModule } from 'primeng/card';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
-import { finalize, Subject, takeUntil } from 'rxjs';
+import { filter, finalize, mergeMap, Subject, take, takeUntil } from 'rxjs';
 import { DeliveryManRewardForm } from '../delivery-man-reward-form/delivery-man-reward-form';
 import { DatePipe } from '@angular/common';
+import { MessageService } from 'primeng/api';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
 
 @Component({
   selector: 'app-delivery-man-reward-handler',
@@ -27,6 +30,8 @@ import { DatePipe } from '@angular/common';
 export class DeliveryManRewardHandler implements OnInit, OnDestroy {
   // services
   private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly messageService: MessageService = inject(MessageService);
+  private readonly dialogService: DialogService = inject(DialogService);
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
@@ -56,6 +61,45 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
     if (refresh) {
       this.loadRewards();
     }
+  }
+
+  handleActivateReward(reward: PackageReward): void {
+    if (reward.active) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Attention',
+        detail: `La récompense est déjà active.`
+      });
+      return;
+    }
+
+    const modalRef: DynamicDialogRef<DialogConfirm> | null = this.dialogService.open(DialogConfirm, {
+      inputValues: {
+        title: "Activation",
+        message: `Voulez-vous vraiment activer cette récompense ? Les livreurs seront informés de ce changement via notification.`,
+        icon: "pi pi-gift",
+        acceptLabel: `Oui, activer`,
+        severity: reward.active ? "danger" : "success"
+      },
+      showHeader: false,
+      modal: true,
+      draggable: false,
+      resizable: false
+    });
+    
+    modalRef?.onClose.pipe(
+      take(1),
+      filter(response => response),
+      mergeMap(() => this.deliveryMenService.activateReward(reward.id)),
+      takeUntil(this.unsubscribe$),
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: `La récompense a été ${reward.active ? "activée" : "désactivée"}.`
+      });
+      this.loadRewards();
+    });
   }
 
   private loadRewards(): void {
