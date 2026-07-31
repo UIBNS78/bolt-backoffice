@@ -7,7 +7,6 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveryManSalary, DeliveryMenSalaryList } from '../../types/delivery-men-salary';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { SkeletonModule } from 'primeng/skeleton';
 import { DeliveryMenService } from '../../delivery-men-service';
 import { ImageModule } from 'primeng/image';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
@@ -31,7 +30,6 @@ import { DeliveryManSalaryHistory } from '../../components/salary/delivery-man-s
     InputTextModule,
     TableModule,
     PaginatorModule,
-    SkeletonModule,
     ImageModule,
     OverlayBadgeModule,
     AvatarModule,

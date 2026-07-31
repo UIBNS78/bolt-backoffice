@@ -1,0 +1,57 @@
+<p-drawer [(visible)]="open" [dismissible]="false" position="right" [header]="isUpdate() ? 'Modification' : 'Nouvelle récompense'" (onHide)="handleClose()" styleClass="!w-[35rem] rounded-l-2xl">
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="h-full">
+        <div class="flex flex-col justify-between gap-2 h-full">
+            <div class="flex flex-col gap-3 overflow-y-auto overflow-x-hidden">
+                <p-fieldset legend="Informations">
+                    <div class="flex flex-col gap-4">
+                        <div class="flex flex-col gap-1">
+                            <label for="title">Titre <span class="text-red-500">*</span></label>
+                            <input type="text" pInputText pSize="small" id="title" formControlName="title" fluid [invalid]="form.get('title')?.invalid && (form.get('title')?.touched || form.get('title')?.dirty)" required>
+                            @if (form.get('title')?.invalid && (form.get('title')?.touched || form.get('title')?.dirty)) {
+                                <p-message severity="error" size="small" variant="simple">Titre requis.</p-message>
+                            }
+                        </div>    
+                        <div class="flex flex-col gap-1">
+                            <label for="motivation">Motivation <span class="text-red-500">*</span></label>
+                            <textarea pTextarea rows="5" cols="30" id="motivation" formControlName="motivation" [invalid]="form.get('motivation')?.invalid && (form.get('motivation')?.touched || form.get('motivation')?.dirty)" required></textarea>
+                            @if (form.get('motivation')?.invalid && (form.get('motivation')?.touched || form.get('motivation')?.dirty)) {
+                                <p-message severity="error" size="small" variant="simple">Motivation requise.</p-message>
+                            }
+                        </div>
+                    </div>
+                </p-fieldset>
+                <p-fieldset legend="Paramètres">
+                    <div class="flex flex-col gap-4">
+                        <p class="text-gray-400">Chaque récompense est liée à un nombre minimum de colis livrés et à une récompense par colis supplémentaire livré. Par exemple, vous pouvez définir une récompense de 300 Ariary par colis après les 4 premiers colis livrés. Cela signifie que pour chaque colis supplémentaire livré, le livreur recevra 300 Ariary. Vous pouvez définir plusieurs récompenses de ce type, chacune avec un nombre minimum de colis livrés et une récompense par colis livré différent. </p>
+                        <div class="flex flex-col gap-4">
+                            <div class="flex flex-col gap-1">
+                                <label for="minPackages">Minimum colis livré <span class="text-red-500">*</span></label>
+                                <p-inputnumber inputId="integeronly" id="minPackages" size="small" formControlName="minPackages" [invalid]="form.get('minPackages')?.invalid && (form.get('minPackages')?.touched || form.get('minPackages')?.dirty)" required />
+                                @if (form.get('minPackages')?.invalid && (form.get('minPackages')?.touched || form.get('minPackages')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Minimum colis livré requis.</p-message>
+                                }
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <div class="flex flex-col gap-1">
+                                <label for="reward">Récompense par colis livré (en Ariary) <span class="text-red-500">*</span></label>
+                                <p-inputnumber inputId="integeronly" id="reward" size="small" formControlName="reward" [invalid]="form.get('reward')?.invalid && (form.get('reward')?.touched || form.get('reward')?.dirty)" required />
+                                @if (form.get('reward')?.invalid && (form.get('reward')?.touched || form.get('reward')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Récompense requise.</p-message>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </p-fieldset>
+            </div>
+
+            <div class="flex items-center justify-end gap-3">
+                <p-button type="button" (click)="handleClose()" label="Annuler" severity="secondary" variant="outlined" size="small" [disabled]="loading() || deleting()" />
+                @if (isUpdate()) {
+                    <p-button type="button" (click)="handleDelete()" label="Supprimer" icon="pi pi-trash" severity="danger" size="small" [loading]="deleting()" />
+                }
+                <p-button type="submit" [label]="isUpdate() ? 'Modifier' : 'Enregistrer'" severity="contrast" size="small" [loading]="loading()" [disabled]="deleting()" />
+            </div>
+        </div>
+    </form>
+</p-drawer>

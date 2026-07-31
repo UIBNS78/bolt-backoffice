@@ -50,6 +50,7 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
   protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.deliveryMenAsUsersOptions;
 
   constructor() {
+    this.isUpdate.set(false);
     this.form = this.formBuilder.group({
       userId: [null, Validators.required],
       amount: [0, [Validators.required, Validators.pattern("[0-9]*"), Validators.min(0)]],
@@ -100,7 +101,6 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
   }
 
   handleClose(refresh: boolean = false): void {
-    this.isUpdate.set(false);
     this.dialogRef.close(refresh);
   }
 

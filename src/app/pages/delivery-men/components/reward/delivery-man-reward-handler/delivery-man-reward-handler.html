@@ -1,0 +1,82 @@
+<div class="flex flex-col gap-4">
+    <div class="flex items-center justify-end gap-2">
+        <p-button (click)="handleDeactivateAll()" label="Désactiver toutes" icon="pi pi-ban" size="small" severity="danger" [text]="true" [disabled]="isLoading()" />
+        <p-button (click)="openRewardForm()" label="Nouvelle récompense" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+        @if (isLoading()) {
+            @for (item of [1, 2, 3]; track $index) {
+                <p-skeleton height="10rem" borderRadius="0.75rem" />
+            }
+        } @else {
+            @defer (on idle) {
+                @for (reward of rewards(); track reward.id) {
+                    <p-card class="group">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center justify-between w-full">
+                                <div class="flex flex-col">
+                                    <span class="mb-0 font-bold">{{ reward.title }}</span>
+                                    <small class="text-gray-400">Dernière mise à jour: {{ reward.modifiedAt | date: 'dd MMM yyyy' }}</small>
+                                </div>
+                                <p-button 
+                                    (click)="openRewardForm(reward)"
+                                    class="opacity-0 transition-opacity duration-200 group-hover:opacity-100" 
+                                    icon="pi pi-cog" 
+                                    severity="contrast" 
+                                    [rounded]="true" 
+                                    [text]="true" 
+                                    [pTooltip]="!!reward.active ? 'Récompense active et ne peut être gérée' : 'Gérer cette récompense'"
+                                    tooltipPosition="left"
+                                    [disabled]="!!reward.active"
+                                />
+                            </div>
+                            <div class="flex justify-between gap-24">
+                                <div class="flex flex-col items-start gap-2 flex-1">
+                                    <p class="text-sm m-0 italic">{{ reward.motivation }}</p>
+                                    <div class="flex items-center gap-2">
+                                        <p-tag 
+                                            icon="pi pi-gift" 
+                                            [severity]="reward.active ? 'success' : 'secondary'" 
+                                            [value]="reward.active ? 'Récompense active' : 'Récompense inactive'"
+                                            class="cursor-pointer"
+                                            [pTooltip]="reward.active ? 'Récompense active en ce moment' : 'Cliquez pour activer la récompense'"
+                                            tooltipPosition="top"
+                                            (click)="handleActivateReward(reward)"
+                                        />
+                                        <p-tag icon="pi pi-box" severity="info" [value]="`${reward.minPackages} colis livrés minimum`" />
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-end">
+                                    <p class="mb-0 font-bold text-xl">{{ reward.reward.toLocaleString("fr-FR") }} Ar</p>
+                                    <small class="text-gray-400">par colis supl.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </p-card>
+                } @empty {
+                    <div class="flex justify-center items-center h-[calc(100vh-180px)]">
+                        <div class="flex flex-col justify-center items-center gap-3 w-80">
+                            <i class="pi pi-gift"></i>
+                            <div class="flex flex-col items-center">
+                                <p class="text-center">Aucune récompense</p>
+                                <p class="text-gray-400 text-center">Aucune récompense n'est enregistrée pour le moment. Cliquez sur le bouton "Nouvelle récompense" pour en ajouter une.</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            } @placeholder (minimum 600ms) {
+                @for (item of [1, 2, 3]; track $index) {
+                    <p-skeleton height="10rem" borderRadius="0.75rem" />
+                }
+            }
+        }
+    </div>
+</div>
+
+<!-- drawers -->
+<app-delivery-man-reward-form
+    [open]="openForm()"
+    (onCloseEmitter)="handleFormClose($event)"
+    [reward]="selectedReward()"
+/>

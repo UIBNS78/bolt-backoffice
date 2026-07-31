@@ -6,9 +6,9 @@
             <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || data().totalItems <= 0" />
         </p-iconfield>
     </div>
-    <div class="flex flex-col gap-2">
-        @defer (when !isLoading()) {
-            @if (data().totalItems > 0) {
+    @defer (when !isLoading()) {
+        @if (data().totalItems > 0) {
+            <div class="flex flex-col gap-2">
                 <p-table [value]="data().salaries" [tableStyle]="{ 'min-width': '50rem' }" sortMode="multiple">
                     <ng-template #header>
                         <tr>
@@ -99,23 +99,7 @@
                         </tr>
                     </ng-template>
                 </p-table>
-            } @else {
-                <div class="flex justify-center items-center h-[calc(100vh-150px)]">
-                    <div class="flex flex-col justify-center items-center gap-3 w-80">
-                        <i class="pi pi-credit-card"></i>
-                        <div class="flex flex-col items-center">
-                            <p class="text-center">Aucun salaire enregistré</p>
-                            <p class="text-gray-400 text-center">Aucun salaire n'est enregistré pour le moment. Cliquez sur le bouton "Assigner un salaire" pour en ajouter un.</p>
-                        </div>
-                    </div>
-                </div>
-            }
-        } @placeholder (minimum 600ms) {
-            <app-delivery-man-salaries-placeholder />
-        }
 
-        @defer (when !isLoading()) {
-            @if (data().totalItems > 0) {
                 <p-paginator 
                     (onPageChange)="onPageChange($event)" 
                     [first]="first()" 
@@ -124,13 +108,21 @@
                     [rowsPerPageOptions]="[10, 20, 30]"
                     class="p-paginator-sm"
                 />
-            }
-        } @placeholder (minimum 600ms) {
-            <div class="flex justify-center">
-                <p-skeleton width="25%" height="2rem" />
+            </div>
+        } @else {
+            <div class="flex justify-center items-center h-[calc(100vh-150px)]">
+                <div class="flex flex-col justify-center items-center gap-3 w-80">
+                    <i class="pi pi-wallet"></i>
+                    <div class="flex flex-col items-center">
+                        <p class="text-center">Aucun salaire enregistré</p>
+                        <p class="text-gray-400 text-center">Aucun salaire n'est enregistré pour le moment. Cliquez sur le bouton "Assigner un salaire" pour en ajouter un.</p>
+                    </div>
+                </div>
             </div>
         }
-    </div>
+    } @placeholder (minimum 600ms) {
+        <app-delivery-man-salaries-placeholder />
+    }
 </div>
 
 <!-- drawers -->

@@ -6,8 +6,8 @@
             <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || data().totalItems <= 0" />
         </p-iconfield>
     </div>
-    <div class="flex flex-col gap-2">
-        @defer (when !isLoading()) {
+    @defer (when !isLoading()) {
+        <div class="flex flex-col gap-2">
             <p-table [value]="data().deliveryMen" [tableStyle]="{ 'min-width': '50rem' }">
                 <ng-template #header>
                     <tr>
@@ -106,11 +106,7 @@
                     </tr>
                 </ng-template>
             </p-table>
-        } @placeholder (minimum 600ms) {
-            <app-delivery-men-placeholder></app-delivery-men-placeholder>
-        }
 
-        @defer (when !isLoading()) {
             <p-paginator 
                 (onPageChange)="onPageChange($event)" 
                 [first]="first()" 
@@ -119,12 +115,10 @@
                 [rowsPerPageOptions]="[10, 20, 30]"
                 class="p-paginator-sm"
             />
-        } @placeholder (minimum 600ms) {
-            <div class="flex justify-center">
-                <p-skeleton width="25%" height="2rem" />
-            </div>
-        }
-    </div>
+        </div>
+    } @placeholder (minimum 600ms) {
+        <app-delivery-men-placeholder></app-delivery-men-placeholder>
+    }
 </div>
 
 <app-delivery-man-details [open]="showDetails()" (onCloseEmitter)="handleOpenDetails()" [deliveryManId]="selectedDeliveryManId()"></app-delivery-man-details>
