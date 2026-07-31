@@ -5,7 +5,7 @@ import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { FilterDateType } from '@shared/types/common';
 import { DeliveryMenRewardsListPlaceholder } from 'app/pages/delivery-men/components/placeholders/delivery-men-rewards-list-placeholder/delivery-men-rewards-list-placeholder';
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { DmRewardPackagesService } from 'app/pages/delivery-men/services/dm-reward-packages-service';
 import { DeliveryMenRewardsList as DeliveryMenRewardsListType } from 'app/pages/delivery-men/types/delivery-men-reward';
 import { endOfWeek, format, isThisMonth, isThisWeek, isThisYear, isToday, startOfWeek } from 'date-fns';
 import { MenuItem } from 'primeng/api';
@@ -45,7 +45,7 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 })
 export class DeliveryMenRewardsList implements OnDestroy {
   // services
-  private readonly deliveryManService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly dmRewardPackagesService: DmRewardPackagesService = inject(DmRewardPackagesService);
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
@@ -156,7 +156,7 @@ export class DeliveryMenRewardsList implements OnDestroy {
 
   private loadRewards(): void {
     this.isLoading.set(true);
-    this.deliveryManService.getDeliveryMenRewards(this.filter()).pipe(
+    this.dmRewardPackagesService.getDmRewardPackages(this.filter()).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe(response => {

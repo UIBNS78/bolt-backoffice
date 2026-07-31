@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { DmRewardPackagesService } from 'app/pages/delivery-men/services/dm-reward-packages-service';
 import { PackageReward } from 'app/pages/delivery-men/types/delivery-men-reward';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -29,7 +29,7 @@ import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-
 })
 export class DeliveryManRewardHandler implements OnInit, OnDestroy {
   // services
-  private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly dmRewardPackagesService: DmRewardPackagesService = inject(DmRewardPackagesService);
   private readonly messageService: MessageService = inject(MessageService);
   private readonly dialogService: DialogService = inject(DialogService);
 
@@ -90,7 +90,7 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
     modalRef?.onClose.pipe(
       take(1),
       filter(confirmed => confirmed),
-      mergeMap(() => this.deliveryMenService.activateReward(reward.id)),
+      mergeMap(() => this.dmRewardPackagesService.activateReward(reward.id)),
       takeUntil(this.unsubscribe$),
     ).subscribe(() => {
       this.messageService.add({
@@ -120,7 +120,7 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
     modalRef?.onClose.pipe(
       take(1),
       filter(confirmed => confirmed),
-      mergeMap(() => this.deliveryMenService.deactivateRewards()),
+      mergeMap(() => this.dmRewardPackagesService.deactivateRewards()),
       takeUntil(this.unsubscribe$),
     ).subscribe(() => {
       this.messageService.add({
@@ -133,7 +133,7 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
   }
 
   private loadRewards(): void {
-    this.deliveryMenService.getRewards().pipe(
+    this.dmRewardPackagesService.getRewards().pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe(response => {

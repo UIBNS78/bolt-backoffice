@@ -20,7 +20,7 @@ import { InputSelectOptions } from '@shared/components/types/input-select-option
 import { packageStatusOptions as packageStatusOpt } from '@shared/constants/package';
 import { NgClass } from '@angular/common';
 import { InputMaskModule } from 'primeng/inputmask';
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { DmService as DeliveryMenService } from 'app/pages/delivery-men/services/dm-service';
 import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { FormatImageSizePipe } from '@shared/pipes/format-image-size-pipe';
 import { ImageModule } from 'primeng/image';

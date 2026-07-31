@@ -1,5 +1,4 @@
-import { Component, effect, EventEmitter, inject, Input, input, InputSignal, OnDestroy, OnInit, Output, signal, WritableSignal } from '@angular/core';
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { Component, effect, EventEmitter, inject, input, InputSignal, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
 import { DeliveryManSalary } from 'app/pages/delivery-men/types/delivery-men-salary';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -10,6 +9,7 @@ import { DatePipe, NgClass, UpperCasePipe } from '@angular/common';
 import { FieldsetModule } from 'primeng/fieldset';
 import { AvatarModule } from 'primeng/avatar';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
+import { DmSalariesService } from 'app/pages/delivery-men/services/dm-salaries-service';
 
 @Component({
   selector: 'app-delivery-man-salary-history',
@@ -29,7 +29,7 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
 })
 export class DeliveryManSalaryHistory implements OnDestroy {
   // services
-  private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly dmSalariesService: DmSalariesService = inject(DmSalariesService);
   private readonly messageService: MessageService = inject(MessageService);
   
   // vars
@@ -72,7 +72,7 @@ export class DeliveryManSalaryHistory implements OnDestroy {
 
     const salary: DeliveryManSalary = this.salary()!;
     this.loading.set(true);
-    this.deliveryMenService.getDeliveryManSalaryHistory(salary.deliveryMan.userId).pipe(
+    this.dmSalariesService.getDeliveryManSalaryHistory(salary.deliveryMan.userId).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe((response: DeliveryManSalary[]) => {

@@ -1,6 +1,5 @@
-import { Component, EventEmitter, inject, input, Input, InputSignal, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, Output, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
 import { PackageReward, PackageRewardForm } from 'app/pages/delivery-men/types/delivery-men-reward';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -11,6 +10,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { DmRewardPackagesService } from 'app/pages/delivery-men/services/dm-reward-packages-service';
 
 @Component({
   selector: 'app-delivery-man-reward-form',
@@ -29,7 +29,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 })
 export class DeliveryManRewardForm implements OnDestroy {
   // services
-  private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly dmRewardPackagesService: DmRewardPackagesService = inject(DmRewardPackagesService);
   private readonly messageService: MessageService = inject(MessageService);
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
 
@@ -113,7 +113,7 @@ export class DeliveryManRewardForm implements OnDestroy {
     }
 
     this.deleting.set(true);
-    this.deliveryMenService.deleteReward(this.selectedReward()!.id).pipe(
+    this.dmRewardPackagesService.deleteReward(this.selectedReward()!.id).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.deleting.set(false))
     ).subscribe(() => {
@@ -128,7 +128,7 @@ export class DeliveryManRewardForm implements OnDestroy {
 
   private createReward(reward: PackageRewardForm): void {
     this.loading.set(true);
-    this.deliveryMenService.createReward(reward).pipe(
+    this.dmRewardPackagesService.createReward(reward).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(() => {
@@ -161,7 +161,7 @@ export class DeliveryManRewardForm implements OnDestroy {
     }
 
     this.loading.set(true);
-    this.deliveryMenService.updateReward(this.selectedReward()!.id, reward).pipe(
+    this.dmRewardPackagesService.updateReward(this.selectedReward()!.id, reward).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(() => {

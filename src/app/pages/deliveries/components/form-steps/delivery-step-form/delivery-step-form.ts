@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Output, Signal, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { DmService as DeliveryMenService } from 'app/pages/delivery-men/services/dm-service';
 import { OwnersService } from 'app/pages/owners/owners-service';
 import { deliveryStatusOptions as deliveryStatusOpt } from '@shared/constants/delivery';
 import { format } from 'date-fns';

@@ -8,7 +8,7 @@ import { DeliveryMenList } from '../../types/delivery-men-list';
 import { finalize, Subject, take, takeUntil } from 'rxjs';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
-import { DeliveryMenService } from '../../delivery-men-service';
+import { DmService as DeliveryMenService } from '../../services/dm-service';
 import { NgxMaskPipe } from 'ngx-mask';
 import { DeliveryMan } from '@shared/types/delivery-men';
 import { ChipModule } from 'primeng/chip';

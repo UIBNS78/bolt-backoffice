@@ -6,7 +6,7 @@ import { DeliveryManInformations } from './delivery-man-informations/delivery-ma
 import { DeliveryManData } from './delivery-man-data/delivery-man-data';
 import { DeliveryManHistory } from './delivery-man-history/delivery-man-history';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import { DeliveryMenService } from '../../delivery-men-service';
+import { DmService as DeliveryMenService } from '../../services/dm-service';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { DeliveryManDetails as DMDetails } from '@shared/types/delivery-men';
 import { SeniorityPipe } from '@shared/pipes/seniority.pipe';

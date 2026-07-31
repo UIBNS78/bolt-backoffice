@@ -4,7 +4,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { BadgeModule } from 'primeng/badge';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgClass } from '@angular/common';
-import { DeliveryMenService } from './delivery-men-service';
+import { DmService as DeliveryMenService } from './services/dm-service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { SocketService } from 'core/services/socket-service';
 import { SOCKET_EVENT } from '@shared/types/socket';

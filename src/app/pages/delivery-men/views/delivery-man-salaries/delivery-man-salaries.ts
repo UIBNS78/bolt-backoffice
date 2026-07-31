@@ -7,7 +7,6 @@ import { finalize, Subject, takeUntil } from 'rxjs';
 import { DeliveryManSalary, DeliveryMenSalaryList } from '../../types/delivery-men-salary';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { DeliveryMenService } from '../../delivery-men-service';
 import { ImageModule } from 'primeng/image';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { AvatarModule } from 'primeng/avatar';
@@ -20,6 +19,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { DurationPipe } from '@shared/pipes/duration-pipe';
 import { DeliveryManSalaryHistory } from '../../components/salary/delivery-man-salary-history/delivery-man-salary-history';
+import { DmSalariesService } from '../../services/dm-salaries-service';
 
 @Component({
   selector: 'app-delivery-man-salaries',
@@ -48,7 +48,7 @@ import { DeliveryManSalaryHistory } from '../../components/salary/delivery-man-s
 })
 export class DeliveryManSalaries implements OnInit, OnDestroy {
   // services
-  private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly dmSalariesService: DmSalariesService = inject(DmSalariesService);
   private readonly dialogService: DialogService = inject(DialogService);
 
   // vars
@@ -107,7 +107,7 @@ export class DeliveryManSalaries implements OnInit, OnDestroy {
   }
 
   private loadData(): void {
-    this.deliveryMenService.getSalaries({ page: this.first() / this.rows() + 1, itemsPerPage: this.rows()}).pipe(
+    this.dmSalariesService.getSalaries({ page: this.first() / this.rows() + 1, itemsPerPage: this.rows()}).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe((response: DeliveryMenSalaryList) => {
