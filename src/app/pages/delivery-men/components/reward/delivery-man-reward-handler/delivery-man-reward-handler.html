@@ -26,8 +26,9 @@
                                     severity="contrast" 
                                     [rounded]="true" 
                                     [text]="true" 
-                                    pTooltip="Gérer cette récompense"
+                                    [pTooltip]="!!reward.active ? 'Récompense active et ne peut être gérée' : 'Gérer cette récompense'"
                                     tooltipPosition="left"
+                                    [disabled]="!!reward.active"
                                 />
                             </div>
                             <div class="flex justify-between gap-24">

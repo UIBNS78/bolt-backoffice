@@ -50,7 +50,7 @@ export class DeliveryManRewardForm implements OnDestroy {
     this.selectedReward.set(data);
 
     this._form = this.formBuilder.group({
-      title: [data?.title ?? '', [Validators.required, Validators.minLength(3)]],
+      title: [data?.title ?? '', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       motivation: [data?.motivation ?? '', [Validators.required, Validators.minLength(10)]],
       minPackages: [data?.minPackages ?? 1, [Validators.required, Validators.min(1)]],
       reward: [data?.reward ?? 0, [Validators.required, Validators.min(0)]],
@@ -78,7 +78,6 @@ export class DeliveryManRewardForm implements OnDestroy {
       return;
     }
 
-    this.loading.set(true);
     const values = this.form.getRawValue() as PackageRewardForm;
     
     const reward: PackageRewardForm = {
@@ -128,6 +127,7 @@ export class DeliveryManRewardForm implements OnDestroy {
   }
 
   private createReward(reward: PackageRewardForm): void {
+    this.loading.set(true);
     this.deliveryMenService.createReward(reward).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
@@ -151,6 +151,16 @@ export class DeliveryManRewardForm implements OnDestroy {
       return;
     }
 
+    if (this.selectedReward()!.active) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Attention',
+        detail: 'Une récompense active ne peut pas être modifiée. Veuillez la désactiver avant de la modifier.',
+      });
+      return;
+    }
+
+    this.loading.set(true);
     this.deliveryMenService.updateReward(this.selectedReward()!.id, reward).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
@@ -158,7 +168,7 @@ export class DeliveryManRewardForm implements OnDestroy {
       this.messageService.add({
         severity: 'success',
         summary: 'Succès',
-        detail: 'Salaire mis à jour avec succès',
+        detail: 'Récompense mise à jour avec succès',
       });
       this.handleClose(true);
     });
