@@ -36,16 +36,18 @@ export class DeliveryManRewardForm implements OnDestroy {
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject();
   protected loading: WritableSignal<boolean> = signal(false);
+  protected deleting: WritableSignal<boolean> = signal(false);
   private _form: FormGroup = new FormGroup({});
   protected isUpdate: WritableSignal<boolean> = signal(false);
 
   // inputs / outputs
   @Output() onCloseEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() open: boolean = false;
-  selectedReward: InputSignal<PackageReward | null> = input<PackageReward | null>(null);
+  selectedReward: WritableSignal<PackageReward | null> = signal(null);
   @Input() 
-  set reward (data: PackageRewardForm | null) {
+  set reward (data: PackageReward | null) {
     this.isUpdate.set(data !== null);
+    this.selectedReward.set(data);
 
     this._form = this.formBuilder.group({
       title: [data?.title ?? '', [Validators.required, Validators.minLength(3)]],
@@ -66,6 +68,7 @@ export class DeliveryManRewardForm implements OnDestroy {
 
   handleClose(refresh: boolean = false): void {
     this._form.reset();
+    this.selectedReward.set(null);
     this.onCloseEmitter.emit(refresh);
   }
 
@@ -92,7 +95,36 @@ export class DeliveryManRewardForm implements OnDestroy {
   }
 
   handleDelete(): void {
-    console.log("Deleting...", this.selectedReward());
+    if (!this.selectedReward()) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erreur',
+        detail: 'Récompense introuvable',
+      });
+      return;
+    }
+
+    if (this.selectedReward()!.active) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Attention',
+        detail: 'Impossible de supprimer cette récompense car elle est active en ce moment.',
+      });
+      return;
+    }
+
+    this.deleting.set(true);
+    this.deliveryMenService.deleteReward(this.selectedReward()!.id).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.deleting.set(false))
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Récompense supprimée avec succès',
+      });
+      this.handleClose(true);
+    });
   }
 
   private createReward(reward: PackageRewardForm): void {

@@ -46,11 +46,11 @@
             </div>
 
             <div class="flex items-center justify-end gap-3">
-                <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" [disabled]="loading()" />
+                <p-button type="button" (click)="handleClose()" label="Annuler" severity="secondary" variant="outlined" size="small" [disabled]="loading() || deleting()" />
                 @if (isUpdate()) {
-                    <p-button type="button" label="Supprimer" icon="pi pi-trash" severity="danger" size="small" (click)="handleDelete()" [disabled]="loading()" />
+                    <p-button type="button" (click)="handleDelete()" label="Supprimer" icon="pi pi-trash" severity="danger" size="small" [loading]="deleting()" />
                 }
-                <p-button type="submit" [label]="isUpdate() ? 'Modifier' : 'Enregistrer'" severity="contrast" size="small" [loading]="loading()" [disabled]="loading()" />
+                <p-button type="submit" [label]="isUpdate() ? 'Modifier' : 'Enregistrer'" severity="contrast" size="small" [loading]="loading()" [disabled]="deleting()" />
             </div>
         </div>
     </form>
