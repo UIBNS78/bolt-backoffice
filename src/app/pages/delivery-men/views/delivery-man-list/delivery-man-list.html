@@ -15,7 +15,7 @@
                         <th>Nom complet</th>
                         <th>Age</th>
                         <th>Phone</th>
-                        <th style="text-align: center;">Nombre de colis</th>
+                        <th style="text-align: center;">Note</th>
                         <th class="hidden 2xl:table-cell" style="text-align: center;">Statut</th>
                         <th>Date de début</th>
                         <th class="hidden 2xl:table-cell">Pièce d'identité</th>
@@ -63,7 +63,9 @@
                         <td>
                             <p-chip [label]="man.phone | mask:'+999 99 99 999 99'" icon="pi pi-phone" />
                         </td>
-                        <td style="text-align: center;">{{ man.totalPackages }}</td>
+                        <td style="text-align: center;">
+                            <p-rating [(ngModel)]="man.rates" [readonly]="true" />
+                        </td>
                         <td class="hidden 2xl:table-cell">
                             <div class="flex items-center justify-center">
                                 <p-tag [severity]="man.isOnline ? 'success' : 'warn'" [value]="man.isOnline ? 'En ligne' : 'Hors ligne'" [rounded]="true" />
