@@ -3,12 +3,13 @@ import { DmRewardRatesService } from 'app/pages/delivery-men/services/dm-reward-
 import { RewardRate } from 'app/pages/delivery-men/types/delivery-men-reward-rate';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SkeletonModule } from 'primeng/skeleton';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TooltipModule } from 'primeng/tooltip';
-import { finalize, Subject, take, takeUntil } from 'rxjs';
+import { filter, finalize, mergeMap, Subject, take, takeUntil } from 'rxjs';
 import { RewardRatesForm } from '../reward-rates-form/reward-rates-form';
+import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
 
 @Component({
   selector: 'app-dm-reward-rates-handler',
@@ -58,6 +59,8 @@ export class DmRewardRatesHandler implements OnInit, OnDestroy {
         {
           label: "Supprimer",
           icon: "pi pi-trash",
+          iconClass: "text-red-500!",
+          labelClass: "text-red-500",
           command: () => this.handleDelete(d.id)
         }
       ] : undefined,
@@ -133,9 +136,27 @@ export class DmRewardRatesHandler implements OnInit, OnDestroy {
   }
 
   private handleDelete(id: number): void {
-    this.isRewardsLoading.set(true);
-
-    this.dmRewardRatesService.deleteRewardRate(id).pipe(
+    const modalRef: DynamicDialogRef<DialogConfirm> | null = this.dialogService.open(DialogConfirm, {
+      inputValues: {
+        title: "Suppression",
+        message: `Voulez-vous vraiment supprimer cette récompense ? Elle ne peut pas être récupérée.`,
+        icon: "pi pi-trash",
+        acceptLabel: `Oui, supprimer`,
+        severity: "danger"
+      },
+      showHeader: false,
+      modal: true,
+      draggable: false,
+      resizable: false
+    });
+        
+    modalRef?.onClose.pipe(
+      take(1),
+      filter(confirmed => confirmed),
+      mergeMap(() => {
+        this.isRewardsLoading.set(true);
+        return this.dmRewardRatesService.deleteRewardRate(id);
+      }),
       takeUntil(this.unsubscribe$),
       finalize(() => this.isRewardsLoading.set(false))
     ).subscribe(() => {
