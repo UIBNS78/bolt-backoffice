@@ -38,7 +38,8 @@ export class RewardRatesForm implements OnInit, OnDestroy {
   constructor() {
     this.isUpdate.set(false);
     this.form = this.formBuilder.group({
-      reward: [0, [Validators.required, Validators.pattern("[0-9]*"), Validators.min(0)]]
+      reward: [0, [Validators.required, Validators.pattern("[0-9]*"), Validators.min(0)]],
+      active: false,
     });
   }
 
@@ -51,6 +52,7 @@ export class RewardRatesForm implements OnInit, OnDestroy {
     this.form.patchValue({
       id: rewardRate.id,
       reward: rewardRate.reward,
+      active: rewardRate.active
     });
   }
 

@@ -5,7 +5,7 @@
         @if (data().length > 0) {
             <p-splitbutton 
                 [label]="currentReward()?.reward ? currentReward()!.reward.toLocaleString('fr-FR') + ' Ar' : 'Aucune récompense active'" 
-                severity="warn" 
+                [severity]="currentReward() ? 'warn' : 'secondary'" 
                 [outlined]="true" 
                 [rounded]="true" 
                 icon="pi pi-gift" 

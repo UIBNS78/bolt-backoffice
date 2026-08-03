@@ -86,7 +86,7 @@ export class DmRewardRatesHandler implements OnInit, OnDestroy {
         iconClass: "text-red-500!",
         labelClass: "text-red-500",
         disabled: !this.currentReward(),
-        command: () => {}
+        command: () => this.handleDeactivate()
       },
     ];
   });
@@ -164,6 +164,39 @@ export class DmRewardRatesHandler implements OnInit, OnDestroy {
         severity: 'success',
         summary: 'Succès',
         detail: 'Récompense supprimée avec succès',
+      });
+      this.loadData();
+    });
+  }
+
+  private handleDeactivate(): void {
+    const current = this.currentReward();
+    if (!current) return;
+
+    const modalRef: DynamicDialogRef<DialogConfirm> | null = this.dialogService.open(DialogConfirm, {
+      inputValues: {
+        title: "Désactivation",
+        message: `Voulez-vous vraiment désactiver cette récompense ? Les livreurs ne recevrons plus de récompenses tant qu'une autre ne sera pas activée.`,
+        icon: "pi pi-gift",
+        acceptLabel: `Oui, désactiver`,
+        severity: "danger"
+      },
+      showHeader: false,
+      modal: true,
+      draggable: false,
+      resizable: false
+    });
+    
+    modalRef?.onClose.pipe(
+      take(1),
+      filter(confirmed => confirmed),
+      mergeMap(() => this.dmRewardRatesService.updateRewardRate(current.id, {...current, active: false})),
+      takeUntil(this.unsubscribe$),
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: `La récompense a été désactivée.`
       });
       this.loadData();
     });
