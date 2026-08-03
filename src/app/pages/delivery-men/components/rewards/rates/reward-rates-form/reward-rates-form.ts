@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageModule } from 'primeng/message';
-import { finalize, iif, Subject, takeUntil } from 'rxjs';
+import { defer, EMPTY, finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-reward-rates-form',
@@ -67,10 +67,21 @@ export class RewardRatesForm implements OnInit, OnDestroy {
 
     this.loading.set(true);
     const values = this.form.getRawValue() as RewardRate;
-    iif(() => this.isUpdate(), 
-      this.dmRewardRatesService.updateRewardRate(this.selectedRewardRate()!.id, values), 
-      this.dmRewardRatesService.createRewardRate(values)
-    ).pipe(
+    defer(() => {
+      if (this.isUpdate()) {
+        if (!this.selectedRewardRate()) {
+          this.messageService.add({
+            severity: "error",
+            summary: "Erreur",
+            detail: "Tarif non trouvé."
+          });
+          return EMPTY;
+        }
+
+        return this.dmRewardRatesService.updateRewardRate(this.selectedRewardRate()!.id, values)
+      }
+      return this.dmRewardRatesService.createRewardRate(values)
+    }).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(() => {

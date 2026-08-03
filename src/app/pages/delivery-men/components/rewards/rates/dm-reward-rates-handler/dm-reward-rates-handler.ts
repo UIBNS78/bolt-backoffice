@@ -1,7 +1,7 @@
 import { Component, computed, inject, input, InputSignal, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { DmRewardRatesService } from 'app/pages/delivery-men/services/dm-reward-rates-service';
 import { RewardRate } from 'app/pages/delivery-men/types/delivery-men-reward-rate';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -25,6 +25,7 @@ export class DmRewardRatesHandler implements OnInit, OnDestroy {
   // services
   private readonly dmRewardRatesService: DmRewardRatesService = inject(DmRewardRatesService);
   private readonly dialogService: DialogService = inject(DialogService);
+  private readonly messageService: MessageService = inject(MessageService);
   
   // inputs
   isLoading: InputSignal<boolean> = input.required();
@@ -115,9 +116,37 @@ export class DmRewardRatesHandler implements OnInit, OnDestroy {
     });
   }
   
-  private handleApply(id: number): void {}
+  private handleApply(id: number): void {
+    this.isRewardsLoading.set(true);
 
-  private handleDelete(id: number): void {}
+    this.dmRewardRatesService.applyRewardRate(id).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.isRewardsLoading.set(false))
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Récompense activée avec succès',
+      });
+      this.loadData();
+    });
+  }
+
+  private handleDelete(id: number): void {
+    this.isRewardsLoading.set(true);
+
+    this.dmRewardRatesService.deleteRewardRate(id).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.isRewardsLoading.set(false))
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Récompense supprimée avec succès',
+      });
+      this.loadData();
+    });
+  }
 
   private loadData(): void {
     this.isRewardsLoading.set(true);
