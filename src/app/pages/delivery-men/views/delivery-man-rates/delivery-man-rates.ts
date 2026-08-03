@@ -171,7 +171,7 @@ export class DeliveryManRates implements OnDestroy {
 
   private loadData(): void {
     this.isLoading.set(true);
-    this.dmRewardRatesService.getDmRewardPackages(this.filter()).pipe(
+    this.dmRewardRatesService.getDmRewardRates(this.filter()).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => {
         this.isLoading.set(false);

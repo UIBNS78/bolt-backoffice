@@ -4,13 +4,13 @@ import { FilterDateType } from '@shared/types/common';
 import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { format } from 'date-fns';
-import { DMRewardRatesList } from '../types/delivery-men-reward-rate';
+import { DMRewardRatesList, RewardRate } from '../types/delivery-men-reward-rate';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DmRewardRatesService extends DmService {
-  getDmRewardPackages(params: FilterDateType): Observable<DMRewardRatesList> {
+  getDmRewardRates(params: FilterDateType): Observable<DMRewardRatesList> {
     const queryParams = new HttpParams({
       fromObject: {
         filter: params.filter,
@@ -21,5 +21,9 @@ export class DmRewardRatesService extends DmService {
     });
 
     return this.http.get<DMRewardRatesList>(`${this.apiUrl}/reward-rates/dm-rewards-list`, { params: queryParams });
+  }
+
+  getRewardRates(): Observable<RewardRate[]> {
+    return this.http.get<RewardRate[]>(`${this.apiUrl}/reward-rates`);
   }
 }

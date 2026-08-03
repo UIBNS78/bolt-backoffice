@@ -12,3 +12,11 @@ export type DMRewardRate = {
     reward: number;
     deliveryMan: DeliveryMan;
 }
+
+export type RewardRate = {
+    id: number;
+    reward: number;
+    active: boolean;
+    modifiedAt: Date | null;
+    createdAt: Date;
+}
