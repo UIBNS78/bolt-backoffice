@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { DmService as DeliveryMenService } from 'app/pages/delivery-men/services/dm-service';
+import { DmSalariesService } from 'app/pages/delivery-men/services/dm-salaries-service';
 import { DeliveryManSalary, DeliveryManSalaryForm } from 'app/pages/delivery-men/types/delivery-men-salary';
 import { addMonths, format, startOfMonth } from 'date-fns';
 import { MessageService } from 'primeng/api';
@@ -38,6 +39,7 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
   private readonly dialogRef: DynamicDialogRef = inject(DynamicDialogRef);
   private readonly dialogConfig: DynamicDialogConfig = inject(DynamicDialogConfig);
   private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly dmSalariesService: DmSalariesService = inject(DmSalariesService);
   private readonly messageService: MessageService = inject(MessageService);
   
   // vars
@@ -105,7 +107,7 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
   }
 
   private createSalary(salary: DeliveryManSalaryForm): void {
-    this.deliveryMenService.createSalary(salary).pipe(
+    this.dmSalariesService.createSalary(salary).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(() => {
@@ -128,7 +130,7 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
       return;
     }
 
-    this.deliveryMenService.updateSalary(this.selectedSalary()!.id, salary).pipe(
+    this.dmSalariesService.updateSalary(this.selectedSalary()!.id, salary).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.loading.set(false))
     ).subscribe(() => {

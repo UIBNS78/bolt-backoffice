@@ -1,44 +1,44 @@
 import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
-import { PackageReward } from 'app/pages/delivery-men/types/delivery-men-reward';
+import { DmRewardPackagesService } from 'app/pages/delivery-men/services/dm-reward-packages-service';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { filter, finalize, mergeMap, Subject, take, takeUntil } from 'rxjs';
-import { DeliveryManRewardForm } from '../delivery-man-reward-form/delivery-man-reward-form';
+import { DmRewardPackagesForm } from '../dm-reward-packages-form/dm-reward-packages-form';
 import { DatePipe } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
+import { RewardPackage } from 'app/pages/delivery-men/types/delivery-men-reward-package';
 
 @Component({
-  selector: 'app-delivery-man-reward-handler',
+  selector: 'app-dm-reward-packages-handler',
   imports: [
     ButtonModule,
     CardModule,
     TagModule,
     TooltipModule,
     SkeletonModule,
-    DeliveryManRewardForm,
+    DmRewardPackagesForm,
     DatePipe
   ],
-  templateUrl: './delivery-man-reward-handler.html',
-  styleUrl: './delivery-man-reward-handler.css',
+  templateUrl: './dm-reward-packages-handler.html',
+  styleUrl: './dm-reward-packages-handler.css',
 })
-export class DeliveryManRewardHandler implements OnInit, OnDestroy {
+export class DmRewardPackagesHandler implements OnInit, OnDestroy {
   // services
-  private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
+  private readonly dmRewardPackagesService: DmRewardPackagesService = inject(DmRewardPackagesService);
   private readonly messageService: MessageService = inject(MessageService);
   private readonly dialogService: DialogService = inject(DialogService);
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   protected openForm: WritableSignal<boolean> = signal(false);
-  protected selectedReward: WritableSignal<PackageReward | null> = signal(null);
+  protected selectedReward: WritableSignal<RewardPackage | null> = signal(null);
   protected isLoading: WritableSignal<boolean> = signal(false);
-  protected rewards: WritableSignal<PackageReward[]> = signal([]);
+  protected rewards: WritableSignal<RewardPackage[]> = signal([]);
 
   ngOnInit(): void {
     this.isLoading.set(true);
@@ -50,7 +50,7 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  openRewardForm(reward: PackageReward | null = null): void {
+  openRewardForm(reward: RewardPackage | null = null): void {
     this.selectedReward.set(reward);
     this.openForm.set(true);
   }
@@ -63,7 +63,7 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
     }
   }
 
-  handleActivateReward(reward: PackageReward): void {
+  handleActivateReward(reward: RewardPackage): void {
     if (reward.active) {
       this.messageService.add({
         severity: 'warn',
@@ -90,7 +90,7 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
     modalRef?.onClose.pipe(
       take(1),
       filter(confirmed => confirmed),
-      mergeMap(() => this.deliveryMenService.activateReward(reward.id)),
+      mergeMap(() => this.dmRewardPackagesService.activateReward(reward.id)),
       takeUntil(this.unsubscribe$),
     ).subscribe(() => {
       this.messageService.add({
@@ -120,7 +120,7 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
     modalRef?.onClose.pipe(
       take(1),
       filter(confirmed => confirmed),
-      mergeMap(() => this.deliveryMenService.deactivateRewards()),
+      mergeMap(() => this.dmRewardPackagesService.deactivateRewards()),
       takeUntil(this.unsubscribe$),
     ).subscribe(() => {
       this.messageService.add({
@@ -133,7 +133,7 @@ export class DeliveryManRewardHandler implements OnInit, OnDestroy {
   }
 
   private loadRewards(): void {
-    this.deliveryMenService.getRewards().pipe(
+    this.dmRewardPackagesService.getRewards().pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe(response => {

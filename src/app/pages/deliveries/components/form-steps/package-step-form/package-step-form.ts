@@ -25,7 +25,7 @@ import { TagModule } from 'primeng/tag';
 import { PackageStatusSeverityPipe } from '@shared/pipes/package-pipes/package-status-severity-pipe';
 import { PackageStatusPipe } from '@shared/pipes/package-pipes/package-status-pipe';
 import { PackageStatusIconPipe } from '@shared/pipes/package-pipes/package-status-icon-pipe';
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { DmService as DeliveryMenService } from 'app/pages/delivery-men/services/dm-service';
 
 type LocationForm = {
   placeId: FormControl<number | null>;

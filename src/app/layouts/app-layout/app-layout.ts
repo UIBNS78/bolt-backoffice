@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SideNav } from "../../components/side-nav/side-nav";
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { DmService as DeliveryMenService } from 'app/pages/delivery-men/services/dm-service';
 import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { OwnersService } from 'app/pages/owners/owners-service';
 import { DeliveryPricesService } from 'app/pages/delivery-prices/delivery-prices-service';

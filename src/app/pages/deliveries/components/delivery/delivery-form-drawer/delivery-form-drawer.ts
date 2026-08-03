@@ -6,7 +6,7 @@ import { MessageService } from 'primeng/api';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { Delivery, deliveryStatusObj } from '@shared/types/delivery';
 import { OwnersService } from 'app/pages/owners/owners-service';
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { DmService as DeliveryMenService } from 'app/pages/delivery-men/services/dm-service';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { ButtonModule } from 'primeng/button';
 import { FieldsetModule } from 'primeng/fieldset';

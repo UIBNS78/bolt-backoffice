@@ -6,7 +6,7 @@ import { PackageStatusPipe } from '@shared/pipes/package-pipes/package-status-pi
 import { PackageStatusSeverityPipe } from '@shared/pipes/package-pipes/package-status-severity-pipe';
 import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
 import { DeliveryForm } from 'app/pages/deliveries/types/delivery-form';
-import { DeliveryMenService } from 'app/pages/delivery-men/delivery-men-service';
+import { DmService as DeliveryMenService } from 'app/pages/delivery-men/services/dm-service';
 import { DeliveryPricesService } from 'app/pages/delivery-prices/delivery-prices-service';
 import { OwnersService } from 'app/pages/owners/owners-service';
 import { NgxMaskPipe } from 'ngx-mask';

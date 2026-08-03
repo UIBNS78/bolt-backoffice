@@ -1,7 +1,20 @@
 <div class="flex flex-col gap-4">
     <div class="flex items-center justify-end gap-2">
-        <p-button (click)="handleDeactivateAll()" label="Désactiver toutes" icon="pi pi-ban" size="small" severity="danger" [text]="true" [disabled]="isLoading()" />
-        <p-button (click)="openRewardForm()" label="Nouvelle récompense" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
+        @if (isLoading()) {
+            <p-skeleton width="15%" height="2.3rem" />
+            <p-skeleton width="20%" height="2.3rem" />
+        } @else {
+            @defer (on idle) {
+                @let countActive = rewards().filter((r) => r.active).length;
+                @if (countActive > 0) {
+                    <p-button (click)="handleDeactivateAll()" label="Désactiver toutes" icon="pi pi-ban" size="small" severity="danger" [text]="true" [disabled]="isLoading()" />
+                }
+                <p-button (click)="openRewardForm()" label="Nouvelle récompense" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
+            } @placeholder (minimum 600ms) {
+                <p-skeleton width="15%" height="2.3rem" />
+                <p-skeleton width="20%" height="2.3rem" />
+            }
+        }
     </div>
 
     <div class="flex flex-col gap-2">
@@ -75,7 +88,7 @@
 </div>
 
 <!-- drawers -->
-<app-delivery-man-reward-form
+<app-dm-reward-packages-form
     [open]="openForm()"
     (onCloseEmitter)="handleFormClose($event)"
     [reward]="selectedReward()"

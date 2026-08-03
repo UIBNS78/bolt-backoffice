@@ -29,6 +29,7 @@ export type DeliveryMan =
         birthday: Date;
         address: string;
         totalPackages: number;
+        rates: number;
         transport: DeliveryManTransport;
         cin: CloudinaryImage;
         residence: CloudinaryImage;

@@ -1,0 +1,34 @@
+@if (isLoading() || isRewardsLoading()) {
+    <p-skeleton width="200px" height="2.2rem" borderRadius="16px" />
+} @else {
+    @defer (on idle) {
+        @if (data().length > 0) {
+            <p-splitbutton 
+                [label]="currentReward()?.reward ? currentReward()!.reward.toLocaleString('fr-FR') + ' Ar' : 'Aucune récompense active'" 
+                [severity]="currentReward() ? 'warn' : 'secondary'" 
+                [outlined]="true" 
+                [rounded]="true" 
+                icon="pi pi-gift" 
+                size="small" 
+                dropdownIcon="pi pi-cog" 
+                [model]="rewardActions()" 
+                [pTooltip]="currentReward() ? 'Récompense active en ce moment, cliquez sur le bouton pour configurer' : 'Aucune récompense active, cliquez sur le bouton pour configurer'"    
+                tooltipPosition="left"
+                [disabled]="isLoading() || isRewardsLoading()"
+            />
+        } @else {
+            <p-button  
+                (click)="handleOpenForm()"
+                icon="pi pi-gift" 
+                label="Nouvelle récompense" 
+                [outlined]="true" 
+                [rounded]="true" 
+                severity="warn" 
+                size="small" 
+                [loading]="isLoading()"
+            />
+        }
+    } @placeholder (minimum 600ms) {
+        <p-skeleton width="200px" height="2.2rem" borderRadius="16px" />
+    }
+}

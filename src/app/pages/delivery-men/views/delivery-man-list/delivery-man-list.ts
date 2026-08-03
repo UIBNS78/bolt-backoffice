@@ -8,7 +8,7 @@ import { DeliveryMenList } from '../../types/delivery-men-list';
 import { finalize, Subject, take, takeUntil } from 'rxjs';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
-import { DeliveryMenService } from '../../delivery-men-service';
+import { DmService as DeliveryMenService } from '../../services/dm-service';
 import { NgxMaskPipe } from 'ngx-mask';
 import { DeliveryMan } from '@shared/types/delivery-men';
 import { ChipModule } from 'primeng/chip';
@@ -31,10 +31,13 @@ import { SocketService } from 'core/services/socket-service';
 import { SOCKET_EVENT } from '@shared/types/socket';
 import { UserConnectivitySocketData } from '@shared/types/user';
 import { BadgeModule } from 'primeng/badge';
+import { RatingModule } from 'primeng/rating';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-delivery-man-list',
   imports: [
+    FormsModule,
     ButtonModule,
     IconFieldModule,
     InputIconModule,
@@ -51,6 +54,7 @@ import { BadgeModule } from 'primeng/badge';
     AvatarModule,
     TagModule,
     TooltipModule,
+    RatingModule,
     DeliveryManDetails,
     DeliveryManForm,
     ImageModule,
