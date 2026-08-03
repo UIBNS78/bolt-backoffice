@@ -4,7 +4,7 @@
     @defer (on idle) {
         @if (data().length > 0) {
             <p-splitbutton 
-                [label]="currentReward()?.reward ? currentReward()!.reward.toLocaleString('fr-FR') + ' Ar' : '0 Ar'" 
+                [label]="currentReward()?.reward ? currentReward()!.reward.toLocaleString('fr-FR') + ' Ar' : 'Aucune récompense active'" 
                 severity="warn" 
                 [outlined]="true" 
                 [rounded]="true" 
@@ -18,6 +18,7 @@
             />
         } @else {
             <p-button  
+                (click)="handleOpenForm()"
                 icon="pi pi-gift" 
                 label="Nouvelle récompense" 
                 [outlined]="true" 
