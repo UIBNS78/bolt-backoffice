@@ -1,1 +1,33 @@
-<p>delivery-man-rates works!</p>
+<div class="flex flex-col gap-2">
+    <div class="flex items-center justify-between">
+        <p-selectbutton 
+            [options]="[
+                { id: 1, label: 'Notes et récompenses' }, 
+                { id: 2, label: 'Gérer les récompenses' }
+            ]" 
+            [(ngModel)]="selected" 
+            optionLabel="label" 
+            optionValue="id" 
+            size="small"
+            [unselectable]="true"
+        >
+            <ng-template #item let-item>
+                <div class="flex gap-2">
+                    @if (item.id === 1) {
+                        <i class="pi pi-star" style="font-size: 0.9rem;"></i>
+                    } @else {
+                        <i class="pi pi-cog" style="font-size: 0.9rem;"></i>
+                    }
+                    <small class="font-bold">{{ item.label }}</small>
+                </div>
+            </ng-template>
+        </p-selectbutton>
+    </div>
+
+    @if (selected === 1) {
+        <app-dm-reward-rates-list></app-dm-reward-rates-list>
+    }
+    @if (selected === 2) {
+        <app-dm-reward-rates-handler></app-dm-reward-rates-handler>
+    }
+</div>

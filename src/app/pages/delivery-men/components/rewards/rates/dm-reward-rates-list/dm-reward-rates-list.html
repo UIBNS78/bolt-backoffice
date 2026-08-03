@@ -20,20 +20,19 @@
         </div>
     }
     @if (isLoading()) {
-        <app-delivery-men-rewards-list-placeholder />
+        <!-- <app-delivery-men-rewards-list-placeholder /> -->
     } @else {
         @defer (on idle) {
             @if (data().totalItems > 0) {
                 <div class="flex flex-col gap-2">
-                    <p-table [value]="data().deliveryMenRewards" [tableStyle]="{ 'min-width': '50rem' }">
+                    <p-table [value]="data().dmRewardRates" [tableStyle]="{ 'min-width': '50rem' }">
                         <ng-template #header>
                             <tr>
                                 <th class="text-center hidden 2xl:table-cell">ID</th>
                                 <th>Livreur</th>
-                                <th style="text-align: center;">Min. colis livré</th>
-                                <th style="text-align: center;">Nb. colis récompensés</th>
-                                <th style="text-align: end;">Récompense par colis</th>
-                                <th style="text-align: end;">Total</th>
+                                <th style="text-align: center;">Note</th>
+                                <th style="text-align: center;">Nb. d'avis</th>
+                                <th style="text-align: end;">Récompense</th>
                             </tr>
                         </ng-template>
                         <ng-template #body let-reward>
@@ -66,24 +65,17 @@
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
-                                    @if (reward.countReached > 0) {
-                                        <p class="font-bold">{{ reward.countReached }}</p>
-                                    } @else {
-                                        <p-tag severity="secondary" value="Aucun" [rounded]="true" />
-                                    }
+                                    <p-rating [(ngModel)]="reward.rate" [readonly]="true" />
                                 </td>
                                 <td style="text-align: center;">
-                                    @if (reward.packageRewarded > 0) {
-                                        <p class="font-bold">{{ reward.packageRewarded }}</p>
+                                    @if (reward.totalRating > 0) {
+                                        <p class="font-bold">{{ reward.totalRating }}</p>
                                     } @else {
                                         <p-tag severity="secondary" value="Aucun" [rounded]="true" />
                                     }
                                 </td>
                                 <td style="text-align: end;">
-                                    <p class="font-bold">{{ reward.reward.toLocaleString('fr-FR') }} Ar</p>
-                                </td>
-                                <td style="text-align: end;">
-                                    <p class="font-bold">{{ (reward.reward * reward.packageRewarded).toLocaleString('fr-FR') }} Ar</p>
+                                    <p class="font-bold" [ngClass]="reward.reward > 0 ? 'text-green-500' : ''">{{ reward.reward.toLocaleString('fr-FR') }} Ar</p>
                                 </td>
                             </tr>
                         </ng-template>
@@ -110,7 +102,7 @@
                 </div>           
             }
         } @placeholder (minimum 600ms) {
-            <app-delivery-men-rewards-list-placeholder />
+            <!-- <app-delivery-men-rewards-list-placeholder /> -->
         } 
     }
 </div>

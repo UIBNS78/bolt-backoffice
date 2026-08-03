@@ -7,7 +7,8 @@ export type DMRewardRatesList = {
 
 export type DMRewardRate = {
     id: number;
+    rate: number;
+    totalRating: number;
+    reward: number;
     deliveryMan: DeliveryMan;
-    createdAt: Date | null;
-    modifiedAt: Date | null;
 }

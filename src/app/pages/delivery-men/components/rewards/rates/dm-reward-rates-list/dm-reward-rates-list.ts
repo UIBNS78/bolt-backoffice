@@ -1,12 +1,11 @@
-import { UpperCasePipe } from '@angular/common';
+import { NgClass, UpperCasePipe } from '@angular/common';
 import { Component, computed, effect, inject, OnDestroy, Signal, signal, ViewChild, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { FilterDateType } from '@shared/types/common';
-import { DeliveryMenRewardsListPlaceholder } from 'app/pages/delivery-men/components/placeholders/delivery-men-rewards-list-placeholder/delivery-men-rewards-list-placeholder';
-import { DmRewardPackagesService } from 'app/pages/delivery-men/services/dm-reward-packages-service';
-import { DMRewardPackagesList as DMRewardPackagesListType } from 'app/pages/delivery-men/types/delivery-men-reward-package';
+import { DmRewardRatesService } from 'app/pages/delivery-men/services/dm-reward-rates-service';
+import { DMRewardRatesList } from 'app/pages/delivery-men/types/delivery-men-reward-rate';
 import { endOfWeek, format, isThisMonth, isThisWeek, isThisYear, isToday, startOfWeek } from 'date-fns';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
@@ -17,12 +16,13 @@ import { MenuModule } from 'primeng/menu';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { Popover, PopoverModule } from 'primeng/popover';
+import { RatingModule } from 'primeng/rating';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-dm-reward-packages-list',
+  selector: 'app-dm-reward-rates-list',
   imports: [
     FormsModule,
     TableModule,
@@ -34,18 +34,19 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     ButtonModule,
     MenuModule,
     TagModule,
+    RatingModule,
     PaginatorModule,
     BigramPipe,
     UpperCasePipe,
     CivilityPipe,
-    DeliveryMenRewardsListPlaceholder
+    NgClass
   ],
-  templateUrl: './dm-reward-packages-list.html',
-  styleUrl: './dm-reward-packages-list.css',
+  templateUrl: './dm-reward-rates-list.html',
+  styleUrl: './dm-reward-rates-list.css',
 })
-export class DmRewardPackagesList implements OnDestroy {
+export class DmRewardRatesList implements OnDestroy {
   // services
-  private readonly dmRewardPackagesService: DmRewardPackagesService = inject(DmRewardPackagesService);
+  private readonly dmRewardRatesService: DmRewardRatesService = inject(DmRewardRatesService);
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
@@ -55,8 +56,8 @@ export class DmRewardPackagesList implements OnDestroy {
   protected rows: WritableSignal<number> = signal(10);
   protected selectedDate: WritableSignal<Date> = signal(this.today);
   protected isLoading: WritableSignal<boolean> = signal(false);
-  protected data: WritableSignal<DMRewardPackagesListType> = signal({
-    deliveryMenRewards: [],
+  protected data: WritableSignal<DMRewardRatesList> = signal({
+    dmRewardRates: [],
     totalItems: 0
   });
   protected filterLabel: Signal<string> = computed(() => {
@@ -121,13 +122,13 @@ export class DmRewardPackagesList implements OnDestroy {
       ]
     },
   ];
-
+  
   constructor() {
     effect(() => {
       this.loadData();
     });
   }
-  
+
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
@@ -156,7 +157,7 @@ export class DmRewardPackagesList implements OnDestroy {
 
   private loadData(): void {
     this.isLoading.set(true);
-    this.dmRewardPackagesService.getDmRewardPackages(this.filter()).pipe(
+    this.dmRewardRatesService.getDmRewardPackages(this.filter()).pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe(response => {
