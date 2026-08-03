@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { DeliveryManRewardHandler } from '../../components/reward/delivery-man-reward-handler/delivery-man-reward-handler';
-import { DeliveryMenRewardsList } from '../../components/reward/delivery-men-rewards-list/delivery-men-rewards-list';
+import { DmRewardPackagesHandler } from '../../components/rewards/packages/dm-reward-packages-handler/dm-reward-packages-handler';
+import { DmRewardPackagesList } from '../../components/rewards/packages/dm-reward-packages-list/dm-reward-packages-list';
 
 @Component({
   selector: 'app-delivery-man-rewards',
@@ -11,8 +11,8 @@ import { DeliveryMenRewardsList } from '../../components/reward/delivery-men-rew
     FormsModule,
     SelectButtonModule,
     ButtonModule,
-    DeliveryMenRewardsList,
-    DeliveryManRewardHandler
+    DmRewardPackagesList,
+    DmRewardPackagesHandler
   ],
   templateUrl: './delivery-man-rewards.html',
   styleUrl: './delivery-man-rewards.css',

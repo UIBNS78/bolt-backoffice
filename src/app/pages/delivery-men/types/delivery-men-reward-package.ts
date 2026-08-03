@@ -1,11 +1,11 @@
 import { DeliveryMan } from "@shared/types/delivery-men";
 
-export type DeliveryMenRewardsList = {
-    deliveryMenRewards: DeliveryManReward[];
+export type DMRewardPackagesList = {
+    deliveryMenRewards: DMRewardPackage[];
     totalItems: number;
 }
 
-export type DeliveryManReward = {
+export type DMRewardPackage = {
     id: number;
     deliveryId: number;
     countReached: number;
@@ -15,7 +15,7 @@ export type DeliveryManReward = {
     createdAt: Date | null;
 }
 
-export type PackageReward = {
+export type RewardPackage = {
     id: number;
     title: string;
     motivation: string;
@@ -27,4 +27,4 @@ export type PackageReward = {
     createdAt: Date;
 }
 
-export type PackageRewardForm = Omit<PackageReward, "id" | "active" | "applyAt" | "modifiedAt" | "createdAt">;
+export type RewardPackageForm = Omit<RewardPackage, "id" | "active" | "applyAt" | "modifiedAt" | "createdAt">;

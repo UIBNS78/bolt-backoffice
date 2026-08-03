@@ -3,15 +3,15 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { FilterDateType } from '@shared/types/common';
 import { format } from 'date-fns';
-import { DeliveryMenRewardsList, PackageReward, PackageRewardForm } from '../types/delivery-men-reward';
 import { DmService } from './dm-service';
+import { DMRewardPackagesList, RewardPackage, RewardPackageForm } from '../types/delivery-men-reward-package';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DmRewardPackagesService extends DmService {
 
-  getDmRewardPackages(params: FilterDateType): Observable<DeliveryMenRewardsList> {
+  getDmRewardPackages(params: FilterDateType): Observable<DMRewardPackagesList> {
     const queryParams = new HttpParams({
       fromObject: {
         filter: params.filter,
@@ -21,20 +21,20 @@ export class DmRewardPackagesService extends DmService {
       }
     });
 
-    return this.http.get<DeliveryMenRewardsList>(`${this.apiUrl}/reward-packages/dm-rewards-list`, { params: queryParams });
+    return this.http.get<DMRewardPackagesList>(`${this.apiUrl}/reward-packages/dm-rewards-list`, { params: queryParams });
   }
 
-  getRewards(): Observable<PackageReward[]> {
-    return this.http.get<{ rewards: PackageReward[] }>(`${this.apiUrl}/reward-packages`).pipe(
+  getRewards(): Observable<RewardPackage[]> {
+    return this.http.get<{ rewards: RewardPackage[] }>(`${this.apiUrl}/reward-packages`).pipe(
       map(response => response.rewards)
     );
   }
 
-  createReward(reward: PackageRewardForm): Observable<void> {
+  createReward(reward: RewardPackageForm): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/reward-packages`, reward);
   }
 
-  updateReward(id: number, reward: PackageRewardForm): Observable<void> {
+  updateReward(id: number, reward: RewardPackageForm): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/reward-packages/${id}`, reward);
   }
 

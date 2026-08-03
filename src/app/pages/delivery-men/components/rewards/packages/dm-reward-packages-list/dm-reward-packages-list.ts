@@ -6,7 +6,7 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { FilterDateType } from '@shared/types/common';
 import { DeliveryMenRewardsListPlaceholder } from 'app/pages/delivery-men/components/placeholders/delivery-men-rewards-list-placeholder/delivery-men-rewards-list-placeholder';
 import { DmRewardPackagesService } from 'app/pages/delivery-men/services/dm-reward-packages-service';
-import { DeliveryMenRewardsList as DeliveryMenRewardsListType } from 'app/pages/delivery-men/types/delivery-men-reward';
+import { DMRewardPackagesList as DMRewardPackagesListType } from 'app/pages/delivery-men/types/delivery-men-reward-package';
 import { endOfWeek, format, isThisMonth, isThisWeek, isThisYear, isToday, startOfWeek } from 'date-fns';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
@@ -22,7 +22,7 @@ import { TagModule } from 'primeng/tag';
 import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-delivery-men-rewards-list',
+  selector: 'app-dm-reward-packages-list',
   imports: [
     FormsModule,
     TableModule,
@@ -40,10 +40,10 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     CivilityPipe,
     DeliveryMenRewardsListPlaceholder
   ],
-  templateUrl: './delivery-men-rewards-list.html',
-  styleUrl: './delivery-men-rewards-list.css',
+  templateUrl: './dm-reward-packages-list.html',
+  styleUrl: './dm-reward-packages-list.css',
 })
-export class DeliveryMenRewardsList implements OnDestroy {
+export class DmRewardPackagesList implements OnDestroy {
   // services
   private readonly dmRewardPackagesService: DmRewardPackagesService = inject(DmRewardPackagesService);
 
@@ -55,7 +55,7 @@ export class DeliveryMenRewardsList implements OnDestroy {
   protected rows: WritableSignal<number> = signal(10);
   protected selectedDate: WritableSignal<Date> = signal(this.today);
   protected isLoading: WritableSignal<boolean> = signal(false);
-  protected data: WritableSignal<DeliveryMenRewardsListType> = signal({
+  protected data: WritableSignal<DMRewardPackagesListType> = signal({
     deliveryMenRewards: [],
     totalItems: 0
   });
