@@ -1,1 +1,13 @@
-<p>dm-reward-rates-handler works!</p>
+<p-splitbutton 
+    label="15 000 Ar" 
+    severity="warn" 
+    [outlined]="true" 
+    [rounded]="true" 
+    icon="pi pi-star" 
+    size="small" 
+    dropdownIcon="pi pi-cog" 
+    [model]="rewardActions" 
+    pTooltip="Récompense active en ce moment, cliquez sur le bouton pour configurer"    
+    tooltipPosition="left"
+    [disabled]="isLoading()"
+/>
