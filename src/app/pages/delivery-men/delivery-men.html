@@ -45,7 +45,20 @@
                     </div>
                 </div>
                 <div class="flex flex-col gap-1">
-                    <p class="text-gray-500 font-semibold">Facturation</p>
+                    <p class="text-gray-500 font-semibold">Récompenses</p>
+                    <div class="flex flex-col">
+                        <a routerLink="rewards" routerLinkActive="bg-blue-100/70" #rewardsLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
+                            <i style="font-size: small;" [ngClass]="['pi pi-box', rewardsLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+                            <p style="font-size: small;" [ngClass]="['', rewardsLink.isActive ? 'text-blue-500' : '']">Colis</p>
+                        </a>
+                        <a routerLink="rates" routerLinkActive="bg-blue-100/70" #ratesLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
+                            <i style="font-size: small;" [ngClass]="['pi pi-star', ratesLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+                            <p style="font-size: small;" [ngClass]="['', ratesLink.isActive ? 'text-blue-500' : '']">Évaluations</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <p class="text-gray-500 font-semibold">Facturations</p>
                     <div class="flex flex-col">
                         <a routerLink="payments" routerLinkActive="bg-blue-100/70" #paymentsLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
                             <i style="font-size: small;" [ngClass]="['pi pi-money-bill', paymentsLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
@@ -54,14 +67,6 @@
                         <a routerLink="salaries" routerLinkActive="bg-blue-100/70" #salariesLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
                             <i style="font-size: small;" [ngClass]="['pi pi-wallet', salariesLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
                             <p style="font-size: small;" [ngClass]="['', salariesLink.isActive ? 'text-blue-500' : '']">Salaires</p>
-                        </a>
-                        <a routerLink="rewards" routerLinkActive="bg-blue-100/70" #rewardsLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
-                            <i style="font-size: small;" [ngClass]="['pi pi-gift', rewardsLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
-                            <p style="font-size: small;" [ngClass]="['', rewardsLink.isActive ? 'text-blue-500' : '']">Récompenses</p>
-                        </a>
-                        <a routerLink="rates" routerLinkActive="bg-blue-100/70" #ratesLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
-                            <i style="font-size: small;" [ngClass]="['pi pi-star', ratesLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
-                            <p style="font-size: small;" [ngClass]="['', ratesLink.isActive ? 'text-blue-500' : '']">Notes</p>
                         </a>
                     </div>
                 </div>
