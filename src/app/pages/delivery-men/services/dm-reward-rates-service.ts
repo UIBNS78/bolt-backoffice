@@ -33,8 +33,8 @@ export class DmRewardRatesService extends DmService {
     return this.http.post<void>(`${this.apiUrl}/reward-rates`, rewardRate);
   }
 
-  updateRewardRate(rewardRate: RewardRate): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/reward-rates/${rewardRate.id}`, rewardRate);
+  updateRewardRate(id: number, rewardRate: RewardRate): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/reward-rates/${id}`, rewardRate);
   }
 
   deleteRewardRate(id: number): Observable<void> {

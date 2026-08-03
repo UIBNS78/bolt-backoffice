@@ -68,7 +68,7 @@ export class RewardRatesForm implements OnInit, OnDestroy {
     this.loading.set(true);
     const values = this.form.getRawValue() as RewardRate;
     iif(() => this.isUpdate(), 
-      this.dmRewardRatesService.updateRewardRate(values), 
+      this.dmRewardRatesService.updateRewardRate(this.selectedRewardRate()!.id, values), 
       this.dmRewardRatesService.createRewardRate(values)
     ).pipe(
       takeUntil(this.unsubscribe$),
