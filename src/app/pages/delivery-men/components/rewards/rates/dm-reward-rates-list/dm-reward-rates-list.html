@@ -1,39 +1,38 @@
-<div class="flex flex-col gap-4">
-    @if (data().totalItems > 0) {
-        <div class="flex items-center justify-end gap-2">
-            <p-button 
-                (click)="handleRefresh()" 
-                icon="pi pi-refresh" 
-                [outlined]="true"
-                severity="secondary" 
-                size="small" 
-                pTooltip="Rafraîchir"
-                tooltipPosition="top"
-                [loading]="isRefreshing()"
-            />
-            <p-button 
-                (click)="filterDatePicker.toggle($event)" 
-                [label]="filterLabel()" 
-                icon="pi pi-filter" 
-                [outlined]="true"
-                severity="secondary" 
-                size="small" 
-            />
-            <p-button 
-                (click)="datepicker.toggle($event)" 
-                [label]="filterDateLabel()" 
-                icon="pi pi-calendar" 
-                [outlined]="true"
-                severity="secondary" 
-                size="small" 
-            />
-        </div>
-    }
-    @if (isLoading()) {
-        <app-dm-reward-rates-placeholder />
-    } @else {
-        @defer (on idle) {
-            @if (data().totalItems > 0) {
+@if (isLoading()) {
+    <app-dm-reward-rates-placeholder />
+} @else {
+    @defer (on idle) {
+        @if (data().totalItems > 0) {
+            <div class="flex flex-col gap-4">
+                <div class="flex items-center justify-end gap-2">
+                    <p-button 
+                        (click)="handleRefresh()" 
+                        icon="pi pi-refresh" 
+                        [outlined]="true"
+                        severity="secondary" 
+                        size="small" 
+                        pTooltip="Rafraîchir"
+                        tooltipPosition="top"
+                        [loading]="isRefreshing()"
+                    />
+                    <p-button 
+                        (click)="filterDatePicker.toggle($event)" 
+                        [label]="filterLabel()" 
+                        icon="pi pi-filter" 
+                        [outlined]="true"
+                        severity="secondary" 
+                        size="small" 
+                    />
+                    <p-button 
+                        (click)="datepicker.toggle($event)" 
+                        [label]="filterDateLabel()" 
+                        icon="pi pi-calendar" 
+                        [outlined]="true"
+                        severity="secondary" 
+                        size="small" 
+                    />
+                </div>
+
                 <div class="flex flex-col gap-2">
                     <p-table [value]="data().dmRewardRates" [tableStyle]="{ 'min-width': '50rem' }">
                         <ng-template #header>
@@ -100,22 +99,22 @@
                         class="p-paginator-sm"
                     />
                 </div>   
-            } @else {
-                <div class="flex justify-center items-center h-[calc(100vh-150px)]">
-                    <div class="flex flex-col justify-center items-center gap-3 w-80">
-                        <i class="pi pi-gift"></i>
-                        <div class="flex flex-col items-center">
-                            <p class="text-center">Aucune récompense</p>
-                            <p class="text-gray-400 text-center">Aucune récompense n'est enregistrée pour le moment. Vérifiez si vous avez bien activé les récompenses.</p>
-                        </div>
+            </div>
+        } @else {
+            <div class="flex justify-center items-center h-[calc(100vh-150px)]">
+                <div class="flex flex-col justify-center items-center gap-3 w-80">
+                    <i class="pi pi-gift"></i>
+                    <div class="flex flex-col items-center">
+                        <p class="text-center">Aucune récompense</p>
+                        <p class="text-gray-400 text-center">Aucune récompense n'est enregistrée pour le moment. Vérifiez si vous avez bien activé les récompenses.</p>
                     </div>
-                </div>           
-            }
-        } @placeholder (minimum 600ms) {
-            <app-dm-reward-rates-placeholder />
-        } 
-    }
-</div>
+                </div>
+            </div>           
+        }
+    } @placeholder (minimum 600ms) {
+        <app-dm-reward-rates-placeholder />
+    } 
+}
 
 <p-popover #datepicker>
     <p-datepicker 
