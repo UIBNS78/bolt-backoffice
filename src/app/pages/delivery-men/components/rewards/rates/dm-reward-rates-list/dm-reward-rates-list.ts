@@ -21,6 +21,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { DmRewardRatesPlaceholder } from '../../../placeholders/dm-reward-rates-placeholder/dm-reward-rates-placeholder';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-dm-reward-rates-list',
@@ -37,6 +38,7 @@ import { DmRewardRatesPlaceholder } from '../../../placeholders/dm-reward-rates-
     TagModule,
     RatingModule,
     PaginatorModule,
+    TooltipModule,
     BigramPipe,
     UpperCasePipe,
     CivilityPipe,
@@ -58,6 +60,7 @@ export class DmRewardRatesList implements OnDestroy {
   protected rows: WritableSignal<number> = signal(10);
   protected selectedDate: WritableSignal<Date> = signal(this.today);
   protected isLoading: WritableSignal<boolean> = signal(false);
+  protected isRefreshing: WritableSignal<boolean> = signal(false);
   protected data: WritableSignal<DMRewardRatesList> = signal({
     dmRewardRates: [],
     totalItems: 0
@@ -136,6 +139,11 @@ export class DmRewardRatesList implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
+  handleRefresh(): void {
+    this.isRefreshing.set(true);
+    this.loadData();
+  }
+  
   handleSelectFilter(filter: FilterDateType['filter']): void {
     this.filter.update(prev => ({
       filter,
@@ -161,7 +169,10 @@ export class DmRewardRatesList implements OnDestroy {
     this.isLoading.set(true);
     this.dmRewardRatesService.getDmRewardPackages(this.filter()).pipe(
       takeUntil(this.unsubscribe$),
-      finalize(() => this.isLoading.set(false))
+      finalize(() => {
+        this.isLoading.set(false);
+        this.isRefreshing.set(false);
+      })
     ).subscribe(response => {
       this.data.set(response);
     });
