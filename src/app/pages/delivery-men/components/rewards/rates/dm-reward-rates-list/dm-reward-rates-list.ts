@@ -20,6 +20,7 @@ import { RatingModule } from 'primeng/rating';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { finalize, Subject, takeUntil } from 'rxjs';
+import { DmRewardRatesPlaceholder } from '../../../placeholders/dm-reward-rates-placeholder/dm-reward-rates-placeholder';
 
 @Component({
   selector: 'app-dm-reward-rates-list',
@@ -39,7 +40,8 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     BigramPipe,
     UpperCasePipe,
     CivilityPipe,
-    NgClass
+    NgClass,
+    DmRewardRatesPlaceholder
   ],
   templateUrl: './dm-reward-rates-list.html',
   styleUrl: './dm-reward-rates-list.css',

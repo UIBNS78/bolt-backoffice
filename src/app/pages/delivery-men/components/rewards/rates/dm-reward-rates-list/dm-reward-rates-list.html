@@ -20,7 +20,7 @@
         </div>
     }
     @if (isLoading()) {
-        <!-- <app-delivery-men-rewards-list-placeholder /> -->
+        <app-dm-reward-rates-placeholder />
     } @else {
         @defer (on idle) {
             @if (data().totalItems > 0) {
@@ -102,7 +102,7 @@
                 </div>           
             }
         } @placeholder (minimum 600ms) {
-            <!-- <app-delivery-men-rewards-list-placeholder /> -->
+            <app-dm-reward-rates-placeholder />
         } 
     }
 </div>
