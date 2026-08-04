@@ -47,7 +47,7 @@
                 [showClear]="true" 
                 [iconDisplay]="'input'" 
                 [showIcon]="true" 
-                [minDate]="minDate"
+                [minDate]="!isUpdate() ? minDate : null"
                 inputId="applyAt" 
                 [readonlyInput]="true"
                 [invalid]="form.get('applyAt')?.invalid && (form.get('applyAt')?.touched || form.get('applyAt')?.dirty)"

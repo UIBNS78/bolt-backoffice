@@ -6,7 +6,7 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { DmService as DeliveryMenService } from 'app/pages/delivery-men/services/dm-service';
 import { DmSalariesService } from 'app/pages/delivery-men/services/dm-salaries-service';
 import { DeliveryManSalary, DeliveryManSalaryForm } from 'app/pages/delivery-men/types/delivery-men-salary';
-import { eachDayOfInterval, isFirstDayOfMonth, isSunday, isThisMonth, lastDayOfMonth, startOfMonth, subDays } from 'date-fns';
+import { eachDayOfInterval, isFirstDayOfMonth, isPast, isSunday, isThisMonth, lastDayOfMonth, startOfMonth, subDays } from 'date-fns';
 import { MessageService } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -61,7 +61,7 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       userId: [null, Validators.required],
       amount: [0, [Validators.required, Validators.pattern("[0-9]*"), Validators.min(0)]],
-      applyAt: [this.minDate, [Validators.required]],
+      applyAt: [{ value: this.minDate, disabled: false }, [Validators.required]],
       proratedAmount: [0, [Validators.required, Validators.pattern("[0-9]*"), Validators.min(0)]],
     });
   }
@@ -75,6 +75,8 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
 
     this.isUpdate.set(true);
     this.selectedSalary.set(salary);
+    this.form.get("applyAt")?.disable();
+    
     this.form.patchValue({
       id: salary.id,
       userId: salary.deliveryMan.userId,
@@ -123,7 +125,8 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
     this.form.get("amount")?.valueChanges.pipe(
       takeUntil(this.unsubscribe$),
     ).subscribe(() => {
-      if (!isThisMonth(this.form.get("applyAt")?.value)) {
+      const applyAt: Date = this.form.get("applyAt")?.value;
+      if (!isThisMonth(applyAt) || (isThisMonth(applyAt) && isPast(applyAt))) {
         this.form.get("proratedAmount")?.setValue(0);
         return;
       }
@@ -137,9 +140,9 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
     this.form.get("applyAt")?.valueChanges.pipe(
       takeUntil(this.unsubscribe$),
     ).subscribe((value: Date) => {
-      this.isThisMonth.set(isThisMonth(value));
+      this.isThisMonth.set(isThisMonth(value) && !isPast(value));
 
-      if (!isThisMonth(value)) {
+      if (!isThisMonth(value) || (isThisMonth(value) && isPast(value))) {
         this.form.get("proratedAmount")?.setValue(0);
         return;
       }

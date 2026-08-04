@@ -20,6 +20,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DurationPipe } from '@shared/pipes/duration-pipe';
 import { DeliveryManSalaryHistory } from '../../components/salary/delivery-man-salary-history/delivery-man-salary-history';
 import { DmSalariesService } from '../../services/dm-salaries-service';
+import { isBefore, startOfMonth } from 'date-fns';
 
 @Component({
   selector: 'app-delivery-man-salaries',
@@ -99,6 +100,11 @@ export class DeliveryManSalaries implements OnInit, OnDestroy {
 
   isApplied(applyAt: Date): boolean {
     return new Date(applyAt).getTime() < new Date().getTime();
+  }
+
+  isPastMonth(applyAt: Date): boolean {
+    const startOfCurrentMonth = startOfMonth(new Date());
+    return isBefore(applyAt, startOfCurrentMonth);
   }
 
   handleOpenHistory(salary: DeliveryManSalary | null = null): void {
