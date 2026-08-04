@@ -1,1 +1,125 @@
-<p>delivery-man-payments works!</p>
+
+<div class="flex flex-col gap-4">
+    <div class="flex items-center justify-end gap-2">
+        <p-button 
+            (click)="datepicker.toggle($event)" 
+            [label]="filterDateLabel()" 
+            icon="pi pi-calendar" 
+            [outlined]="true"
+            severity="secondary" 
+            size="small" 
+            [loading]="isFiltering() || isLoading()"
+        />
+    </div>
+
+    @if (isLoading()) {
+
+    } @else {
+        @defer (on idle) {
+            @if (data().totalItems > 0) {                
+                <div class="flex flex-col gap-2">
+                    <p-table [value]="data().payments" [tableStyle]="{ 'min-width': '50rem' }">
+                        <ng-template #header>
+                            <tr>
+                                <th class="text-center hidden 2xl:table-cell">ID</th>
+                                <th>Livreur</th>
+                                <th style="text-align: end;">Salaire</th>
+                                <th style="text-align: end;">Réc. colis</th>
+                                <th style="text-align: end;">Réc. note</th>
+                                <th style="text-align: end;">Total</th>
+                                <th style="text-align: center;">Date de création</th>
+                                <th style="text-align: center;">Statut</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-payment>
+                            <tr>
+                                <td class="text-center hidden 2xl:table-cell">{{ payment.deliveryMan.id }}</td>
+                                <td>
+                                    <div class="flex items-center gap-2">
+                                        <p-image [preview]="payment.deliveryMan.profilePicture" alt="Profile picture" width="30">
+                                            <ng-template #indicator>
+                                                <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
+                                            </ng-template>
+                                            <ng-template #image>
+                                                <p-overlay-badge [badgeDisabled]="!payment.deliveryMan.isOnline" severity="success">
+                                                    <p-avatar 
+                                                        [label]="!payment.deliveryMan.profilePicture ? ((payment.deliveryMan.name + ' ' + payment.deliveryMan.firstName) | bigram) : undefined"
+                                                        [image]="payment.deliveryMan.profilePicture ? payment.deliveryMan.profilePicture.thumbnail: undefined"
+                                                        shape="circle" 
+                                                        style="font-size: 12px;" 
+                                                    />
+                                                </p-overlay-badge>
+                                            </ng-template>
+                                            <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                                                <img [src]="payment.deliveryMan.profilePicture.original" alt="Profile picture" [style]="style" (click)="previewCallback()" />
+                                            </ng-template>
+                                        </p-image>
+                                        <div class="flex flex-col">
+                                            <p class="font-bold">{{ payment.deliveryMan.gender | civility }} {{ payment.deliveryMan.name | uppercase }}</p>
+                                            <p>{{ payment.deliveryMan.firstName }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="text-align: end;" class="font-bold">{{ payment.salary | ariary }}</td>
+                                <td style="text-align: end;" class="font-bold">{{ payment.rewardPackages | ariary }}</td>
+                                <td style="text-align: end;" class="font-bold">{{ payment.rewardRates | ariary }}</td>
+                                <td>
+                                    <div class="flex flex-col items-end">
+                                        <span class="font-bold">{{ (payment.salary + payment.rewardPackages + payment.rewardRates) | ariary }}</span>
+                                        @if (payment.paidAt) {
+                                            <small class="text-gray-400">{{ payment.paymentMode | paymentMode }}</small>
+                                        }
+                                    </div>
+                                </td>
+                                <td style="text-align: center;" class="text-gray-400">
+                                    {{ payment.createdAt | date:'dd MMM yyyy' }}
+                                </td>
+                                <td style="text-align: center;">
+                                    <p-tag severity="warn" [value]="payment.status | paymentStatus" [rounded]="true" />
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <p-paginator 
+                        (onPageChange)="onPageChange($event)" 
+                        [first]="first()" 
+                        [rows]="rows()" 
+                        [totalRecords]="data().totalItems" 
+                        [rowsPerPageOptions]="[10, 20, 30]"
+                        class="p-paginator-sm"
+                    />
+                </div>
+            } @else {
+                <div class="flex justify-center items-center h-[calc(100vh-150px)]">
+                    <div class="flex flex-col justify-center items-center gap-3 w-80">
+                        <i class="pi pi-credit-card"></i>
+                        <div class="flex flex-col items-center">
+                            <p class="text-center">Aucun paiement</p>
+                            <p class="text-gray-400 text-center">Aucun paiement n'est enregistré pour le moment.</p>
+                        </div>
+                    </div>
+                </div>   
+            }
+        } @placeholder (minimum 600ms) {
+
+        }
+    }
+</div>
+
+<p-popover #datepicker>
+    <p-datepicker 
+        [(ngModel)]="selectedDate" 
+        (onSelect)="handleSelectDate($event)" 
+        [showButtonBar]="true" 
+        [inline]="true" 
+        view="month"
+        [maxDate]="today"
+    >
+        <ng-template #buttonbar let-todayCallback="todayCallback">
+            <div class="flex justify-center w-full">
+                <p-button label="Ce mois" severity="info" variant="text" size="small" (onClick)="todayCallback()" />
+            </div>
+        </ng-template>
+    </p-datepicker>
+</p-popover>

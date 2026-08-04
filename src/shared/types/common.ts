@@ -10,8 +10,11 @@ export type CloudinaryImage = {
     download?: string;
 }
 
-export type FilterDateType = {
+export type FilterDateWithMode = FilterDateType & {
     filter: "day" | "week" | "month" | "year";
+}
+
+export type FilterDateType = {
     date: Date;
     page?: number;
     itemsPerPage?: number;

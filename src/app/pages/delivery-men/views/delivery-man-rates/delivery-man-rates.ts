@@ -3,7 +3,7 @@ import { Component, computed, effect, inject, OnDestroy, Signal, signal, ViewChi
 import { FormsModule } from '@angular/forms';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
-import { FilterDateType } from '@shared/types/common';
+import { FilterDateWithMode } from '@shared/types/common';
 import { DmRewardRatesService } from 'app/pages/delivery-men/services/dm-reward-rates-service';
 import { DMRewardRatesList } from 'app/pages/delivery-men/types/delivery-men-reward-rate';
 import { endOfWeek, format, isThisMonth, isThisWeek, isThisYear, isToday, startOfWeek } from 'date-fns';
@@ -100,7 +100,7 @@ export class DeliveryManRates implements OnDestroy {
         return format(date, "dd MMM yyyy");
     }
   });
-  protected filter: WritableSignal<FilterDateType> = signal({
+  protected filter: WritableSignal<FilterDateWithMode> = signal({
     filter: "month",
     date: new Date()
   });    
@@ -148,7 +148,7 @@ export class DeliveryManRates implements OnDestroy {
     this.loadData();
   }
   
-  handleSelectFilter(filter: FilterDateType['filter']): void {
+  handleSelectFilter(filter: FilterDateWithMode['filter']): void {
     this.filter.update(prev => ({
       filter,
       date: prev.date
