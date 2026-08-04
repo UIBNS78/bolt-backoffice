@@ -19,6 +19,7 @@ import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { AriaryPipe } from '@shared/pipes/ariary-pipe';
 import { PaymentModePipe } from '@shared/pipes/payment-pipes/payment-mode-pipe';
 import { PaymentStatusPipe } from '@shared/pipes/payment-pipes/payment-status-pipe';
+import { DmPaymentsPlaceholder } from '../../components/placeholders/dm-payments-placeholder/dm-payments-placeholder';
 
 @Component({
   selector: 'app-delivery-man-payments',
@@ -39,7 +40,8 @@ import { PaymentStatusPipe } from '@shared/pipes/payment-pipes/payment-status-pi
     DatePipe,
     PaymentModePipe,
     PaymentStatusPipe,
-    AriaryPipe
+    AriaryPipe,
+    DmPaymentsPlaceholder
   ],
   templateUrl: './delivery-man-payments.html',
   styleUrl: './delivery-man-payments.css',
