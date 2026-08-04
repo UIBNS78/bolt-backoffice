@@ -6,7 +6,7 @@ import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { DmService as DeliveryMenService } from 'app/pages/delivery-men/services/dm-service';
 import { DmSalariesService } from 'app/pages/delivery-men/services/dm-salaries-service';
 import { DeliveryManSalary, DeliveryManSalaryForm } from 'app/pages/delivery-men/types/delivery-men-salary';
-import { addMonths, format, startOfMonth } from 'date-fns';
+import { eachDayOfInterval, isFirstDayOfMonth, isSunday, isThisMonth, lastDayOfMonth, startOfMonth, subDays } from 'date-fns';
 import { MessageService } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -44,23 +44,32 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
   
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
-  protected readonly minDate: Date = startOfMonth(addMonths(new Date(), 1));
+  protected readonly minDate: Date = subDays(new Date(), 1);
   protected form: FormGroup = new FormGroup({});
   protected isUpdate: WritableSignal<boolean> = signal(false);
   protected selectedSalary: WritableSignal<DeliveryManSalary | null> = signal(null);
   protected loading: WritableSignal<boolean> = signal(false);
+  protected isThisMonth: WritableSignal<boolean> = signal(true);
   protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.deliveryMenAsUsersOptions;
 
+  get proratedAmountValue(): number {
+    return this.form.get("proratedAmount")?.value ?? 0;
+  }
+  
   constructor() {
     this.isUpdate.set(false);
     this.form = this.formBuilder.group({
       userId: [null, Validators.required],
       amount: [0, [Validators.required, Validators.pattern("[0-9]*"), Validators.min(0)]],
-      applyAt: [format(startOfMonth(addMonths(new Date(), 1)), "dd MMMM yyyy"), [Validators.required]],
+      applyAt: [this.minDate, [Validators.required]],
+      proratedAmount: [0, [Validators.required, Validators.pattern("[0-9]*"), Validators.min(0)]],
     });
   }
   
   ngOnInit(): void {
+    this.amountListener();
+    this.applyAtListener();
+    
     const salary: DeliveryManSalary | null = this.dialogConfig.data?.salary ?? null;
     if (!salary) return;
 
@@ -70,7 +79,8 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
       id: salary.id,
       userId: salary.deliveryMan.userId,
       amount: salary.amount,
-      applyAt: new Date(salary.applyAt)
+      applyAt: new Date(salary.applyAt),
+      proratedAmount: salary.proratedAmount
     });
   }
   
@@ -81,6 +91,7 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
 
   handleSubmit(): void {
     if (this.form.invalid) {
+      console.log(this.form.get("proratedAmount")?.errors)
       this.form.markAllAsTouched();
       return;
     }
@@ -94,7 +105,9 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
       userId: values.userId,
       amount: values.amount,
       applyAt,
+      proratedAmount: values.proratedAmount
     }
+    console.log(salary)
     if (this.isUpdate()) {
       this.updateSalary(salary);
     } else {
@@ -106,6 +119,36 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
     this.dialogRef.close(refresh);
   }
 
+  private amountListener(): void {
+    this.form.get("amount")?.valueChanges.pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe(() => {
+      if (!isThisMonth(this.form.get("applyAt")?.value)) {
+        this.form.get("proratedAmount")?.setValue(0);
+        return;
+      }
+
+      const proratedAmount: number = this.getProratedAmount(this.form.get("applyAt")?.value);
+      this.form.get("proratedAmount")?.setValue(proratedAmount);
+    });
+  }
+  
+  private applyAtListener(): void {
+    this.form.get("applyAt")?.valueChanges.pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe((value: Date) => {
+      this.isThisMonth.set(isThisMonth(value));
+
+      if (!isThisMonth(value)) {
+        this.form.get("proratedAmount")?.setValue(0);
+        return;
+      }
+
+      const proratedAmount: number = this.getProratedAmount(value);
+      this.form.get("proratedAmount")?.setValue(proratedAmount);
+    });
+  }
+  
   private createSalary(salary: DeliveryManSalaryForm): void {
     this.dmSalariesService.createSalary(salary).pipe(
       takeUntil(this.unsubscribe$),
@@ -141,5 +184,14 @@ export class DeliveryManSalariesForm implements OnInit, OnDestroy {
       });
       this.handleClose(true);
     });
+  }
+
+  private getProratedAmount(startDate: Date): number {
+    let prorated: number = 0;
+    const endDate = lastDayOfMonth(startDate);
+    const allDaysWithoutSundaysWithStartDate: number = eachDayOfInterval({ start: startDate, end: endDate }).filter(day => !isSunday(day)).length;
+    const allDaysWithoutSundays: number = eachDayOfInterval({ start: startOfMonth(startDate), end: endDate }).filter(day => !isSunday(day)).length;
+    prorated = (allDaysWithoutSundaysWithStartDate * (this.form.get("amount")?.value ?? 0)) / allDaysWithoutSundays;
+    return Math.round(prorated);
   }
 }

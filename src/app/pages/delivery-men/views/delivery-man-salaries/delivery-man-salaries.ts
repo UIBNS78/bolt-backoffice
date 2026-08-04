@@ -80,7 +80,7 @@ export class DeliveryManSalaries implements OnInit, OnDestroy {
       data: {
         salary
       },
-      width: '20rem'
+      width: '25rem'
     });
 
     ref?.onClose.pipe(

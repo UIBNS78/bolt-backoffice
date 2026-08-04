@@ -5,6 +5,7 @@ export type DeliveryManSalary = {
     deliveryMan: DeliveryMan;
     amount: number;
     applyAt: Date;
+    proratedAmount: number;
     isCurrent: boolean;
     modifiedAt?: Date | null;
     createdAt: Date;
@@ -20,4 +21,5 @@ export type DeliveryManSalaryForm = {
     userId: number;
     amount: number;
     applyAt: Date;
+    proratedAmount: number;
 }
