@@ -31,7 +31,7 @@
                                 <th style="text-align: end;">Réc. colis</th>
                                 <th style="text-align: end;">Réc. note</th>
                                 <th style="text-align: end;">Total</th>
-                                <th style="text-align: center;">Date de création</th>
+                                <th style="text-align: center;">Période</th>
                                 <th style="text-align: center;">Statut</th>
                             </tr>
                         </ng-template>
@@ -64,19 +64,26 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td style="text-align: end;" class="font-bold">{{ payment.salary | ariary }}</td>
+                                <td>
+                                    <div class="flex flex-col items-end">
+                                        <p [ngClass]="payment.proratedAmount > 0 ? 'text-gray-400 line-through' : 'font-bold'">{{ payment.salary | ariary }}</p>
+                                        @if (payment.proratedAmount > 0) {
+                                            <p class="font-bold text-orange-400" pTooltip="Salaire proratisé" tooltipPosition="bottom">{{ payment.proratedAmount | ariary }}</p>
+                                        }
+                                    </div>
+                                </td>
                                 <td style="text-align: end;" class="font-bold">{{ payment.rewardPackages | ariary }}</td>
                                 <td style="text-align: end;" class="font-bold">{{ payment.rewardRates | ariary }}</td>
                                 <td>
                                     <div class="flex flex-col items-end">
-                                        <span class="font-bold">{{ (payment.salary + payment.rewardPackages + payment.rewardRates) | ariary }}</span>
+                                        <span class="font-bold">{{ ((payment.proratedAmount > 0 ? payment.proratedAmount : payment.salary) + payment.rewardPackages + payment.rewardRates) | ariary }}</span>
                                         @if (payment.paidAt) {
                                             <small class="text-gray-400">{{ payment.paymentMode | paymentMode }}</small>
                                         }
                                     </div>
                                 </td>
                                 <td style="text-align: center;" class="text-gray-400">
-                                    {{ payment.createdAt | date:'dd MMM yyyy' }}
+                                    {{ payment.period | date:'MMMM yyyy' }}
                                 </td>
                                 <td style="text-align: center;">
                                     <app-dm-payments-status-editable [payment]="payment" (onStatusChangeEmitter)="handleChangeStatus(payment.id, $event)" />

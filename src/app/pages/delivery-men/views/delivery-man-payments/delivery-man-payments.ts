@@ -14,7 +14,7 @@ import { ImageModule } from 'primeng/image';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { TagModule } from 'primeng/tag';
-import { DatePipe, UpperCasePipe } from '@angular/common';
+import { DatePipe, NgClass, UpperCasePipe } from '@angular/common';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { AriaryPipe } from '@shared/pipes/ariary-pipe';
 import { PaymentModePipe } from '@shared/pipes/payment-pipes/payment-mode-pipe';
@@ -24,6 +24,7 @@ import { MessageService } from 'primeng/api';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-delivery-man-payments',
@@ -41,6 +42,7 @@ import { InputTextModule } from 'primeng/inputtext';
     IconFieldModule,
     InputTextModule,
     InputIconModule,
+    TooltipModule,
     BigramPipe,
     UpperCasePipe,
     CivilityPipe,
@@ -48,7 +50,8 @@ import { InputTextModule } from 'primeng/inputtext';
     PaymentModePipe,
     AriaryPipe,
     DmPaymentsPlaceholder,
-    DmPaymentsStatusEditable
+    DmPaymentsStatusEditable,
+    NgClass
   ],
   templateUrl: './delivery-man-payments.html',
   styleUrl: './delivery-man-payments.css',

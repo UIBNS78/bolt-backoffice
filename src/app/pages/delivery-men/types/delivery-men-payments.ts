@@ -9,6 +9,7 @@ export type DMPaymentsList = {
 export type DMPayment = {
     id: number;
     deliveryMan: DeliveryMan;
+    proratedAmount: number;
     salary: number;
     rewardPackages: number;
     rewardRates: number;
@@ -19,6 +20,7 @@ export type DMPayment = {
     paidAt: Date | null;
     failedAt: Date | null;
     onHoldAt: Date | null;
+    period: Date;
     createdAt: Date;
 }
 
