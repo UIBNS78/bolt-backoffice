@@ -69,6 +69,7 @@ export class DeliveryManPayments implements OnDestroy {
 
   constructor() {
     effect(() => {
+      this.isLoading.set(true);
       this.loadData();
     });
   }
@@ -103,7 +104,6 @@ export class DeliveryManPayments implements OnDestroy {
   }
   
   private loadData(): void {
-    this.isLoading.set(true);
     this.dmPaymentsService.getDmPayments({
       date: this.selectedDate(),
       page: this.first() + 1,

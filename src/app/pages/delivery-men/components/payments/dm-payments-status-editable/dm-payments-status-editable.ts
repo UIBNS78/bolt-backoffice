@@ -3,14 +3,15 @@ import { Component, computed, EventEmitter, inject, input, InputSignal, OnDestro
 import { PaymentStatusIconPipe } from '@shared/pipes/payment-pipes/payment-status-icon-pipe';
 import { PaymentStatusPipe } from '@shared/pipes/payment-pipes/payment-status-pipe';
 import { PaymentStatusSeverityPipe } from '@shared/pipes/payment-pipes/payment-status-severity-pipe';
-import { DMPayment, PAYMENT_STATUS, PaymentMode, PaymentStatus, UpdatePaymentStatusType } from 'app/pages/delivery-men/types/delivery-men-payments';
+import { DMPayment, PAYMENT_STATUS, PaymentStatus, UpdatePaymentStatusType } from 'app/pages/delivery-men/types/delivery-men-payments';
 import { MenuItem } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MenuModule } from 'primeng/menu';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { DmPaymentsConfirmDialog } from '../dm-payments-confirm-dialog/dm-payments-confirm-dialog';
-import { filter, Subject, take, takeUntil } from 'rxjs';
+import { filter, Subject, take, takeUntil, tap } from 'rxjs';
+import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
 
 @Component({
   selector: 'app-dm-payments-status-editable',
@@ -21,7 +22,8 @@ import { filter, Subject, take, takeUntil } from 'rxjs';
     NgClass,
     PaymentStatusPipe,
     PaymentStatusIconPipe,
-    PaymentStatusSeverityPipe
+    PaymentStatusSeverityPipe,
+    TodayYesterdayTomorrowPipe
   ],
   templateUrl: './dm-payments-status-editable.html',
   styleUrl: './dm-payments-status-editable.css',
@@ -36,6 +38,16 @@ export class DmPaymentsStatusEditable implements OnDestroy {
   // inputs
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   payment: InputSignal<DMPayment> = input.required<DMPayment>();
+  protected statusDate: Signal<Date | null> = computed(() => {
+    const { status, pendingAt, processingAt, paidAt, failedAt, onHoldAt }: DMPayment = this.payment();
+    return {
+      [PAYMENT_STATUS.pending]: pendingAt, 
+      [PAYMENT_STATUS.processing]: processingAt, 
+      [PAYMENT_STATUS.paid]: paidAt, 
+      [PAYMENT_STATUS.failed]: failedAt, 
+      [PAYMENT_STATUS.onHold]: onHoldAt
+    }[status] ?? null;
+  });
   protected isSwitching: WritableSignal<boolean> = signal(false);
   protected items: MenuItem[] = [
     {
@@ -93,6 +105,7 @@ export class DmPaymentsStatusEditable implements OnDestroy {
     modalRef?.onClose.pipe(
       take(1),
       filter((confirmed) => !!confirmed),
+      tap(() => this.isSwitching.set(true)),
       takeUntil(this.unsubscribe$)
     ).subscribe((paymentMode) => {
       this.onStatusChangeEmitter.emit({ status, paymentMode });

@@ -17,7 +17,7 @@ export type DMPayment = {
     pendingAt: Date | null;
     processingAt: Date | null;
     paidAt: Date | null;
-    faildAt: Date | null;
+    failedAt: Date | null;
     onHoldAt: Date | null;
     createdAt: Date;
 }

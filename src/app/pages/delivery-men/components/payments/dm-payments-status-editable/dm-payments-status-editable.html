@@ -1,17 +1,25 @@
 <p-menu #menu [model]="statuses()" [popup]="true" appendTo="body" />
 
-<p-tag (click)="menu.toggle($event)" [severity]="payment().status | paymentStatusSeverity" [rounded]="true">
-    <div class="flex items-center justify-between gap-2 cursor-pointer">
+<div class="flex flex-col gap-1 items-center justify-center">
+    <p-tag (click)="menu.toggle($event)" [severity]="payment().status | paymentStatusSeverity" [rounded]="true">
+        <div class="flex items-center justify-between gap-2 cursor-pointer">
+            <div class="flex items-center gap-1">
+                @if (isSwitching()) {
+                    <p-progress-spinner [style]="{ width: '15px', height: '15px' }" />
+                } @else {
+                    <i [ngClass]="[payment().status | paymentStatusIcon]" style="font-size: 0.7rem;"></i>
+                }
+                <small style="font-size: 0.6rem;">{{ payment().status | paymentStatus }}</small>
+            </div>
+            <div class="flex items-center justify-center">
+                <i class="pi pi-sort-down-fill" style="font-size: 0.6rem;"></i>
+            </div>
+        </div>
+    </p-tag>
+    @if (statusDate()) {
         <div class="flex items-center gap-1">
-            @if (isSwitching()) {
-                <p-progress-spinner [style]="{ width: '15px', height: '15px' }" />
-            } @else {
-                <i [ngClass]="[payment().status | paymentStatusIcon]" style="font-size: 0.7rem;"></i>
-            }
-            <small style="font-size: 0.6rem;">{{ payment().status | paymentStatus }}</small>
+            <i class="pi pi-calendar text-gray-400" style="font-size: 0.7rem;"></i>
+            <p class="text-gray-400">{{ statusDate()! | todayYesterdayTomorrow:"dd MMM yyyy" }}</p>
         </div>
-        <div class="flex items-center justify-center">
-            <i class="pi pi-sort-down-fill" style="font-size: 0.6rem;"></i>
-        </div>
-    </div>
-</p-tag>
+    }
+</div>
