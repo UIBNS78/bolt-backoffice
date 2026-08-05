@@ -12,7 +12,10 @@ import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
+import { IconFieldModule } from 'primeng/iconfield';
 import { ImageModule } from 'primeng/image';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
@@ -35,6 +38,9 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     MenuModule,
     TagModule,
     PaginatorModule,
+    IconFieldModule,
+    InputTextModule,
+    InputIconModule,
     BigramPipe,
     UpperCasePipe,
     CivilityPipe,

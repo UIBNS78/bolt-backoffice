@@ -10,6 +10,10 @@
             size="small" 
             [loading]="isFiltering() || isLoading()"
         />
+        <p-iconfield>
+            <p-inputicon class="pi pi-search" />
+            <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || data().totalItems <= 0" />
+        </p-iconfield>
     </div>
 
     @if (isLoading()) {

@@ -24,6 +24,9 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DividerModule } from 'primeng/divider';
 import { DmRewardRatesPlaceholder } from '../../components/placeholders/dm-reward-rates-placeholder/dm-reward-rates-placeholder';
 import { DmRewardRatesHandler } from '../../components/rewards/rates/dm-reward-rates-handler/dm-reward-rates-handler';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputIconModule } from 'primeng/inputicon';
 
 @Component({
   selector: 'app-delivery-man-rates',
@@ -42,6 +45,9 @@ import { DmRewardRatesHandler } from '../../components/rewards/rates/dm-reward-r
     PaginatorModule,
     TooltipModule,
     DividerModule,
+    IconFieldModule,
+    InputTextModule,
+    InputIconModule,
     BigramPipe,
     UpperCasePipe,
     CivilityPipe,

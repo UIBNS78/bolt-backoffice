@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { DMPaymentsList, UpdatePaymentStatusType } from '../../types/delivery-men-payments';
-import { format } from 'date-fns';
+import { format, isThisMonth } from 'date-fns';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { DmPaymentsService } from '../../services/dm-payments-service';
 import { FormsModule } from '@angular/forms';
@@ -21,6 +21,9 @@ import { PaymentModePipe } from '@shared/pipes/payment-pipes/payment-mode-pipe';
 import { DmPaymentsPlaceholder } from '../../components/placeholders/dm-payments-placeholder/dm-payments-placeholder';
 import { DmPaymentsStatusEditable } from '../../components/payments/dm-payments-status-editable/dm-payments-status-editable';
 import { MessageService } from 'primeng/api';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-delivery-man-payments',
@@ -35,6 +38,9 @@ import { MessageService } from 'primeng/api';
     ImageModule,
     OverlayBadgeModule,
     TagModule,
+    IconFieldModule,
+    InputTextModule,
+    InputIconModule,
     BigramPipe,
     UpperCasePipe,
     CivilityPipe,
@@ -65,7 +71,9 @@ export class DeliveryManPayments implements OnDestroy {
     payments: [],
     totalItems: 0
   });
-  protected filterDateLabel: Signal<string> = computed(() => format(this.selectedDate(), "MMMM yyyy"));
+  protected filterDateLabel: Signal<string> = computed(() => {
+    return isThisMonth(this.selectedDate()) ? 'Ce mois' : format(this.selectedDate(), "MMMM yyyy");
+  });
 
   constructor() {
     effect(() => {
