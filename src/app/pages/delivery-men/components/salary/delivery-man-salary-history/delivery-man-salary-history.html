@@ -23,7 +23,10 @@
                     </ng-template>
                     <ng-template #content let-history>
                         <div class="flex flex-col gap-1">
-                            <span class="font-bold text-lg/5">{{ history.amount.toLocaleString('fr-FR') }} Ar</span>
+                            <span [ngClass]="history.proratedAmount > 0 ? 'line-through' : 'font-bold text-lg/5'">{{ history.amount.toLocaleString('fr-FR') }} Ar</span>
+                            @if (history.proratedAmount > 0) {
+                                <span class="font-bold text-lg/5" pTooltip="Salaire proratisé" tooltipPosition="left">{{ history.proratedAmount.toLocaleString('fr-FR') }} Ar</span>
+                            }
                             <span [ngClass]="{ 'text-gray-400': isApplied(history.applyAt), 'text-green-500': !isApplied(history.applyAt) }">{{ isApplied(history.applyAt) ? 'En vigueur le' : 'Applicable à partir du' }} {{ history.applyAt | date:'dd MMMM yyyy' }}</span>
                         </div>
                     </ng-template>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DmService } from './dm-service';
-import { FilterDateType } from '@shared/types/common';
+import { FilterDateWithMode } from '@shared/types/common';
 import { map, Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { format } from 'date-fns';
@@ -10,7 +10,7 @@ import { DMRewardRatesList, RewardRate } from '../types/delivery-men-reward-rate
   providedIn: 'root',
 })
 export class DmRewardRatesService extends DmService {
-  getDmRewardRates(params: FilterDateType): Observable<DMRewardRatesList> {
+  getDmRewardRates(params: FilterDateWithMode): Observable<DMRewardRatesList> {
     const queryParams = new HttpParams({
       fromObject: {
         filter: params.filter,

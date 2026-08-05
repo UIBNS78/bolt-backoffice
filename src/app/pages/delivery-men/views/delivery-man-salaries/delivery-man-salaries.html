@@ -74,7 +74,10 @@
                             </td>
                             <td>
                                 <div class="flex flex-col items-end">
-                                    <p class="font-bold">{{ salary.amount.toLocaleString('fr-FR') }} Ar</p>
+                                    <p [ngClass]="salary.proratedAmount > 0 ? 'text-gray-400 line-through' : 'font-bold'">{{ salary.amount.toLocaleString('fr-FR') }} Ar</p>
+                                    @if (salary.proratedAmount > 0) {
+                                        <p class="font-bold text-orange-400" pTooltip="Salaire proratisé" tooltipPosition="bottom">{{ salary.proratedAmount.toLocaleString('fr-FR') }} Ar</p>
+                                    }
                                 </div>
                             </td>
                             <td style="text-align: center;">
@@ -91,7 +94,7 @@
                             <td>
                                 <div class="flex justify-center gap-2">
                                     <p-button (click)="handleOpenHistory(salary)" icon="pi pi-history" size="small" [rounded]="true" [text]="true" severity="secondary" pTooltip="Historique des salaires" tooltipPosition="left" />
-                                    @if (!isApplied(salary.applyAt)) {
+                                    @if (!isPast(salary.applyAt)) {
                                         <p-button (click)="handleOpenForm(salary)" icon="pi pi-pencil" size="small" [rounded]="true" [text]="true" severity="info" pTooltip="Modifier le salaire" tooltipPosition="left" />
                                     }
                                 </div>

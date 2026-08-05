@@ -3,7 +3,7 @@ import { Component, computed, effect, inject, OnDestroy, Signal, signal, ViewChi
 import { FormsModule } from '@angular/forms';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
-import { FilterDateType } from '@shared/types/common';
+import { FilterDateWithMode } from '@shared/types/common';
 import { DeliveryMenRewardsListPlaceholder } from 'app/pages/delivery-men/components/placeholders/delivery-men-rewards-list-placeholder/delivery-men-rewards-list-placeholder';
 import { DmRewardPackagesService } from 'app/pages/delivery-men/services/dm-reward-packages-service';
 import { DMRewardPackagesList as DMRewardPackagesListType } from 'app/pages/delivery-men/types/delivery-men-reward-package';
@@ -12,7 +12,10 @@ import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
+import { IconFieldModule } from 'primeng/iconfield';
 import { ImageModule } from 'primeng/image';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
@@ -35,6 +38,9 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     MenuModule,
     TagModule,
     PaginatorModule,
+    IconFieldModule,
+    InputTextModule,
+    InputIconModule,
     BigramPipe,
     UpperCasePipe,
     CivilityPipe,
@@ -90,7 +96,7 @@ export class DmRewardPackagesList implements OnDestroy {
         return format(date, "dd MMM yyyy");
     }
   });
-  protected filter: WritableSignal<FilterDateType> = signal({
+  protected filter: WritableSignal<FilterDateWithMode> = signal({
     filter: "month",
     date: new Date()
   });    
@@ -133,7 +139,7 @@ export class DmRewardPackagesList implements OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  handleSelectFilter(filter: FilterDateType['filter']): void {
+  handleSelectFilter(filter: FilterDateWithMode['filter']): void {
     this.filter.update(prev => ({
       filter,
       date: prev.date

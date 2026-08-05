@@ -68,7 +68,7 @@ export class DmRewardRatesHandler implements OnInit, OnDestroy {
     
     return [
       {
-        label: "Activer une récompense",
+        label: "Gérer les récompenses",
         icon: 'pi pi-arrow-right-arrow-left',
         items
       },
@@ -120,16 +120,34 @@ export class DmRewardRatesHandler implements OnInit, OnDestroy {
   }
   
   private handleApply(id: number): void {
-    this.isRewardsLoading.set(true);
+    const modalRef: DynamicDialogRef<DialogConfirm> | null = this.dialogService.open(DialogConfirm, {
+      inputValues: {
+        title: "Confirmer l'application",
+        message: `Voulez-vous vraiment appliquer cette récompense ? Les livreurs recevrons des récompenses basés sur cette valeur.`,
+        icon: "pi pi-check",
+        acceptLabel: `Oui, appliquer`,
+        severity: "success"
+      },
+      showHeader: false,
+      modal: true,
+      draggable: false,
+      resizable: false
+    });
 
-    this.dmRewardRatesService.applyRewardRate(id).pipe(
+    modalRef?.onClose.pipe(
+      take(1),
+      filter(confirmed => confirmed),
+      mergeMap(() => {
+        this.isRewardsLoading.set(true);
+        return this.dmRewardRatesService.applyRewardRate(id);
+      }),
       takeUntil(this.unsubscribe$),
       finalize(() => this.isRewardsLoading.set(false))
     ).subscribe(() => {
       this.messageService.add({
         severity: 'success',
         summary: 'Succès',
-        detail: 'Récompense activée avec succès',
+        detail: 'Récompense appliquée avec succès',
       });
       this.loadData();
     });

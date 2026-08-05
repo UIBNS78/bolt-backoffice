@@ -10,6 +10,7 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { AvatarModule } from 'primeng/avatar';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { DmSalariesService } from 'app/pages/delivery-men/services/dm-salaries-service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-delivery-man-salary-history',
@@ -17,6 +18,7 @@ import { DmSalariesService } from 'app/pages/delivery-men/services/dm-salaries-s
     DrawerModule,
     TimelineModule,
     ButtonModule,
+    TooltipModule,
     DatePipe,
     NgClass,
     CivilityPipe,

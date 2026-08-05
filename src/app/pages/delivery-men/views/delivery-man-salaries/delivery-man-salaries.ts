@@ -20,6 +20,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DurationPipe } from '@shared/pipes/duration-pipe';
 import { DeliveryManSalaryHistory } from '../../components/salary/delivery-man-salary-history/delivery-man-salary-history';
 import { DmSalariesService } from '../../services/dm-salaries-service';
+import { isPast, isToday } from 'date-fns';
 
 @Component({
   selector: 'app-delivery-man-salaries',
@@ -80,7 +81,7 @@ export class DeliveryManSalaries implements OnInit, OnDestroy {
       data: {
         salary
       },
-      width: '20rem'
+      width: '25rem'
     });
 
     ref?.onClose.pipe(
@@ -99,6 +100,14 @@ export class DeliveryManSalaries implements OnInit, OnDestroy {
 
   isApplied(applyAt: Date): boolean {
     return new Date(applyAt).getTime() < new Date().getTime();
+  }
+
+  isPast(applyAt: Date): boolean {
+    if (isToday(applyAt)) {
+      return false;
+    }
+
+    return isPast(applyAt);
   }
 
   handleOpenHistory(salary: DeliveryManSalary | null = null): void {
