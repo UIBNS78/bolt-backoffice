@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DmService } from './dm-service';
 import { Observable } from 'rxjs';
-import { DMPaymentsList } from '../types/delivery-men-payments';
+import { DMPaymentsList, UpdatePaymentStatusType } from '../types/delivery-men-payments';
 import { FilterDateType } from '@shared/types/common';
 import { HttpParams } from '@angular/common/http';
 import { format } from 'date-fns';
@@ -21,5 +21,9 @@ export class DmPaymentsService extends DmService {
     });
     
     return this.http.get<DMPaymentsList>(`${this.apiUrl}/payments`, { params });
+  }
+
+  updatePaymentStatus(id: number, data: UpdatePaymentStatusType): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/payments/${id}/status`, data);
   }
 }

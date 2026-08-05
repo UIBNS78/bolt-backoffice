@@ -75,7 +75,7 @@
                                     {{ payment.createdAt | date:'dd MMM yyyy' }}
                                 </td>
                                 <td style="text-align: center;">
-                                    <p-tag severity="warn" [value]="payment.status | paymentStatus" [rounded]="true" />
+                                    <app-dm-payments-status-editable [payment]="payment" (onStatusChangeEmitter)="handleChangeStatus(payment.id, $event)" />
                                 </td>
                             </tr>
                         </ng-template>

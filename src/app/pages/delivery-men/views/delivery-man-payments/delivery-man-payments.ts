@@ -4,7 +4,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import { DMPaymentsList } from '../../types/delivery-men-payments';
+import { DMPaymentsList, UpdatePaymentStatusType } from '../../types/delivery-men-payments';
 import { format } from 'date-fns';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { DmPaymentsService } from '../../services/dm-payments-service';
@@ -18,8 +18,9 @@ import { DatePipe, UpperCasePipe } from '@angular/common';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { AriaryPipe } from '@shared/pipes/ariary-pipe';
 import { PaymentModePipe } from '@shared/pipes/payment-pipes/payment-mode-pipe';
-import { PaymentStatusPipe } from '@shared/pipes/payment-pipes/payment-status-pipe';
 import { DmPaymentsPlaceholder } from '../../components/placeholders/dm-payments-placeholder/dm-payments-placeholder';
+import { DmPaymentsStatusEditable } from '../../components/payments/dm-payments-status-editable/dm-payments-status-editable';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-delivery-man-payments',
@@ -39,9 +40,9 @@ import { DmPaymentsPlaceholder } from '../../components/placeholders/dm-payments
     CivilityPipe,
     DatePipe,
     PaymentModePipe,
-    PaymentStatusPipe,
     AriaryPipe,
-    DmPaymentsPlaceholder
+    DmPaymentsPlaceholder,
+    DmPaymentsStatusEditable
   ],
   templateUrl: './delivery-man-payments.html',
   styleUrl: './delivery-man-payments.css',
@@ -49,6 +50,7 @@ import { DmPaymentsPlaceholder } from '../../components/placeholders/dm-payments
 export class DeliveryManPayments implements OnDestroy {
   // services
   private readonly dmPaymentsService: DmPaymentsService = inject(DmPaymentsService);
+  private readonly messageService: MessageService = inject(MessageService);
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
@@ -87,6 +89,19 @@ export class DeliveryManPayments implements OnDestroy {
     this.rows.set(event.rows ?? 10);
   }
 
+  handleChangeStatus(id: number, data: UpdatePaymentStatusType): void {
+    this.dmPaymentsService.updatePaymentStatus(id, data).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Succès',
+        detail: 'Paiement mis à jour avec succès'
+      });
+      this.loadData();
+    });
+  }
+  
   private loadData(): void {
     this.isLoading.set(true);
     this.dmPaymentsService.getDmPayments({

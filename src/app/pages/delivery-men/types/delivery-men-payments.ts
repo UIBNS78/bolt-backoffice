@@ -13,7 +13,8 @@ export type DMPayment = {
     rewardPackages: number;
     rewardRates: number;
     paymentMode: PaymentMode;
-    status: paymentStatus;
+    status: PaymentStatus;
+    pendingAt: Date | null;
     processingAt: Date | null;
     paidAt: Date | null;
     faildAt: Date | null;
@@ -34,7 +35,7 @@ export const PAYMENT_STATUS: {
     failed: 'FAILED',
     onHold: 'ON_HOLD',
 } as const;
-export type paymentStatus = ValueOf<typeof PAYMENT_STATUS>;
+export type PaymentStatus = ValueOf<typeof PAYMENT_STATUS>;
 
 export const PAYMENT_MODE: {
     cash: 'CASH';
@@ -46,3 +47,8 @@ export const PAYMENT_MODE: {
     bank: 'BANK',
 } as const;
 export type PaymentMode = ValueOf<typeof PAYMENT_MODE>;
+
+export type UpdatePaymentStatusType = {
+    status: PaymentStatus,
+    paymentMode: PaymentMode,
+}

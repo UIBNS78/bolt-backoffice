@@ -1,0 +1,25 @@
+<form [formGroup]="form" (ngSubmit)="handleSubmit()" class="flex flex-col gap-4 mt-5">
+    <div class="flex flex-col items-center gap-2">
+        <div class="flex items-center justify-center rounded-full p-5" [ngClass]="getBgColor()">
+            <i [ngClass]="[newStatus()! | paymentStatusIcon,  getColor()]" style="font-size: 1.5rem;"></i>
+        </div>
+        <span class="font-bold text-lg">Nouveau statut</span>
+    </div>
+
+    <p class="text-gray-500 text-center">{{ message() }}</p>
+    
+    @if (showPaymentModeSelection()) {
+        <div class="flex flex-col gap-1">
+            <label for="paymentMode">Veuillez séléctionner le mode de paiement</label>
+            <p-select [options]="paymentModeOptions" formControlName="paymentMode" size="small" optionLabel="label" optionValue="value" [invalid]="form.get('paymentMode')?.invalid && (form.get('paymentMode')?.touched || form.get('paymentMode')?.dirty)" [showClear]="true" appendTo="body" />
+            @if (form.get('paymentMode')?.invalid && (form.get('paymentMode')?.touched || form.get('paymentMode')?.dirty)) {
+                <p-message severity="error" size="small" variant="simple">Mode de paiement requis.</p-message>
+            }
+        </div>
+    }
+    
+    <div class="flex items-center justify-center gap-2">
+        <p-button type="button" label="Annuler" severity="secondary" variant="text" size="small" (click)="handleClose()"></p-button>
+        <p-button type="submit" label="Confirmer" [severity]="newStatus()! | paymentStatusSeverity" size="small"></p-button>
+    </div>
+</form>
