@@ -4,3 +4,9 @@ export type DeliveryMenList = {
     deliveryMen: DeliveryMan[];
     totalItems: number;
 }
+
+export type DMCounts = {
+    online: number;
+    rewardPackages: number;
+    total: number;
+}

@@ -8,13 +8,15 @@ import { DmService as DeliveryMenService } from './services/dm-service';
 import { finalize, Subject, takeUntil } from 'rxjs';
 import { SocketService } from 'core/services/socket-service';
 import { SOCKET_EVENT } from '@shared/types/socket';
-import { UserConnectivitySocketData } from '@shared/types/user';
+import { DMCounts } from './types/delivery-men-list';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-delivery-men',
   imports: [
     SkeletonModule,
     BadgeModule,
+    TooltipModule,
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
@@ -32,7 +34,11 @@ export class DeliveryMen implements OnInit, OnDestroy {
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
   protected isLoading: WritableSignal<boolean> = signal(false);
-  protected data: WritableSignal<{ onlineCount: number; totalCount: number }> = signal({ onlineCount: 0, totalCount: 0 });
+  protected data: WritableSignal<DMCounts> = signal({
+    online: 0, 
+    rewardPackages: 0, 
+    total: 0
+  });
 
   ngOnInit(): void {
     this.isLoading.set(true);
@@ -47,7 +53,7 @@ export class DeliveryMen implements OnInit, OnDestroy {
   }
 
   private loadData(): void {
-    this.deliveryMenService.getOnlineCount().pipe(
+    this.deliveryMenService.getCounts().pipe(
       takeUntil(this.unsubscribe$),
       finalize(() => this.isLoading.set(false))
     ).subscribe(response => {

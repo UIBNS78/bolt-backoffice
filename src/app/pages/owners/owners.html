@@ -25,7 +25,7 @@
     </div>
     <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-2">
         @defer (when !isLoading()) {
-            <p-table [value]="data().owners" [tableStyle]="{ 'min-width': '50rem' }">
+            <p-table [value]="data().owners" [scrollable]="true" scrollHeight="550px" [tableStyle]="{ 'min-width': '50rem' }">
                 <ng-template #header>
                     <tr>
                         <th class="text-center hidden 2xl:table-cell">ID</th>
