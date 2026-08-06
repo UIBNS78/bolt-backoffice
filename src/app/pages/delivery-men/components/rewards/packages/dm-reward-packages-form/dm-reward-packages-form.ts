@@ -53,7 +53,7 @@ export class DmRewardPackagesForm implements OnDestroy {
       title: [data?.title ?? '', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       motivation: [data?.motivation ?? '', [Validators.required, Validators.minLength(10)]],
       minPackages: [data?.minPackages ?? 1, [Validators.required, Validators.min(1)]],
-      reward: [data?.reward ?? 0, [Validators.required, Validators.min(0)]],
+      reward: [data?.reward ?? 4, [Validators.required, Validators.min(4)]],
     });
   }
 

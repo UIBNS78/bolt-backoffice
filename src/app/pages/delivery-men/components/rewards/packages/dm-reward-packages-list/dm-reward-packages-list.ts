@@ -61,6 +61,7 @@ export class DmRewardPackagesList implements OnDestroy {
   protected rows: WritableSignal<number> = signal(10);
   protected selectedDate: WritableSignal<Date> = signal(this.today);
   protected isLoading: WritableSignal<boolean> = signal(false);
+  protected isFiltering: WritableSignal<boolean> = signal(false);
   protected data: WritableSignal<DMRewardPackagesListType> = signal({
     deliveryMenRewards: [],
     totalItems: 0
@@ -140,6 +141,7 @@ export class DmRewardPackagesList implements OnDestroy {
   }
 
   handleSelectFilter(filter: FilterDateWithMode['filter']): void {
+    this.isFiltering.set(true);
     this.filter.update(prev => ({
       filter,
       date: prev.date
@@ -147,6 +149,7 @@ export class DmRewardPackagesList implements OnDestroy {
   }
   
   handleSelectDate(date: Date): void {
+    this.isFiltering.set(true);
     this.selectedDate.set(date);
     this.datepicker.hide();
     this.filter.update(prev => ({
@@ -164,7 +167,10 @@ export class DmRewardPackagesList implements OnDestroy {
     this.isLoading.set(true);
     this.dmRewardPackagesService.getDmRewardPackages(this.filter()).pipe(
       takeUntil(this.unsubscribe$),
-      finalize(() => this.isLoading.set(false))
+      finalize(() => {
+        this.isLoading.set(false);
+        this.isFiltering.set(false);
+      })
     ).subscribe(response => {
       this.data.set(response);
     });
