@@ -109,7 +109,7 @@ export class OwnerForm implements OnDestroy {
     formData.append("firstName", values.firstName);
     formData.append("gender", values.gender);
     formData.append("email", values.email);
-    formData.append("phone", values.phone);
+    formData.append("phone", values.phone.replace(/\s/g, ""));
     formData.append("state", values.state);
     formData.append("planId", values.planId);
     // append image

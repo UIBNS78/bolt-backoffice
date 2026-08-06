@@ -53,8 +53,12 @@
                             <div class="flex flex-col gap-1 w-full">
                                 <label for="phone">Numéro téléphone</label>
                                 <p-iconfield>
-                                    <p-inputicon class="pi pi-phone" />
-                                    <input pInputText pInputMask="+261 99 99 999 99" pSize="small" [autocomplete]="false" id="phone" formControlName="phone" fluid [invalid]="form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)" required />
+                                    <p-inputicon>
+                                        <div class="flex flex-col justify-center h-4">
+                                            <span class="mb-0!" style="font-size: 0.9rem;">261</span>
+                                        </div>
+                                    </p-inputicon>
+                                    <input pInputText pInputMask="99 99 999 99" pSize="small" [autocomplete]="false" id="phone" formControlName="phone" fluid [invalid]="form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)" required />
                                 </p-iconfield>
                                 @if (form.get('phone')?.invalid && (form.get('phone')?.touched || form.get('phone')?.dirty)) {
                                     <p-message severity="error" size="small" variant="simple">Numéro téléphone requis.</p-message>

@@ -74,7 +74,7 @@
                                     <td>
                                         <div class="flex items-center gap-2">
                                             <i class="pi pi-phone" style="font-size: 0.8rem;"></i>
-                                            <p>{{ data()!.owner.phone }}</p>
+                                            <p>0{{ data()!.owner.phone | mask:'99 99 999 99' }}</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -142,7 +142,7 @@
                                     <td>
                                         <div class="flex items-center gap-2">
                                             <i class="pi pi-phone" style="font-size: 0.8rem;"></i>
-                                            <p>{{  data()!.deliveryMan.phone }}</p>
+                                            <p>0{{ data()!.deliveryMan.phone | mask:'99 99 999 99' }}</p>
                                         </div>
                                     </td>
                                 </tr>

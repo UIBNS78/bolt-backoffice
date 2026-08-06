@@ -26,6 +26,8 @@ import { FormatImageSizePipe } from '@shared/pipes/format-image-size-pipe';
 import { ImageModule } from 'primeng/image';
 import { DatePickerModule } from 'primeng/datepicker';
 import { format } from 'date-fns';
+import { InputIconModule } from 'primeng/inputicon';
+import { IconFieldModule } from 'primeng/iconfield';
 
 @Component({
   selector: 'app-delivery-package-form',
@@ -39,6 +41,8 @@ import { format } from 'date-fns';
     InputNumberModule,
     FieldsetModule,
     ToggleSwitchModule,
+    IconFieldModule,
+    InputIconModule,
     NgClass,
     InputMaskModule,
     FileUploadModule,
@@ -141,7 +145,7 @@ export class DeliveryPackageForm implements OnDestroy {
     formData.append("type", values.type);
     formData.append("gender", values.gender);
     formData.append("customer", values.customer);
-    formData.append("phone", values.phone);
+    formData.append("phone", values.phone.replace(/\s/g, ""));
     formData.append("deliveryManId", values.deliveryManId);
     formData.append("price", values.price);
     formData.append("deliveryPrice", values.deliveryPrice);
