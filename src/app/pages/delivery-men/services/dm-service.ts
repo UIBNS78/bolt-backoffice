@@ -3,7 +3,7 @@ import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@a
 import type { DeliveryManDetails } from '@shared/types/delivery-men';
 import { environment } from 'environments/environment';
 import { map, Observable } from 'rxjs';
-import type { DeliveryMenList } from '../types/delivery-men-list';
+import type { DeliveryMenList, DMCounts } from '../types/delivery-men-list';
 import type { DeliveryMenOptionsResponse } from '../types/delivery-men-options-response';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { Gender, GENDER } from '@shared/types/user';
@@ -44,8 +44,8 @@ export class DmService {
     return this.http.get<DeliveryMenList>(`${this.apiUrl}/all`, { params });
   }
 
-  getOnlineCount(): Observable<{ onlineCount: number; totalCount: number }> {
-    return this.http.get<{ onlineCount: number; totalCount: number }>(`${this.apiUrl}/online-count`);
+  getCounts(): Observable<DMCounts> {
+    return this.http.get<DMCounts>(`${this.apiUrl}/counts`);
   }
   
   getAllAsOptions(): Observable<DeliveryMenOptionsResponse[]> {
