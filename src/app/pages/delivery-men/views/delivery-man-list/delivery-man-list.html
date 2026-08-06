@@ -61,7 +61,7 @@
                             </div>
                         </td>
                         <td>
-                            <p-chip [label]="man.phone | mask:'+999 99 99 999 99'" icon="pi pi-phone" />
+                            <p-chip [label]="'0' + (man.phone | mask:'99 99 999 99')" icon="pi pi-phone" />
                         </td>
                         <td style="text-align: center;">
                             <p-rating [(ngModel)]="man.rates" [readonly]="true" />

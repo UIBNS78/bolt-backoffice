@@ -72,7 +72,7 @@
                         <tr>
                             <td>{{ package.gender | civility }} {{ package.customer }}</td>
                             <td>
-                                <p class="font-bold">{{ package.phone | mask:'+999 99 99 999 99' }}</p>
+                                <p class="font-bold">0{{ package.phone | mask:'99 99 999 99' }}</p>
                             </td>
                             <td>
                                 <div class="flex items-center gap-2">

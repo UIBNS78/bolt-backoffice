@@ -123,7 +123,7 @@ export class DeliveryManForm implements OnDestroy {
     formData.append("gender", values.gender);
     formData.append("email", values.email);
     formData.append("birthday", new Date(values.birthday).toISOString());
-    formData.append("phone", values.phone);
+    formData.append("phone", values.phone.replace(/\s/g, ""));
     formData.append("address", values.address);
     formData.append("totalPackages", values.totalPackages);
     formData.append("transport", values.transport);

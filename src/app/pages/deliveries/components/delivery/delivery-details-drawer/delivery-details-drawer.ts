@@ -18,6 +18,7 @@ import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { ImageModule } from 'primeng/image';
 import { RecentPipe } from '@shared/pipes/recent-pipe';
 import { DeliveryStatusTimeline } from '../delivery-status-timeline/delivery-status-timeline';
+import { NgxMaskPipe } from 'ngx-mask';
 
 @Component({
   selector: 'app-delivery-details-drawer',
@@ -38,7 +39,8 @@ import { DeliveryStatusTimeline } from '../delivery-status-timeline/delivery-sta
     BigramPipe,
     ImageModule,
     RecentPipe,
-    DeliveryStatusTimeline
+    DeliveryStatusTimeline,
+    NgxMaskPipe
   ],
   templateUrl: './delivery-details-drawer.html',
   styleUrl: './delivery-details-drawer.css',

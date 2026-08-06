@@ -26,6 +26,8 @@ import { PackageStatusSeverityPipe } from '@shared/pipes/package-pipes/package-s
 import { PackageStatusPipe } from '@shared/pipes/package-pipes/package-status-pipe';
 import { PackageStatusIconPipe } from '@shared/pipes/package-pipes/package-status-icon-pipe';
 import { DmService as DeliveryMenService } from 'app/pages/delivery-men/services/dm-service';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 
 type LocationForm = {
   placeId: FormControl<number | null>;
@@ -60,6 +62,8 @@ type PackageArrayType = {
     ToggleSwitchModule,
     NgClass,
     InputMaskModule,
+    IconFieldModule,
+    InputIconModule,
     TableModule,
     CivilityPipe,
     NgxMaskPipe,
@@ -199,7 +203,7 @@ export class PackageStepForm implements OnChanges, OnDestroy {
       type: p.type,
       gender: p.gender,
       customer: p.customer,
-      phone: p.phone,
+      phone: p.phone?.replace(/\s/g, ""),
       deliveryManId: p.deliveryManId,
       placeId: p.location?.placeId,
       precision: p.location?.precision,
