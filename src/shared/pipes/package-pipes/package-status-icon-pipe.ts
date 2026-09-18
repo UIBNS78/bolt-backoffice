@@ -7,6 +7,9 @@ import { PackageStatus } from '@shared/types/package';
 export class PackageStatusIconPipe implements PipeTransform {
   transform(value: PackageStatus): string {
     switch(value) {
+      case 0:
+        return "pi pi-clock";
+
       case 1:
         return "pi pi-bullseye";
 

@@ -7,6 +7,9 @@ import { PackageStatus } from '@shared/types/package';
 export class PackageStatusSeverityPipe implements PipeTransform {
   transform(value: PackageStatus): 'success' | 'secondary' | 'info' | 'warn' | 'danger' | 'contrast' {
     switch(value) {
+      case 0:
+        return "secondary";
+
       case 1:
         return "info";
 

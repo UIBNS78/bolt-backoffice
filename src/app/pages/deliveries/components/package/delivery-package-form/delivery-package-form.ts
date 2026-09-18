@@ -102,7 +102,7 @@ export class DeliveryPackageForm implements OnDestroy {
       price: [data?.price ?? 0, [Validators.required, Validators.min(0)]],
       deliveryPrice: [{ value: data?.deliveryPrice ?? '', disabled: true }, [Validators.required, Validators.min(0)]],
       isFragile: [data?.isFragile ?? false, [Validators.required]],
-      status: [data?.status ?? PACKAGE_STATUS.inProgress, [Validators.required, Validators.min(1), Validators.max(4)]],
+      status: [data?.status ?? PACKAGE_STATUS.pending, [Validators.required, Validators.min(0), Validators.max(4)]],
       driverInformation: [{ value: data?.driverInformation ?? null, disabled: true }],
       reportedAt: [data?.reportedAt ? format(data.reportedAt, "dd MMMM yyyy") : null],
     });
