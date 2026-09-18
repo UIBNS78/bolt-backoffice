@@ -28,7 +28,6 @@ import { PackageActivities } from '../package-activities/package-activities';
 import { DeliveryDetailsDrawer } from '../../delivery/delivery-details-drawer/delivery-details-drawer';
 import { ActivatedRoute } from '@angular/router';
 import { ImageModule } from 'primeng/image';
-import { PluralPipe } from '@shared/pipes/plural.pipe';
 import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
 
 @Component({
@@ -54,7 +53,6 @@ import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
     PackageActivities,
     DeliveryDetailsDrawer,
     ImageModule,
-    PluralPipe,
     TodayYesterdayTomorrowPipe
   ],
   templateUrl: './delivery-packages-list.html',
