@@ -6,10 +6,10 @@
             </h1>
             @if (delivery()) {
                 <div class="flex items-center gap-2">
-                    <p-tag [value]="packages().filter(p => p.status === 1).length + ' en cours'" severity="secondary" [rounded]="true" icon="pi pi-bullseye" />
-                    <p-tag [value]="packages().filter(p => p.status === 2).length + ' ' + ('livré' | plural:(packages().filter(p => p.status === 2).length))" severity="secondary" [rounded]="true" icon="pi pi-check" />
-                    <p-tag [value]="packages().filter(p => p.status === 3).length + ' ' + ('reporté' | plural:(packages().filter(p => p.status === 3).length))" severity="secondary" [rounded]="true" icon="pi pi-refresh" />
-                    <p-tag [value]="packages().filter(p => p.status === 4).length + ' ' + ('annulé' | plural:(packages().filter(p => p.status === 4).length))" severity="secondary" [rounded]="true" icon="pi pi-times" />
+                    <p-tag [value]="packages().filter(p => p.status === 1).length.toString()" severity="secondary" [rounded]="true" icon="pi pi-bullseye" />
+                    <p-tag [value]="packages().filter(p => p.status === 2).length.toString()" severity="secondary" [rounded]="true" icon="pi pi-check" />
+                    <p-tag [value]="packages().filter(p => p.status === 3).length.toString()" severity="secondary" [rounded]="true" icon="pi pi-refresh" />
+                    <p-tag [value]="packages().filter(p => p.status === 4).length.toString()" severity="secondary" [rounded]="true" icon="pi pi-times" />
                 </div>
             }
         </div>
@@ -17,7 +17,19 @@
             <p-button (click)="handleOpenDeliveryDetails()" icon="pi pi-eye" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Détails de la livraison" tooltipPosition="top" />
             <p-button (click)="handleOpenDeliveryForm()" icon="pi pi-pencil" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Modifier la livraison" tooltipPosition="top" />
             <p-button (click)="handleOpenPackageForm()" icon="pi pi-plus" size="small" severity="secondary" variant="outlined" [disabled]="isLoading() || !delivery()" pTooltip="Ajouter un colis" tooltipPosition="top" />
+            @if (delivery()?.status === 4) {
+                <p-button (click)="handlePayDelivery()" icon="pi pi-check" [label]="delivery()?.paidAt ? 'Payé' : 'Payer'" size="small" severity="success" [disabled]="isLoading() || isPaying() || delivery()?.paidAt || packages().length <= 0" [loading]="isPaying()" [pTooltip]="payButton" tooltipPosition="top" />
+            }
             <p-button (click)="handlePublishDelivery()" icon="pi pi-send" [label]="delivery()?.published ? 'Publiée' : 'Publier'" size="small" severity="info" [disabled]="isLoading() || isPublishing() || delivery()?.published || packages().length <= 0" [loading]="isPublishing()" [pTooltip]="publishButton" tooltipPosition="top" />
+            <ng-template #payButton>
+                <div class="flex flex-col gap-1">
+                    <div class="flex items-center gap-2">
+                        <i class="pi pi-check" style="font-size: 0.8rem;"></i>
+                        <p class="text-bold">{{ delivery()?.paidAt ? `Payé : ${(delivery() && delivery()!.paidAt) ? (delivery()!.paidAt! | todayYesterdayTomorrow:"dd MMM yyyy") : ""}` : "Payer la livraison" }}</p>
+                    </div>
+                    <span class="text-gray-400">Le propriétaire {{ delivery()?.paidAt ? "a déjà été notifié." : "sera notifié une fois que cette livraison sera payée." }}</span>
+                </div>
+            </ng-template>
             <ng-template #publishButton>
                 <div class="flex flex-col gap-1">
                     <div class="flex items-center gap-2">
