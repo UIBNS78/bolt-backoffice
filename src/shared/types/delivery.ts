@@ -29,7 +29,7 @@ export type Delivery = {
     packageNumber: number;
     payment: number;
     deliveryMan: DeiveryRecuperator;
-    recuperationPlace: string;
+    collectPlace: string;
     collectDate: Date;
     deliveryDate: Date;
     createdAt: Date;

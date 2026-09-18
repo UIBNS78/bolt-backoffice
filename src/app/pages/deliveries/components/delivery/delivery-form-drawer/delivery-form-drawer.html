@@ -12,9 +12,9 @@
                             }
                         </div>
                         <div class="flex flex-col gap-1">
-                            <label for="recuperationPlace">Lieu de récupération</label>
-                            <input type="text" pInputText pSize="small" id="recuperationPlace" formControlName="recuperationPlace" fluid [invalid]="form.get('recuperationPlace')?.invalid && (form.get('recuperationPlace')?.touched || form.get('recuperationPlace')?.dirty)" required>
-                            @if (form.get('recuperationPlace')?.invalid && (form.get('recuperationPlace')?.touched || form.get('recuperationPlace')?.dirty)) {
+                            <label for="collectPlace">Lieu de récupération</label>
+                            <input type="text" pInputText pSize="small" id="collectPlace" formControlName="collectPlace" fluid [invalid]="form.get('collectPlace')?.invalid && (form.get('collectPlace')?.touched || form.get('collectPlace')?.dirty)" required>
+                            @if (form.get('collectPlace')?.invalid && (form.get('collectPlace')?.touched || form.get('collectPlace')?.dirty)) {
                                 <p-message severity="error" size="small" variant="simple">Lieu de récupération requis.</p-message>
                             }
                         </div>

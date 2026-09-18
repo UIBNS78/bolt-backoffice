@@ -53,7 +53,7 @@ export class DeliveryStepForm {
       packageNumber: [{ value: 0, disabled: true }, [Validators.required, Validators.min(1)]],
       payment: [0, [Validators.required, Validators.min(0)]],
       deliveryManId: [null, [Validators.required, Validators.min(0)]],
-      recuperationPlace: ["", [Validators.required]],
+      collectPlace: ["", [Validators.required]],
       collectDate: [format(new Date(), "dd MMMM yyyy"), [Validators.required]],
       deliveryDate: [format(new Date(), "dd MMMM yyyy"), [Validators.required]],
       status: [deliveryStatusObj.pending, [Validators.required, Validators.min(1), Validators.max(4)]]
