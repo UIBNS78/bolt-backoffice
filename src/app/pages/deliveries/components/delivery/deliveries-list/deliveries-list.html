@@ -51,7 +51,7 @@
                                         <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : '']">Récup. {{ delivery.deliveryMan.gender | civility }} {{ delivery.deliveryMan.firstName }}</p>
                                         <div class="flex items-center gap-2">
                                             <i [ngClass]="['pi pi-map-marker', selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']" style="font-size: 0.6rem;"></i>
-                                            <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.recuperationPlace }}</p>
+                                            <p [ngClass]="[selectedDelivery()?.id === delivery.id ? 'text-gray-200' : 'text-gray-400']">{{ delivery.collectPlace }}</p>
                                         </div>
                                         <div class="flex items-center justify-between flex-1">
                                             <div class="flex items-center gap-2">

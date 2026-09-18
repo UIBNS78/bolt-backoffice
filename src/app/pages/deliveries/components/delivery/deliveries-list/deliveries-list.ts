@@ -99,7 +99,7 @@ export class DeliveriesList implements OnInit, OnDestroy {
           || d.owner.firstName.toLowerCase().includes(this.searchValue().toLowerCase())
           || d.owner.commercialName.toLowerCase().includes(this.searchValue().toLowerCase())
           || d.deliveryMan.firstName.toLowerCase().includes(this.searchValue().toLowerCase())
-          || d.recuperationPlace.toLowerCase().includes(this.searchValue().toLowerCase())
+          || d.collectPlace.toLowerCase().includes(this.searchValue().toLowerCase())
       })
     })).filter(group => group.deliveries.length > 0);
   });

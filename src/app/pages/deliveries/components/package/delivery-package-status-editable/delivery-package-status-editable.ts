@@ -38,6 +38,14 @@ export class DeliveryPackageStatusEditable {
 
   protected items: MenuItem[] = [
     {
+      id: PACKAGE_STATUS.pending.toString(),
+      label: 'En attente',
+      icon: 'pi pi-clock',
+      command: () => {
+        this.handleStatusChange(PACKAGE_STATUS.pending);
+      }
+    },
+    {
       id: PACKAGE_STATUS.inProgress.toString(),
       label: 'En cours',
       icon: 'pi pi-bullseye',

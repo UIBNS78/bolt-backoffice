@@ -7,6 +7,9 @@ import { PackageStatus } from '@shared/types/package';
 export class PackageStatusPipe implements PipeTransform {
   transform(value: PackageStatus): string {
     switch(value) {
+      case 0:
+        return "En attente";
+
       case 1:
         return "En cours";
 

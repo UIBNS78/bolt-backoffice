@@ -7,6 +7,7 @@ export const packageTypeOptions: InputSelectOptions[] = [
     { id: packageTypeObj.outCity, label: "Livraison en province" }
 ];
 export const packageStatusOptions: InputSelectOptions[] = [
+    { id: PACKAGE_STATUS.pending, label: "En attente", icon: "pi pi-clock" },
     { id: PACKAGE_STATUS.inProgress, label: "En cours", icon: "pi pi-bullseye" },
     { id: PACKAGE_STATUS.delivered, label: "Livré", icon: "pi pi-check" },
     { id: PACKAGE_STATUS.reported, label: "Reporté", icon: "pi pi-refresh" },

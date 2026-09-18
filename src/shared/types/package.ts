@@ -15,11 +15,13 @@ export const packageTypeObj: {
 export type PackageType = ValueOf<typeof packageTypeObj>;
 
 export const PACKAGE_STATUS: {
+    pending: 0;
     inProgress: 1;
     delivered: 2;
     reported: 3;
     cancelled: 4;
 } = {
+    pending: 0,
     inProgress: 1,
     delivered: 2,
     reported: 3,

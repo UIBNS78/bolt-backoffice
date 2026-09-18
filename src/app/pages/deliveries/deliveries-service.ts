@@ -58,6 +58,10 @@ export class DeliveriesService {
     return this.http.put<void>(`${environment.apiURL}/deliveries/${data.id}`, data);
   }
 
+  pay(id: number): Observable<void> {
+    return this.http.patch<void>(`${environment.apiURL}/deliveries/${id}/pay`, {});
+  }
+  
   publish(id: number): Observable<void> {
     return this.http.post<void>(`${environment.apiURL}/deliveries/${id}/publish`, {});
   }

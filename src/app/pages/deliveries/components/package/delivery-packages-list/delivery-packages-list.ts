@@ -28,7 +28,6 @@ import { PackageActivities } from '../package-activities/package-activities';
 import { DeliveryDetailsDrawer } from '../../delivery/delivery-details-drawer/delivery-details-drawer';
 import { ActivatedRoute } from '@angular/router';
 import { ImageModule } from 'primeng/image';
-import { PluralPipe } from '@shared/pipes/plural.pipe';
 import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
 
 @Component({
@@ -54,7 +53,6 @@ import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
     PackageActivities,
     DeliveryDetailsDrawer,
     ImageModule,
-    PluralPipe,
     TodayYesterdayTomorrowPipe
   ],
   templateUrl: './delivery-packages-list.html',
@@ -81,6 +79,7 @@ export class DeliveryPackagesList implements OnDestroy {
   protected hasFilter: WritableSignal<boolean> = signal(false);
   delivery: InputSignal<Delivery | null> = input<Delivery | null>(null);
   protected isLoading: WritableSignal<boolean> = signal(false);
+  protected isPaying: WritableSignal<boolean> = signal(false);
   protected isPublishing: WritableSignal<boolean> = signal(false);
   protected packages: WritableSignal<Package[]> = signal([]);
   protected searchValue: Signal<string> = toSignal(
@@ -254,6 +253,22 @@ export class DeliveryPackagesList implements OnDestroy {
 
   handleOpenReportedDateDialog(): void {
     this.editableStatus()!.handleOpenReportedForm();
+  }
+
+  handlePayDelivery(): void {
+    this.isPaying.set(true);
+    this.deliveriesService.pay(this.delivery()!.id).pipe(
+      takeUntil(this.unsubscribe$),
+      finalize(() => this.isPaying.set(false))
+    ).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Livraison payée',
+        detail: 'La livraison a été payée avec succès.'
+      });
+
+      this.loadDeliveryEmitter.emit();
+    });
   }
 
   handlePublishDelivery(): void {
