@@ -1,115 +1,51 @@
 <div class="flex flex-col gap-4">
-    <div class="flex justify-between items-center">
-        <div class="flex flex-col">
-            <div class="flex items-center gap-3">
-                <h1 class="text-xl font-bold text-blue-950">Propriétaires</h1>
-                @defer (when !isLoading()) {
-                    <div [ngClass]="{'flex items-center gap-1 py-0.5 px-3 border rounded-full': true, 'border-green-100 bg-green-50': counts().onlineCount > 0, 'border-orange-100 bg-orange-50': counts().onlineCount === 0}">
-                        <small [ngClass]="counts().onlineCount > 0 ? 'text-green-500' : 'text-orange-500'">{{ counts().onlineCount }}</small>
-                        <small [ngClass]="counts().onlineCount > 0 ? 'text-green-500' : 'text-orange-500'">{{ 'en ligne' | plural:counts().onlineCount }}</small>
-                    </div>
-                } @placeholder (minimum 600ms) {
-                    <p-skeleton width="4.3rem" height="1.3rem" borderRadius="16px" />
-                }
+    <div class="flex gap-3 h-[calc(100vh-50px)]">
+        <div class="flex flex-col gap-5 border rounded-xl border-gray-200 flex-1 p-4">
+            <div class="flex flex-col gap-1">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-xl font-bold text-blue-950">Propriétaires</h1>
+                    @defer (when !isLoading()) {
+                        <div [ngClass]="{'flex items-center gap-1 py-0.5 px-3 border rounded-full': true, 'border-green-100 bg-green-50': counts().onlineCount > 0, 'border-orange-100 bg-orange-50': counts().onlineCount === 0}">
+                            <small [ngClass]="counts().onlineCount > 0 ? 'text-green-500' : 'text-orange-500'">{{ counts().onlineCount }}</small>
+                            <small [ngClass]="counts().onlineCount > 0 ? 'text-green-500' : 'text-orange-500'">{{ 'en ligne' | plural:counts().onlineCount }}</small>
+                        </div>
+                    } @placeholder (minimum 600ms) {
+                        <p-skeleton width="4.3rem" height="1.3rem" borderRadius="16px" />
+                    }
+                </div>
+                <p class="text-gray-400">Contient toutes les informations nécessaires pour une gestion efficace de notre clientèle.</p>
             </div>
-            <p class="text-gray-400">Contient toutes les informations nécessaires pour une gestion efficace de notre clientèle.</p>
-        </div>
-        <app-owner-counts [counts]="counts()" [loading]="isLoading()"></app-owner-counts>
-    </div>
-    <div class="flex justify-end gap-3">
-        <p-button label="Nouveau" (click)="handleOpenForm()" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
-        <p-iconfield>
-            <p-inputicon class="pi pi-search" />
-            <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || data().totalItems <= 0" />
-        </p-iconfield>
-    </div>
-    <div class="flex flex-col gap-2 border rounded-xl border-gray-200 p-2">
-        @defer (when !isLoading()) {
-            <p-table [value]="data().owners" [scrollable]="true" scrollHeight="550px" [tableStyle]="{ 'min-width': '50rem' }">
-                <ng-template #header>
-                    <tr>
-                        <th class="text-center hidden 2xl:table-cell">ID</th>
-                        <th>Responsable</th>
-                        <th>Nom commercial</th>
-                        <th>Email</th>
-                        <th>Téléphone</th>
-                        <th style="text-align: center;" class="hidden 2xl:table-cell">Nombre de colis</th>
-                        <th style="text-align: center;">Etat du compte</th>
-                        <th>Date de création</th>
-                        <th style="text-align: center;">Action</th>
-                    </tr>
-                </ng-template>
-                <ng-template #body let-owner>
-                    <tr [class.row-flash]="flashingOwnerId() === owner.id">
-                        <td class="hidden 2xl:table-cell">{{ owner.id }}</td>
-                        <td>{{ owner.gender | civility }} {{ (owner.name | uppercase) + ' ' + owner.firstName }}</td>
-                        <td>
-                            <div class="flex items-center gap-2">
-                                <p-overlay-badge [badgeDisabled]="!owner.isOnline" severity="success">
-                                    <p-image [preview]="owner.profilePicture" alt="Profile picture" width="30">
-                                        <ng-template #indicator>
-                                            <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
-                                        </ng-template>
-                                        <ng-template #image>
-                                            <p-avatar 
-                                                [label]="!owner.profilePicture ? ((owner.name + ' ' + owner.firstName) | bigram) : undefined"
-                                                [image]="owner.profilePicture ? owner.profilePicture.thumbnail: undefined"
-                                                shape="circle" 
-                                                style="font-size: 12px; width: 30px; height: 30px" 
-                                            />
-                                        </ng-template>
-                                        <ng-template #preview let-style="style" let-previewCallback="previewCallback">
-                                            <img [src]="owner.profilePicture.original" alt="Profile picture" [style]="style" (click)="previewCallback()" />
-                                        </ng-template>
-                                    </p-image>
-                                </p-overlay-badge>
-                                <p>{{ owner.commercialName }}</p>
-                                @if (owner.createdAt | recent) {
-                                    <p-tag value="Nouveau" severity="info" pTooltip="Créer récemment" tooltipPosition="top" />
-                                }
-                                @if (owner.planId === 2) {
-                                    <i class="pi pi-star-fill" style="color: orange" pTooltip="Premium"></i>
-                                }
+            <div class="flex flex-col gap-4 overflow-y-auto">
+                <div class="flex flex-col gap-1">
+                    <p class="text-gray-500 font-semibold">Informations</p>
+                    <div class="flex flex-col">
+                        <a routerLink="list" routerLinkActive="bg-blue-100/70" #listLink="routerLinkActive" class="flex items-center justify-between gap-2 p-3 cursor-pointer rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <i style="font-size: small;" [ngClass]="['pi pi-users', listLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+                                <p style="font-size: small;" [ngClass]="['', listLink.isActive ? 'text-blue-500' : '']">Liste</p>
                             </div>
-                        </td>
-                        <td>{{ owner.email }}</td>
-                        <td><p-chip [label]="'0' + (owner.phone | mask:'99 99 999 99')" icon="pi pi-phone" /></td>
-                        <td style="text-align: center;" class="hidden 2xl:table-cell">{{ owner.totalPackages }}</td>
-                        <td style="text-align: center;">
-                            <app-owner-state-editable 
-                                [owner]="owner" 
-                                [userId]="owner.userId"
-                                (onStateChangeEmitter)="handleUpdateState($event, owner)"
-                            ></app-owner-state-editable>
-                        </td>
-                        <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
-                        <td>
-                            <div class="flex items-center justify-center">
-                                <p-button (click)="handleDelete(owner)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="owner.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        } @placeholder (minimum 600ms) {
-            <app-owners-placeholder></app-owners-placeholder>
-        }
+                            @defer (when !isLoading()) {
+                                <p-badge [value]="counts().total" [badgeDisabled]="counts().total <= 0" severity="secondary" badgeSize="small" />
+                            } @placeholder (minimum 600ms) {
+                                <p-skeleton width="1.2rem" height="1.2rem" borderRadius="5px" />
+                            }
+                        </a>
 
-        @defer (when !isLoading()) {
-            <p-paginator 
-                (onPageChange)="onPageChange($event)" 
-                [first]="first()" 
-                [rows]="rows()" 
-                [totalRecords]="data().totalItems" 
-                [rowsPerPageOptions]="[10, 20, 30]"
-                class="p-paginator-sm"
-            />
-        } @placeholder (minimum 600ms) {
-            <div class="flex justify-center">
-                <p-skeleton width="15%" height="1.5rem" />
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <p class="text-gray-500 font-semibold">Autres</p>
+                    <div class="flex flex-col">
+                        <a routerLink="faq" routerLinkActive="bg-blue-100/70" #faqLink="routerLinkActive" class="flex items-center gap-2 p-3 cursor-pointer rounded-lg">
+                            <i style="font-size: small;" [ngClass]="['pi pi-question-circle', faqLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
+                            <p style="font-size: small;" [ngClass]="['', faqLink.isActive ? 'text-blue-500' : '']">FAQ</p>
+                        </a>                        
+                    </div>
+                </div>
             </div>
-        }
+        </div>
+        <div class="flex-4 2xl:flex-5 border rounded-xl border-gray-200 p-4">
+            <router-outlet></router-outlet>
+        </div>
     </div>
 </div>
-
-<app-owner-form [open]="showForm()" (onCloseEmitter)="handleOpenForm()" [owner]="undefined"></app-owner-form>

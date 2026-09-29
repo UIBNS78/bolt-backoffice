@@ -1,0 +1,103 @@
+<div class="flex flex-col gap-4">
+    <div class="flex justify-between items-center">
+        <app-owner-counts [counts]="counts()" [loading]="isLoading()"></app-owner-counts>
+    
+        <div class="flex justify-end gap-3">
+            <p-button label="Nouveau" (click)="handleOpenForm()" icon="pi pi-plus" size="small" severity="contrast" [disabled]="isLoading()" />
+            <p-iconfield>
+                <p-inputicon class="pi pi-search" />
+                <input type="text" pInputText pSize="small" placeholder="Recherche" [disabled]="isLoading() || data().totalItems <= 0" />
+            </p-iconfield>
+        </div>
+    </div>
+    <div class="flex flex-col">
+        @defer (when !isLoading()) {
+            <p-table [value]="data().owners" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template #header>
+                    <tr>
+                        <th class="text-center hidden 2xl:table-cell">ID</th>
+                        <th>Responsable</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th style="text-align: center;" class="hidden 2xl:table-cell">Nombre de colis</th>
+                        <th style="text-align: center;">Etat du compte</th>
+                        <th>Date de création</th>
+                        <th style="text-align: center;">Action</th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-owner>
+                    <tr [class.row-flash]="flashingOwnerId() === owner.id">
+                        <td class="hidden 2xl:table-cell">{{ owner.id }}</td>
+                        <td>
+                            <div class="flex items-center gap-2">
+                                <p-overlay-badge [badgeDisabled]="!owner.isOnline" severity="success">
+                                    <p-image [preview]="owner.profilePicture" alt="Profile picture" width="30">
+                                        <ng-template #indicator>
+                                            <i class="pi pi-eye text-white" style="font-size: 0.8rem;"></i>
+                                        </ng-template>
+                                        <ng-template #image>
+                                            <p-avatar 
+                                                [label]="!owner.profilePicture ? ((owner.name + ' ' + owner.firstName) | bigram) : undefined"
+                                                [image]="owner.profilePicture ? owner.profilePicture.thumbnail: undefined"
+                                                shape="circle" 
+                                                style="font-size: 12px; width: 30px; height: 30px" 
+                                            />
+                                        </ng-template>
+                                        <ng-template #preview let-style="style" let-previewCallback="previewCallback">
+                                            <img [src]="owner.profilePicture.original" alt="Profile picture" [style]="style" (click)="previewCallback()" />
+                                        </ng-template>
+                                    </p-image>
+                                </p-overlay-badge>
+                                <div class="flex flex-col">
+                                    <p class="font-bold">{{ owner.commercialName }}</p>
+                                    <p class="text-gray-400">{{ owner.gender | civility }} {{ (owner.name | uppercase) + ' ' + owner.firstName }}</p>
+                                </div>
+                                @if (owner.createdAt | recent) {
+                                    <p-tag value="Nouveau" severity="info" pTooltip="Créer récemment" tooltipPosition="top" />
+                                }
+                                @if (owner.planId === 2) {
+                                    <i class="pi pi-star-fill" style="color: orange" pTooltip="Premium"></i>
+                                }
+                            </div>
+                        </td>
+                        <td>{{ owner.email }}</td>
+                        <td><p-chip [label]="'0' + (owner.phone | mask:'99 99 999 99')" icon="pi pi-phone" /></td>
+                        <td style="text-align: center;" class="hidden 2xl:table-cell">{{ owner.totalPackages }}</td>
+                        <td style="text-align: center;">
+                            <app-owner-state-editable 
+                                [owner]="owner" 
+                                [userId]="owner.userId"
+                                (onStateChangeEmitter)="handleUpdateState($event, owner)"
+                            ></app-owner-state-editable>
+                        </td>
+                        <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
+                        <td>
+                            <div class="flex items-center justify-center">
+                                <p-button (click)="handleDelete(owner)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="owner.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        } @placeholder (minimum 600ms) {
+            <app-owners-placeholder></app-owners-placeholder>
+        }
+
+        @defer (when !isLoading()) {
+            <p-paginator 
+                (onPageChange)="onPageChange($event)" 
+                [first]="first()" 
+                [rows]="rows()" 
+                [totalRecords]="data().totalItems" 
+                [rowsPerPageOptions]="[10, 20, 30]"
+                class="p-paginator-sm"
+            />
+        } @placeholder (minimum 600ms) {
+            <div class="flex justify-center">
+                <p-skeleton width="15%" height="1.5rem" />
+            </div>
+        }
+    </div>
+</div>
+
+<app-owner-form [open]="showForm()" (onCloseEmitter)="handleOpenForm()" [owner]="undefined"></app-owner-form>
