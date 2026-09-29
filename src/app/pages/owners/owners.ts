@@ -1,224 +1,30 @@
-import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
-import { finalize, Subject, take, takeUntil } from 'rxjs';
-import { OwnerList } from './types/owner-list';
-import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { OwnersService } from './owners-service';
-import { OwnersCount } from './types/owners-count';
-import { planObj } from '@shared/types/owner-plan';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { TodayYesterdayTomorrowPipe } from '@shared/pipes/today-yesterday.pipe';
-import { TooltipModule } from 'primeng/tooltip';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { InputTextModule } from 'primeng/inputtext';
-import { ChipModule } from 'primeng/chip';
-import { NgxMaskPipe } from 'ngx-mask';
-import { SkeletonModule } from 'primeng/skeleton';
-import { OwnersPlaceholder } from './components/owners-placeholder/owners-placeholder';
-import { Owner } from '@shared/types/owner';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { DialogConfirm } from '@shared/components/dialogs/dialog-confirm/dialog-confirm';
-import { MessageService } from 'primeng/api';
-import { OwnerForm } from './components/owner-form/owner-form';
-import { OwnerCounts } from './components/owner-counts/owner-counts';
-import { CivilityPipe } from '@shared/pipes/civility-pipe';
-import { OwnerStateEditable } from './components/owner-state-editable/owner-state-editable';
-import { TagModule } from 'primeng/tag';
-import { RecentPipe } from '@shared/pipes/recent-pipe';
-import { UserConnectivitySocketData, UserState } from '@shared/types/user';
-import { AvatarModule } from 'primeng/avatar';
-import { ImageModule } from 'primeng/image';
-import { BigramPipe } from '@shared/pipes/bigram.pipe';
-import { NgClass, UpperCasePipe } from '@angular/common';
-import { OverlayBadgeModule } from 'primeng/overlaybadge';
-import { SocketService } from 'core/services/socket-service';
-import { SOCKET_EVENT } from '@shared/types/socket';
-import { ActivatedRoute } from '@angular/router';
+import { NgClass } from '@angular/common';
+import { Component, signal } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PluralPipe } from '@shared/pipes/plural.pipe';
+import { BadgeModule } from 'primeng/badge';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-owners',
   imports: [
-    PaginatorModule,
-    TableModule,
-    TodayYesterdayTomorrowPipe,
-    ButtonModule,
-    TooltipModule,
-    IconFieldModule,
-    InputIconModule,
-    InputTextModule,
-    ChipModule,
-    NgxMaskPipe,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
     SkeletonModule,
-    OwnersPlaceholder,
-    OwnerForm,
-    OwnerCounts,
-    TooltipModule,
-    CivilityPipe,
-    OwnerStateEditable,
-    TagModule,
-    RecentPipe,
-    ImageModule,
-    AvatarModule,
-    BigramPipe,
-    UpperCasePipe,
-    OverlayBadgeModule,
+    BadgeModule,
     NgClass,
     PluralPipe
 ],
   templateUrl: './owners.html',
   styleUrl: './owners.css',
 })
-export class Owners implements OnInit, OnDestroy {
-  private readonly unsubscribe$: Subject<void> = new Subject<void>();
-  // services
-  private readonly ownersService: OwnersService = inject(OwnersService);
-  private readonly dialogService: DialogService = inject(DialogService);
-  private readonly messageService: MessageService = inject(MessageService);
-  private readonly socketService: SocketService = inject(SocketService);
-  private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
-  
-  // vars
-  protected flashingOwnerId: WritableSignal<number | null> = signal<number | null>(null);
-  protected showForm: WritableSignal<boolean> = signal(false);
-  protected first: WritableSignal<number> = signal(0);
-  protected rows: WritableSignal<number> = signal(10);
-  protected data: WritableSignal<OwnerList> = signal({
-    owners: [],
-    totalItems: 0
-  });
-  protected counts: Signal<OwnersCount> = computed(() => {
-    const owners: Owner[] = this.data().owners;
-
-    return {
-      onlineCount: owners.filter(o => o.isOnline).length,
-      ownersCount: owners.length,
-      premiumCount: owners.filter(o => o.planId === planObj.premium).length,
-      simpleCount: owners.filter(o => o.planId === planObj.simple).length,
-    };
-  });
-  protected isLoading: WritableSignal<boolean> = signal(false);
-  protected isCreating: WritableSignal<boolean> = signal(false);
-
-  ngOnInit(): void {
-    this.isLoading.set(true);
-    this.loadData();
-    
-    // socket listenner
-    this.socketListenner();
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
-  }
-
-  loadData(): void {
-    this.ownersService.getAll({ page: this.first() / this.rows() + 1, itemsPerPage: this.rows()}).pipe(
-      takeUntil(this.unsubscribe$),
-      finalize(() => this.isLoading.set(false))
-    ).subscribe((response: OwnerList) => {
-      this.data.set(response);
-
-      this.triggerFlash();
-    });
-  }
-
-  handleOpenForm(): void {
-    this.showForm.update(prev => {
-      if (prev) {
-        this.loadData();
-        return false;
-      }
-      
-      return true;
-    });
-  }
-
-  handleUpdateState({ userId, newState }: { userId: number; newState: UserState; }, owner: Owner): void {
-    owner.isStateChanging = true;
-    this.ownersService.updateState(userId, newState).pipe(
-      takeUntil(this.unsubscribe$),
-      finalize(() => owner.isStateChanging = false)
-    ).subscribe(() => {
-      this.loadData();
-    });
-  }
-  
-  handleDelete(owner: Owner): void {
-    const modalRef: DynamicDialogRef<DialogConfirm> | null = this.dialogService.open(DialogConfirm, {
-      inputValues: {
-        title: "Suppression",
-        message: "Êtes-vous sûr de vouloir supprimer ce propriétaire ? cette action est irreversible.",
-        icon: "pi pi-trash",
-        acceptLabel: "Oui, supprimer",
-      },
-      showHeader: false,
-      modal: true,
-      draggable: false,
-      resizable: false
-    });
-    
-    modalRef?.onClose.pipe(
-      take(1),
-      takeUntil(this.unsubscribe$),
-    ).subscribe((confirmed: boolean) => {
-      if (confirmed) {
-        owner.isDeleting = true;
-        this.ownersService.delete(owner.id).pipe(
-          take(1),
-          takeUntil(this.unsubscribe$),
-          finalize(() => owner.isDeleting = false)
-        ).subscribe(() => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Suppression réussie',
-            detail: 'Le propriétaire a été supprimé avec succès.'
-          });
-          this.loadData();
-        });
-      }
-    })
-  }
-
-  onPageChange(event: PaginatorState) {
-    this.first.set(event.first ?? 0);
-    this.rows.set(event.rows ?? 10);
-  }
-  
-  private socketListenner(): void {
-    // auto refresh data on man is online/offline
-    this.socketService.onEvent(SOCKET_EVENT.userConnectivity, ({ userId, isOnline }: UserConnectivitySocketData) => {
-      this.data.update(data => {
-        const index = data.owners.findIndex(d => d.userId === userId);
-        if (index !== -1) {
-          data.owners[index].isOnline = isOnline;
-        }
-        return { ...data };
-      })        
-    })
-  }
-
-  private triggerFlash() {
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (params["owner"]) {
-        const ownerId: number = parseInt(params["owner"]!, 10);
-
-        // check owner id
-        if (Number.isNaN(ownerId)) {
-          return;
-        }
-
-        this.flashingOwnerId.set(ownerId);
-        
-        // remove class after animation (2s)
-        setTimeout(() => {
-          if (this.flashingOwnerId() === ownerId) {
-            this.flashingOwnerId.set(null);
-          }
-        }, 2000);
-      }
-    });
-  }
+export class Owners {
+  protected isLoading = signal<boolean>(false);
+  protected counts = signal<{
+    total: number;
+    onlineCount: number;
+    bannedCount: number;
+    pendingCount: number;
+  }>({ total: 0, onlineCount: 0, bannedCount: 0, pendingCount: 0 });
 }

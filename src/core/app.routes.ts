@@ -91,7 +91,22 @@ export const routes: Routes = [
             {
                 path: "owners",
                 title: "Propriétaires",
-                loadComponent: () => import("../app/pages/owners/owners").then(c => c.Owners)
+                loadComponent: () => import("../app/pages/owners/owners").then(c => c.Owners),
+                children: [
+                    {
+                        path: "",
+                        redirectTo: "list",
+                        pathMatch: "full"
+                    },
+                    {
+                        path: "list",
+                        loadComponent: () => import("../app/pages/owners/views/owner-list/owner-list").then(c => c.OwnerList)
+                    },
+                    {
+                        path: "faq",
+                        loadComponent: () => import("../app/pages/owners/views/owner-faq/owner-faq").then(c => c.OwnerFaq)
+                    }
+                ]
             }
         ]
     },
