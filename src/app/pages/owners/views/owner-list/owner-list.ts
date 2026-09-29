@@ -24,12 +24,11 @@ import { UserConnectivitySocketData, UserState } from '@shared/types/user';
 import { AvatarModule } from 'primeng/avatar';
 import { ImageModule } from 'primeng/image';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
-import { NgClass, UpperCasePipe } from '@angular/common';
+import { UpperCasePipe } from '@angular/common';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { SocketService } from 'core/services/socket-service';
 import { SOCKET_EVENT } from '@shared/types/socket';
 import { ActivatedRoute } from '@angular/router';
-import { PluralPipe } from '@shared/pipes/plural.pipe';
 import { OwnersPlaceholder } from '../../components/owners-placeholder/owners-placeholder';
 import { OwnerForm } from '../../components/owner-form/owner-form';
 import { OwnerCounts } from '../../components/owner-counts/owner-counts';
@@ -63,9 +62,7 @@ import { OwnersCount } from '../../types/owners-count';
     AvatarModule,
     BigramPipe,
     UpperCasePipe,
-    OverlayBadgeModule,
-    NgClass,
-    PluralPipe
+    OverlayBadgeModule
 ],
   templateUrl: './owner-list.html',
   styleUrl: './owner-list.css',
