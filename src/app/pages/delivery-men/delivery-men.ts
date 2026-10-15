@@ -44,7 +44,7 @@ export class DeliveryMen implements OnInit, OnDestroy {
     this.isLoading.set(true);
     
     this.loadData();
-    this.socketListenner();
+    this.pusherListenner();
   }
 
   ngOnDestroy(): void {
@@ -61,7 +61,7 @@ export class DeliveryMen implements OnInit, OnDestroy {
     });
   }
   
-  private socketListenner(): void {
+  private pusherListenner(): void {
     this.pusherService.listen<void>(pusherChannel.ADMIN, pusherEvent.USER_PRESENCE).pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe(() => this.loadData());

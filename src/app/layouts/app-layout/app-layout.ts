@@ -37,7 +37,7 @@ export class AppLayout implements OnInit {
     this.browserNotificationService.requestPermission();
     this.loadNotification();
 
-    // show web notification from socket.io
+    // show web notification
     this.notificationListenner();
   }
 

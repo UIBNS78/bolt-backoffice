@@ -102,8 +102,8 @@ export class OwnerList implements OnInit, OnDestroy {
     this.isLoading.set(true);
     this.loadData();
     
-    // socket listenner
-    this.socketListenner();
+    // pusher listenner
+    this.pusherListenner();
   }
 
   ngOnDestroy(): void {
@@ -184,7 +184,7 @@ export class OwnerList implements OnInit, OnDestroy {
     this.rows.set(event.rows ?? 10);
   }
   
-  private socketListenner(): void {
+  private pusherListenner(): void {
     // auto refresh data on man is online/offline
     this.pusherService.listen<UserPresence>(pusherChannel.ADMIN, pusherEvent.USER_PRESENCE).pipe(
       takeUntil(this.unsubscribe$),
