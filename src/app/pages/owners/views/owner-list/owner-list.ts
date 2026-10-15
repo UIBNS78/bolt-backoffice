@@ -20,14 +20,12 @@ import { MessageService } from 'primeng/api';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { TagModule } from 'primeng/tag';
 import { RecentPipe } from '@shared/pipes/recent-pipe';
-import { UserConnectivitySocketData, UserState } from '@shared/types/user';
+import { UserPresence, UserState } from '@shared/types/user';
 import { AvatarModule } from 'primeng/avatar';
 import { ImageModule } from 'primeng/image';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { UpperCasePipe } from '@angular/common';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
-import { SocketService } from 'core/services/socket-service';
-import { SOCKET_EVENT } from '@shared/types/socket';
 import { ActivatedRoute } from '@angular/router';
 import { OwnersPlaceholder } from '../../components/owners-placeholder/owners-placeholder';
 import { OwnerForm } from '../../components/owner-form/owner-form';
@@ -35,6 +33,8 @@ import { OwnerCounts } from '../../components/owner-counts/owner-counts';
 import { OwnerStateEditable } from '../../components/owner-state-editable/owner-state-editable';
 import { OwnersService } from '../../owners-service';
 import { OwnersCount } from '../../types/owners-count';
+import { PusherService } from 'core/services/pusher-service';
+import { pusherChannel, pusherEvent } from '@shared/constants/common';
 
 @Component({
   selector: 'app-owner-list',
@@ -73,7 +73,7 @@ export class OwnerList implements OnInit, OnDestroy {
   private readonly ownersService: OwnersService = inject(OwnersService);
   private readonly dialogService: DialogService = inject(DialogService);
   private readonly messageService: MessageService = inject(MessageService);
-  private readonly socketService: SocketService = inject(SocketService);
+  private readonly pusherService: PusherService = inject(PusherService);
   private readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   
   // vars
@@ -186,7 +186,9 @@ export class OwnerList implements OnInit, OnDestroy {
   
   private socketListenner(): void {
     // auto refresh data on man is online/offline
-    this.socketService.onEvent(SOCKET_EVENT.userConnectivity, ({ userId, isOnline }: UserConnectivitySocketData) => {
+    this.pusherService.listen<UserPresence>(pusherChannel.ADMIN, pusherEvent.USER_PRESENCE).pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe(({ userId, isOnline }) => {
       this.data.update(data => {
         const index = data.owners.findIndex(d => d.userId === userId);
         if (index !== -1) {

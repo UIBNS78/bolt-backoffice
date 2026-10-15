@@ -5,7 +5,9 @@ export const pusherChannel: {
 } as const;
 
 export const pusherEvent: {
-    NOTIFICATIONS: "new-notification"
+    NOTIFICATIONS: "new-notification";
+    USER_PRESENCE: "user-presence";
 } = {
-    NOTIFICATIONS: "new-notification"
+    NOTIFICATIONS: "new-notification",
+    USER_PRESENCE: "user-presence"
 } as const;

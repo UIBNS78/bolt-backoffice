@@ -27,12 +27,12 @@ import { TagModule } from 'primeng/tag';
 import { CivilityPipe } from '@shared/pipes/civility-pipe';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
-import { SocketService } from 'core/services/socket-service';
-import { SOCKET_EVENT } from '@shared/types/socket';
-import { UserConnectivitySocketData } from '@shared/types/user';
+import { UserPresence } from '@shared/types/user';
 import { BadgeModule } from 'primeng/badge';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
+import { PusherService } from 'core/services/pusher-service';
+import { pusherChannel, pusherEvent } from '@shared/constants/common';
 
 @Component({
   selector: 'app-delivery-man-list',
@@ -73,7 +73,7 @@ export class DeliveryManList implements OnInit, OnDestroy {
   private deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
   private readonly dialogService: DialogService = inject(DialogService);
   private readonly messageService: MessageService = inject(MessageService);
-  private readonly socketService: SocketService = inject(SocketService);
+  private readonly pusherService: PusherService = inject(PusherService);
   // vars
   protected first: WritableSignal<number> = signal(0);
   protected rows: WritableSignal<number> = signal(10);
@@ -169,14 +169,16 @@ export class DeliveryManList implements OnInit, OnDestroy {
 
   private socketListenner(): void {
     // auto refresh data on man is online/offline
-    this.socketService.onEvent(SOCKET_EVENT.userConnectivity, ({ userId, isOnline }: UserConnectivitySocketData) => {
+    this.pusherService.listen<UserPresence>(pusherChannel.ADMIN, pusherEvent.USER_PRESENCE).pipe(
+      takeUntil(this.unsubscribe$),
+    ).subscribe(({ userId, isOnline }) => {
       this.data.update(data => {
         const index = data.deliveryMen.findIndex(d => d.userId === userId);
         if (index !== -1) {
           data.deliveryMen[index].isOnline = isOnline;
         }
         return { ...data };
-      })        
+      });
     })
   }
 }
