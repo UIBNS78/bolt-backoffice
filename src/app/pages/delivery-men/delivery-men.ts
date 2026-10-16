@@ -6,10 +6,10 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { NgClass } from '@angular/common';
 import { DmService as DeliveryMenService } from './services/dm-service';
 import { finalize, Subject, takeUntil } from 'rxjs';
-import { SocketService } from 'core/services/socket-service';
-import { SOCKET_EVENT } from '@shared/types/socket';
 import { DMCounts } from './types/delivery-men-list';
 import { TooltipModule } from 'primeng/tooltip';
+import { PusherService } from 'core/services/pusher-service';
+import { pusherChannel, pusherEvent } from '@shared/constants/common';
 
 @Component({
   selector: 'app-delivery-men',
@@ -29,7 +29,7 @@ import { TooltipModule } from 'primeng/tooltip';
 export class DeliveryMen implements OnInit, OnDestroy {
   // services
   private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
-    private readonly socketService: SocketService = inject(SocketService);
+  private readonly pusherService: PusherService = inject(PusherService);
   
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
@@ -44,7 +44,7 @@ export class DeliveryMen implements OnInit, OnDestroy {
     this.isLoading.set(true);
     
     this.loadData();
-    this.socketListenner();
+    this.pusherListenner();
   }
 
   ngOnDestroy(): void {
@@ -61,7 +61,9 @@ export class DeliveryMen implements OnInit, OnDestroy {
     });
   }
   
-  private socketListenner(): void {
-    this.socketService.onEvent(SOCKET_EVENT.userConnectivity, () => this.loadData());
+  private pusherListenner(): void {
+    this.pusherService.listen<void>(pusherChannel.ADMIN, pusherEvent.USER_PRESENCE).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(() => this.loadData());
   }
 }

@@ -6,6 +6,7 @@ import { environment } from 'environments/environment';
 import { OwnerOptionsResponse } from './types/owner-options-response';
 import { InputSelectOptions } from '@shared/components/types/input-select-options';
 import { Gender, UserState } from '@shared/types/user';
+import { OwnerOnlineCounts } from './types/owners-count';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +27,7 @@ export class OwnersService {
   getAll(pagination?: {
     itemsPerPage: number;
     page: number;
-}): Observable<OwnerList> {
+  }): Observable<OwnerList> {
     const params = new HttpParams({
       fromObject: {
         page: pagination ? pagination.page : 1,
@@ -35,6 +36,10 @@ export class OwnersService {
     });
 
     return this.http.get<OwnerList>(`${environment.apiURL}/owners/all`, { params });
+  }
+  
+  getOnlineCounts(): Observable<OwnerOnlineCounts> {
+    return this.http.get<OwnerOnlineCounts>(`${environment.apiURL}/owners/online-counts`);
   }
 
   getAllAsOptions(): Observable<OwnerOptionsResponse[]> {

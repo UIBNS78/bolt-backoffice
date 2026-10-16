@@ -2,13 +2,14 @@ import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { SideNav } from "../../components/side-nav/side-nav";
 import { DmService as DeliveryMenService } from 'app/pages/delivery-men/services/dm-service';
-import { combineLatest, Subject, takeUntil } from 'rxjs';
+import { combineLatest, filter, Subject, takeUntil } from 'rxjs';
 import { OwnersService } from 'app/pages/owners/owners-service';
 import { DeliveryPricesService } from 'app/pages/delivery-prices/delivery-prices-service';
 import { BrowserNotificationService } from 'core/services/browser-notification-service';
 import { NotificationService } from 'app/components/notification/notification-service';
-import { NotificationSocketData, SOCKET_EVENT } from '@shared/types/socket';
-import { SocketService } from 'core/services/socket-service';
+import { PusherService } from 'core/services/pusher-service';
+import { pusherChannel, pusherEvent } from '@shared/constants/common';
+import { NotificationPusherData } from '@shared/types/pusher';
 
 @Component({
   selector: 'app-app-layout',
@@ -26,7 +27,7 @@ export class AppLayout implements OnInit {
   private readonly deliveryPricesSerivce: DeliveryPricesService = inject(DeliveryPricesService);
   private readonly browserNotificationService: BrowserNotificationService = inject(BrowserNotificationService);
   private readonly notificationService: NotificationService = inject(NotificationService);
-  private readonly socketService: SocketService = inject(SocketService);
+  private readonly pusherService: PusherService = inject(PusherService);
 
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();
@@ -36,7 +37,7 @@ export class AppLayout implements OnInit {
     this.browserNotificationService.requestPermission();
     this.loadNotification();
 
-    // show web notification from socket.io
+    // show web notification
     this.notificationListenner();
   }
 
@@ -53,7 +54,8 @@ export class AppLayout implements OnInit {
 
   private loadNotification(): void {
     this.notificationService.init().pipe(
-      takeUntil(this.unsubscribe$)
+      takeUntil(this.unsubscribe$),
+      filter(content => !!content)
     ).subscribe(response => {
       response.forEach((data, i) => {
         setTimeout(() => {
@@ -68,7 +70,10 @@ export class AppLayout implements OnInit {
   }
 
   private notificationListenner(): void {
-    this.socketService.onEvent(SOCKET_EVENT.newNotification, (content: NotificationSocketData[]) => {
+    this.pusherService.listen<NotificationPusherData[] | undefined>(pusherChannel.ADMIN, pusherEvent.NOTIFICATIONS).pipe(
+      takeUntil(this.unsubscribe$),
+      filter(content => !!content)
+    ).subscribe((content) => {
       content.forEach((data, i) => {
         setTimeout(() => {
           this.browserNotificationService.show(data.title, {
@@ -77,6 +82,7 @@ export class AppLayout implements OnInit {
           });
         }, i * 200);
       });
+
       // mark all notification as pushed
       const ids = content.map(n => n.data.notificationId);
       this.notificationService.markAsPushed(ids).pipe(
