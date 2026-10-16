@@ -5,9 +5,9 @@
                 <div class="flex justify-between items-center">
                     <h1 class="text-xl font-bold text-blue-950">Propriétaires</h1>
                     @defer (when !isLoading()) {
-                        <div [ngClass]="{'flex items-center gap-1 py-0.5 px-3 border rounded-full': true, 'border-green-100 bg-green-50': counts().onlineCount > 0, 'border-orange-100 bg-orange-50': counts().onlineCount === 0}">
-                            <small [ngClass]="counts().onlineCount > 0 ? 'text-green-500' : 'text-orange-500'">{{ counts().onlineCount }}</small>
-                            <small [ngClass]="counts().onlineCount > 0 ? 'text-green-500' : 'text-orange-500'">{{ 'en ligne' | plural:counts().onlineCount }}</small>
+                        <div [ngClass]="{'flex items-center gap-1 py-0.5 px-3 border rounded-full': true, 'border-green-100 bg-green-50': onlineCounts() > 0, 'border-orange-100 bg-orange-50': onlineCounts() === 0}">
+                            <small [ngClass]="onlineCounts() > 0 ? 'text-green-500' : 'text-orange-500'">{{ onlineCounts() }}</small>
+                            <small [ngClass]="onlineCounts() > 0 ? 'text-green-500' : 'text-orange-500'">{{ 'en ligne' | plural:onlineCounts() }}</small>
                         </div>
                     } @placeholder (minimum 600ms) {
                         <p-skeleton width="4.3rem" height="1.3rem" borderRadius="16px" />
@@ -24,11 +24,6 @@
                                 <i style="font-size: small;" [ngClass]="['pi pi-users', listLink.isActive ? 'text-blue-500' : 'text-gray-400']"></i>
                                 <p style="font-size: small;" [ngClass]="['', listLink.isActive ? 'text-blue-500' : '']">Liste</p>
                             </div>
-                            @defer (when !isLoading()) {
-                                <p-badge [value]="counts().total" [badgeDisabled]="counts().total <= 0" severity="secondary" badgeSize="small" />
-                            } @placeholder (minimum 600ms) {
-                                <p-skeleton width="1.2rem" height="1.2rem" borderRadius="5px" />
-                            }
                         </a>
 
                     </div>

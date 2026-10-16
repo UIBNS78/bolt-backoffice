@@ -89,7 +89,6 @@ export class OwnerList implements OnInit, OnDestroy {
     const owners: Owner[] = this.data().owners;
 
     return {
-      onlineCount: owners.filter(o => o.isOnline).length,
       ownersCount: owners.length,
       premiumCount: owners.filter(o => o.planId === planObj.premium).length,
       simpleCount: owners.filter(o => o.planId === planObj.simple).length,

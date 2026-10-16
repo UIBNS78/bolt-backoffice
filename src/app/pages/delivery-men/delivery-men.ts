@@ -29,7 +29,7 @@ import { pusherChannel, pusherEvent } from '@shared/constants/common';
 export class DeliveryMen implements OnInit, OnDestroy {
   // services
   private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
-    private readonly pusherService: PusherService = inject(PusherService);
+  private readonly pusherService: PusherService = inject(PusherService);
   
   // vars
   private readonly unsubscribe$: Subject<void> = new Subject<void>();

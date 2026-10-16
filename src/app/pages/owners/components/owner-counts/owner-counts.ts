@@ -15,7 +15,6 @@ import { OwnersCount } from '../../types/owners-count';
 export class OwnerCounts {
   @Input() loading: boolean = false;
   @Input() counts: OwnersCount = {
-    onlineCount: 0,
     ownersCount: 0,
     premiumCount: 0,
     simpleCount: 0
