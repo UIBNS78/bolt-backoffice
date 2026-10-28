@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { finalize, Subject, take, takeUntil } from 'rxjs';
 import { OwnerList as OwnerListType } from '../../types/owner-list';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
@@ -24,7 +24,7 @@ import { UserPresence, UserState } from '@shared/types/user';
 import { AvatarModule } from 'primeng/avatar';
 import { ImageModule } from 'primeng/image';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
-import { UpperCasePipe } from '@angular/common';
+import { DatePipe, UpperCasePipe } from '@angular/common';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { ActivatedRoute } from '@angular/router';
 import { OwnersPlaceholder } from '../../components/owners-placeholder/owners-placeholder';
@@ -62,6 +62,7 @@ import { pusherChannel, pusherEvent } from '@shared/constants/common';
     AvatarModule,
     BigramPipe,
     UpperCasePipe,
+    DatePipe,
     OverlayBadgeModule
 ],
   templateUrl: './owner-list.html',
@@ -97,9 +98,12 @@ export class OwnerList implements OnInit, OnDestroy {
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected isCreating: WritableSignal<boolean> = signal(false);
 
+  constructor() {
+    effect(() => this.loadData());
+  }
+  
   ngOnInit(): void {
     this.isLoading.set(true);
-    this.loadData();
     
     // pusher listenner
     this.pusherListenner();
