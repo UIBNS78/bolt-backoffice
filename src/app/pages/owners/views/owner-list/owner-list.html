@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-2">
     <div class="flex justify-between items-center">
         <app-owner-counts [counts]="counts()" [loading]="isLoading()"></app-owner-counts>
     
@@ -55,13 +55,16 @@
                                 @if (owner.createdAt | recent) {
                                     <p-tag value="Nouveau" severity="info" pTooltip="Créer récemment" tooltipPosition="top" />
                                 }
+                                @if (owner.state === "DELETED") {
+                                    <p-tag value="Supprimé" severity="danger" pTooltip="Supprimé" tooltipPosition="top" />
+                                }
                                 @if (owner.planId === 2) {
                                     <i class="pi pi-star-fill" style="color: orange" pTooltip="Premium"></i>
                                 }
                             </div>
                         </td>
                         <td>{{ owner.email }}</td>
-                        <td><p-chip [label]="'0' + (owner.phone | mask:'99 99 999 99')" icon="pi pi-phone" /></td>
+                        <td>{{ '0' + (owner.phone | mask:'99 99 999 99') }}</td>
                         <td style="text-align: center;" class="hidden 2xl:table-cell">{{ owner.totalPackages }}</td>
                         <td style="text-align: center;">
                             <app-owner-state-editable 
@@ -88,8 +91,7 @@
                 (onPageChange)="onPageChange($event)" 
                 [first]="first()" 
                 [rows]="rows()" 
-                [totalRecords]="data().totalItems" 
-                [rowsPerPageOptions]="[10, 20, 30]"
+                [totalRecords]="data().totalItems"
                 class="p-paginator-sm"
             />
         } @placeholder (minimum 600ms) {

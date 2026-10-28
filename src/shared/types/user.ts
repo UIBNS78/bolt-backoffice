@@ -14,10 +14,12 @@ export const USER_STATE: {
     pending: 'PENDING';
     confirmed: 'CONFIRMED';
     rejected: 'REJECTED';
+    deleted: 'DELETED';
 } = {
     pending: 'PENDING',
     confirmed: 'CONFIRMED',
-    rejected: 'REJECTED'
+    rejected: 'REJECTED',
+    deleted: 'DELETED'
 } as const;
 export type UserState = ValueOf<typeof USER_STATE>;
 

@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, OnInit, Signal, signal, WritableSignal } from '@angular/core';
 import { finalize, Subject, take, takeUntil } from 'rxjs';
 import { OwnerList as OwnerListType } from '../../types/owner-list';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
@@ -97,9 +97,12 @@ export class OwnerList implements OnInit, OnDestroy {
   protected isLoading: WritableSignal<boolean> = signal(false);
   protected isCreating: WritableSignal<boolean> = signal(false);
 
+  constructor() {
+    effect(() => this.loadData());
+  }
+  
   ngOnInit(): void {
     this.isLoading.set(true);
-    this.loadData();
     
     // pusher listenner
     this.pusherListenner();
