@@ -35,6 +35,7 @@ export type User = {
     isOnline: boolean;
     createdAt: Date;
     modifiedAt: Date;
+    deletedAt?: Date | null;
 }
 
 export type UserPresence = {

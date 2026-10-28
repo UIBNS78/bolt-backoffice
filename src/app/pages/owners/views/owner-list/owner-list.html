@@ -56,7 +56,7 @@
                                     <p-tag value="Nouveau" severity="info" pTooltip="Créer récemment" tooltipPosition="top" />
                                 }
                                 @if (owner.state === "DELETED") {
-                                    <p-tag value="Supprimé" severity="danger" pTooltip="Supprimé" tooltipPosition="top" />
+                                    <p-tag value="Supprimé" severity="danger" [pTooltip]="`Supprimé le ${owner.deletedAt | date:'dd MMMM yyyy'}`" tooltipPosition="top" />
                                 }
                                 @if (owner.planId === 2) {
                                     <i class="pi pi-star-fill" style="color: orange" pTooltip="Premium"></i>
@@ -67,16 +67,24 @@
                         <td>{{ '0' + (owner.phone | mask:'99 99 999 99') }}</td>
                         <td style="text-align: center;" class="hidden 2xl:table-cell">{{ owner.totalPackages }}</td>
                         <td style="text-align: center;">
-                            <app-owner-state-editable 
-                                [owner]="owner" 
-                                [userId]="owner.userId"
-                                (onStateChangeEmitter)="handleUpdateState($event, owner)"
-                            ></app-owner-state-editable>
+                            @if (owner.state !== "DELETED") {
+                                <app-owner-state-editable 
+                                    [owner]="owner" 
+                                    [userId]="owner.userId"
+                                    (onStateChangeEmitter)="handleUpdateState($event, owner)"
+                                ></app-owner-state-editable>
+                            } @else {
+                                <span class="text-gray-300">-</span>
+                            }
                         </td>
                         <td>{{ owner.createdAt | todayYesterdayTomorrow:"dd MMMM yyyy" }}</td>
                         <td>
                             <div class="flex items-center justify-center">
-                                <p-button (click)="handleDelete(owner)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="owner.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
+                                @if (owner.state !== "DELETED") {
+                                    <p-button (click)="handleDelete(owner)" icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger" [loading]="owner.isDeleting" size="small" pTooltip="Supprimer" tooltipPosition="top" />
+                                } @else {
+                                    <span class="text-gray-300">-</span>
+                                }
                             </div>
                         </td>
                     </tr>

@@ -24,7 +24,7 @@ import { UserPresence, UserState } from '@shared/types/user';
 import { AvatarModule } from 'primeng/avatar';
 import { ImageModule } from 'primeng/image';
 import { BigramPipe } from '@shared/pipes/bigram.pipe';
-import { UpperCasePipe } from '@angular/common';
+import { DatePipe, UpperCasePipe } from '@angular/common';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { ActivatedRoute } from '@angular/router';
 import { OwnersPlaceholder } from '../../components/owners-placeholder/owners-placeholder';
@@ -62,6 +62,7 @@ import { pusherChannel, pusherEvent } from '@shared/constants/common';
     AvatarModule,
     BigramPipe,
     UpperCasePipe,
+    DatePipe,
     OverlayBadgeModule
 ],
   templateUrl: './owner-list.html',
