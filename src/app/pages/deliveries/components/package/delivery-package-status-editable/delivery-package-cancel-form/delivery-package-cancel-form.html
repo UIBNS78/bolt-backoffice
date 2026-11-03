@@ -1,0 +1,20 @@
+<p-dialog header="Annuler le colis" [modal]="true" [visible]="visible()" (onHide)="handleClose()" [style]="{ width: '25rem' }">
+    <form [formGroup]="form" (ngSubmit)="handleSubmit()">
+        <div class="flex flex-col gap-3">
+            <div class="flex flex-col gap-2 w-full">
+                <div class="flex flex-col">
+                    <label for="cancelReason">Motif de l'annulation</label>
+                    <span class="text-gray-400">Saisissez la raison de l'annulation du colis.</span>
+                </div>
+                <p-autocomplete formControlName="cancelReason" [suggestions]="reasonOptions()" [invalid]="form.get('cancelReason')?.invalid && (form.get('cancelReason')?.touched || form.get('cancelReason')?.dirty)" (completeMethod)="searchReason($event)" fluid appendTo="body" />
+                @if (form.get('cancelReason')?.invalid && (form.get('cancelReason')?.touched || form.get('cancelReason')?.dirty)) {
+                    <p-message severity="error" size="small" variant="simple">Motif requise.</p-message>
+                }
+            </div>
+            <div class="flex items-center justify-end gap-3">
+                <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" />
+                <p-button type="submit" label="Modifier" severity="contrast" size="small" />
+            </div>
+        </div>
+    </form>
+</p-dialog>

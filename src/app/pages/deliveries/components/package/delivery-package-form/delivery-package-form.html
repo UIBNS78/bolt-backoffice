@@ -244,7 +244,7 @@
                          @if (packageStatusControl.value === 4) {
                             <div class="flex flex-col gap-1 w-full">
                                 <label for="cancelReason">Motif de l'annulation</label>
-                                <p-autocomplete formControlName="cancelReason" [suggestions]="reasonOptions()" [invalid]="form.get('cancelReason')?.invalid && (form.get('cancelReason')?.touched || form.get('cancelReason')?.dirty)" (completeMethod)="searchReason($event)" fluid />
+                                <p-autocomplete formControlName="cancelReason" [suggestions]="reasonOptions()" [invalid]="form.get('cancelReason')?.invalid && (form.get('cancelReason')?.touched || form.get('cancelReason')?.dirty)" (completeMethod)="searchReason($event)" fluid appendTo="body" />
                                 @if (form.get('cancelReason')?.invalid && (form.get('cancelReason')?.touched || form.get('cancelReason')?.dirty)) {
                                     <p-message severity="error" size="small" variant="simple">Motif requise.</p-message>
                                 }                                
