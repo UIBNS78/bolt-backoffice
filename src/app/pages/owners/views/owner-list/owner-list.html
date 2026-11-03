@@ -50,7 +50,7 @@
                                 </p-overlay-badge>
                                 <div class="flex flex-col">
                                     <p class="font-bold">{{ owner.commercialName }}</p>
-                                    <p class="text-gray-400">{{ owner.gender | civility }} {{ (owner.name | uppercase) + ' ' + owner.firstName }}</p>
+                                    <p class="text-gray-400">{{ owner.gender | civility }} {{ owner.firstName }}</p>
                                 </div>
                                 @if (owner.createdAt | recent) {
                                     <p-tag value="Nouveau" severity="info" pTooltip="Créer récemment" tooltipPosition="top" />

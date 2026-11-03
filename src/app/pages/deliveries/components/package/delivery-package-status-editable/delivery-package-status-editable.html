@@ -28,3 +28,9 @@
     (closeEmitter)="handleCloseReportedForm()"
     [defaultDate]="package().status === 3 ? package().reportedAt : null"
 ></app-delivery-package-reported-form>
+
+<app-delivery-package-cancel-form
+    [visible]="openCancelForm()"
+    (submitEmitter)="handleSubmitCancelForm($event)"
+    (closeEmitter)="handleCloseCancelForm()"
+/>

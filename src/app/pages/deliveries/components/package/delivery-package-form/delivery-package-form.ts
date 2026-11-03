@@ -28,6 +28,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { format } from 'date-fns';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
+import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 
 @Component({
   selector: 'app-delivery-package-form',
@@ -35,6 +36,7 @@ import { IconFieldModule } from 'primeng/iconfield';
     DrawerModule,
     ReactiveFormsModule,
     InputTextModule,
+    AutoCompleteModule,
     ButtonModule,
     MessageModule,
     SelectModule,
@@ -60,11 +62,12 @@ export class DeliveryPackageForm implements OnDestroy {
   protected deliveryPricesService: DeliveryPricesService = inject(DeliveryPricesService);
   private readonly deliveryMenService: DeliveryMenService = inject(DeliveryMenService);
   protected messageService: MessageService = inject(MessageService);
-
+  
   // vars
   private unsubscribe$: Subject<void> = new Subject<void>();
   private _form: FormGroup = new FormGroup({});
   private _data: WritableSignal<Package | null> = signal(null);
+  private scrollFormRef = viewChild<ElementRef<HTMLElement>>("scrollFormRef");
   private initialFormValues: WritableSignal<Package | null> = signal(null);
   protected packageTypeOptions: InputSelectOptions[] = packageTypeOpt;
   protected packageStatusOptions: InputSelectOptions[] = packageStatusOpt;
@@ -75,6 +78,14 @@ export class DeliveryPackageForm implements OnDestroy {
   protected menOptions: Signal<InputSelectOptions[]> = this.deliveryMenService.deliveryMenOptions;
   protected locationCityOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cityOptions;
   protected locationCooperativeOptions: Signal<SelectItemGroup[]> = this.deliveryPricesService.cooperativeOptions;
+  protected defaultReason: string[] = [
+    "Décision du client",
+    "Client injoignable",
+    "Colis endommagé",
+    "Colis incomplet",
+    "Décision du propriétaire",
+  ];
+  protected reasonOptions: WritableSignal<string[]> = signal(this.defaultReason);
 
   @Output() onCloseEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() open: boolean = false;
@@ -105,6 +116,7 @@ export class DeliveryPackageForm implements OnDestroy {
       status: [data?.status ?? PACKAGE_STATUS.pending, [Validators.required, Validators.min(0), Validators.max(4)]],
       driverInformation: [{ value: data?.driverInformation ?? null, disabled: true }],
       reportedAt: [data?.reportedAt ? format(data.reportedAt, "dd MMMM yyyy") : null],
+      cancelReason: [data?.cancelReason ?? null]
     });
 
     
@@ -151,7 +163,12 @@ export class DeliveryPackageForm implements OnDestroy {
     formData.append("deliveryPrice", values.deliveryPrice);
     formData.append("isFragile", values.isFragile);
     formData.append("status", values.status);
-    formData.append("reportedAt", values.reportedAt);
+    if (values.reportedAt) {
+      formData.append("reportedAt", new Date(values.reportedAt).toISOString());
+    }
+    if (values.cancelReason) {
+      formData.append("cancelReason", values.cancelReason);
+    }
     // append place city
     if (values.type === packageTypeObj.inCity) {
       formData.append("placeId", values.location.placeId);
@@ -226,6 +243,14 @@ export class DeliveryPackageForm implements OnDestroy {
     this.onCloseEmitter.emit(isCancel);
   }
 
+  searchReason(event: AutoCompleteCompleteEvent): void {
+    if (!event.query || event.query.length <= 0) {
+      this.reasonOptions.set([...this.defaultReason]);
+    } else {
+      this.reasonOptions.set(this.defaultReason.filter(option => option.includes(event.query)));
+    }
+  }
+  
   private packageTypeListener(): void {
     this.form.get('type')?.valueChanges.pipe(
       takeUntil(this.unsubscribe$),
@@ -244,6 +269,7 @@ export class DeliveryPackageForm implements OnDestroy {
       // set reported date required
       if (value === PACKAGE_STATUS.reported) {
         this.form.get("reportedAt")?.setValidators([Validators.required]);
+        this.scrollToBottom();
       } else {
         this.form.get("reportedAt")?.clearValidators();
         this.form.patchValue({
@@ -255,6 +281,7 @@ export class DeliveryPackageForm implements OnDestroy {
       if (value === PACKAGE_STATUS.delivered && this.packageTypeSignal() === packageTypeObj.outCity) {
         this.form.setControl("driverInformation", this.formBuilder.control('', [Validators.required]));
         this.form.get("driverInformation")?.enable();
+        this.scrollToBottom();
       } else {
         this.form.get("driverInformation")?.disable();
         this.form.removeControl("driverInformation");
@@ -262,6 +289,17 @@ export class DeliveryPackageForm implements OnDestroy {
           driverInformation: null
         });
         this.form.get("driverInformation")?.markAsTouched();
+      }
+      // set cancel reason
+      if (value === PACKAGE_STATUS.cancelled) {
+        this.form.get("cancelReason")?.setValidators([Validators.required]);
+        this.scrollToBottom();
+      } else {
+        this.form.get("cancelReason")?.clearValidators();
+        this.form.patchValue({
+          cancelReason: null
+        });
+        this.form.get("cancelReason")?.markAsTouched();
       }
     });
   }
@@ -311,5 +349,17 @@ export class DeliveryPackageForm implements OnDestroy {
       const locationCity: SelectItemGroup | undefined = this.locationCooperativeOptions().find(lco => lco.items.find(i => i.value === value))
       this.form.get("deliveryPrice")?.setValue(locationCity ? locationCity.value : 0);
     });
+  }
+
+  private scrollToBottom(): void {
+    setTimeout(() => {
+      const element = this.scrollFormRef()?.nativeElement;
+      if (element) {
+        element.scrollTo({
+          top: element.scrollHeight,
+          behavior: "smooth"
+        });
+      }
+    }, 0);
   }
 }

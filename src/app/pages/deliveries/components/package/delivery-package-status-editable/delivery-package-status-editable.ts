@@ -11,6 +11,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { DriverInformationDialog } from './driver-information-dialog/driver-information-dialog';
 import { DeliveryPackageReportedForm } from './delivery-package-reported-form/delivery-package-reported-form';
+import { DeliveryPackageCancelForm } from './delivery-package-cancel-form/delivery-package-cancel-form';
 
 @Component({
   selector: 'app-delivery-package-status-editable',
@@ -24,7 +25,8 @@ import { DeliveryPackageReportedForm } from './delivery-package-reported-form/de
     ProgressSpinnerModule,
     DialogModule,
     DriverInformationDialog,
-    DeliveryPackageReportedForm
+    DeliveryPackageReportedForm,
+    DeliveryPackageCancelForm
   ],
   templateUrl: './delivery-package-status-editable.html',
   styleUrl: './delivery-package-status-editable.css',
@@ -35,6 +37,7 @@ export class DeliveryPackageStatusEditable {
   package: InputSignal<Package> = input.required<Package>();
   protected openDriverInformationDialog: WritableSignal<boolean> = signal(false);
   protected openReportedForm: WritableSignal<boolean> = signal(false);
+  protected openCancelForm: WritableSignal<boolean> = signal(false);
 
   protected items: MenuItem[] = [
     {
@@ -78,7 +81,7 @@ export class DeliveryPackageStatusEditable {
       label: 'Annulés',
       icon: 'pi pi-times',
       command: () => {
-        this.handleStatusChange(PACKAGE_STATUS.cancelled);
+        this.openCancelForm.set(true);
       }
     }
   ];
@@ -100,9 +103,18 @@ export class DeliveryPackageStatusEditable {
     this.onStatusChangeEmitter.emit(formData);
     this.handleCloseReportedForm();
   }
+
+  protected handleSubmitCancelForm(formData: FormData): void {
+    this.onStatusChangeEmitter.emit(formData);
+    this.handleCloseCancelForm();
+  }
   
   protected handleCloseReportedForm(): void {
     this.openReportedForm.set(false);
+  }
+  
+  protected handleCloseCancelForm(): void {
+    this.openCancelForm.set(false);
   }
 
   public handleOpenReportedForm(): void {

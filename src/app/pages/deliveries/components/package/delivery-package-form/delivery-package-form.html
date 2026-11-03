@@ -1,7 +1,7 @@
-<p-drawer [(visible)]="open" [dismissible]="false" position="right" [header]="isUpdate() ? 'Modification' : 'Nouveau colis'" (onHide)="handleClose(true)" styleClass="!w-[30rem] rounded-l-2xl">
+<p-drawer [(visible)]="open" [dismissible]="false" position="right" [header]="isUpdate() ? 'Modification' : 'Nouveau colis'" (onHide)="handleClose(true)" styleClass="!w-[40rem] rounded-l-2xl">
     <form [formGroup]="form" (ngSubmit)="handleSubmit()" class="h-full">
         <div class="flex flex-col justify-between gap-2 h-full">
-            <div class="flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
+            <div #scrollFormRef class="flex flex-col gap-2 overflow-y-auto overflow-x-hidden">
                 <div class="flex flex-col gap-1">
                     <label for="type">Type de colis</label>
                     <p-select [options]="packageTypeOptions" formControlName="type" size="small" optionLabel="label" optionValue="id" [invalid]="form.get('type')?.invalid && (form.get('type')?.touched || form.get('type')?.dirty)" required />
@@ -109,14 +109,14 @@
                             }
                         </div>
                         <div class="flex items-baseline gap-3">
-                            <div class="flex flex-col gap-1">
+                            <div class="flex flex-col gap-1 flex-1">
                                 <label for="price">Prix du colis (en Ariary)</label>
                                 <p-inputnumber inputId="integeronly" id="price" size="small" formControlName="price" [invalid]="form.get('price')?.invalid && (form.get('price')?.touched || form.get('price')?.dirty)" required />
                                 @if (form.get('price')?.invalid && (form.get('price')?.touched || form.get('price')?.dirty)) {
                                     <p-message severity="error" size="small" variant="simple">Prix requis.</p-message>
                                 }
                             </div>
-                            <div class="flex flex-col gap-1">
+                            <div class="flex flex-col gap-1 flex-1">
                                 <label for="deliveryPrice">Frais de livraison (en Ariary)</label>
                                 <p-inputnumber inputId="integeronly" id="deliveryPrice" size="small" formControlName="deliveryPrice" [invalid]="form.get('deliveryPrice')?.invalid && (form.get('deliveryPrice')?.touched || form.get('deliveryPrice')?.dirty)" required />
                                 @if (form.get('deliveryPrice')?.invalid && (form.get('deliveryPrice')?.touched || form.get('deliveryPrice')?.dirty)) {
@@ -160,6 +160,7 @@
                                 }
                             </div>
                         </div>
+                        <!-- reported date -->
                         @if (packageStatusControl.value === 3) {
                             <div class="flex flex-col gap-1 w-full">
                                 <label for="reportedAt">Reporter le</label>
@@ -179,6 +180,7 @@
                                 }
                             </div>
                         }
+                        <!-- driver information -->
                         @if (packageStatusControl.value === 2 && packageTypeSignal() === 2) {
                             <div [ngClass]="['bg-[#F1F5F9] p-3 rounded-xl', form.get('driverInformation')?.invalid && (form.get('driverInformation')?.touched || form.get('driverInformation')?.dirty) ? 'border border-red-500' : '']">
                                 <div class="flex flex-col pb-3">
@@ -238,6 +240,16 @@
                                 <p-message severity="error" size="small" variant="simple">Corrdonnée requis.</p-message>
                             }
                         }
+                        <!-- cancel reason -->
+                         @if (packageStatusControl.value === 4) {
+                            <div class="flex flex-col gap-1 w-full">
+                                <label for="cancelReason">Motif de l'annulation</label>
+                                <p-autocomplete formControlName="cancelReason" [suggestions]="reasonOptions()" [invalid]="form.get('cancelReason')?.invalid && (form.get('cancelReason')?.touched || form.get('cancelReason')?.dirty)" (completeMethod)="searchReason($event)" fluid appendTo="body" />
+                                @if (form.get('cancelReason')?.invalid && (form.get('cancelReason')?.touched || form.get('cancelReason')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Motif requise.</p-message>
+                                }                                
+                            </div>
+                         }
                     </div>
                 </p-fieldset>
             </div>
