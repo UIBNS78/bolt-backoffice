@@ -42,6 +42,7 @@ export type Package = {
     driverInformation: CloudinaryImage;
     deliveryMan: Pick<DeliveryMan, "id" | "name" | "firstName" | "gender">;
     reportedAt: Date | null;
+    reportedReason?: string;
     cancelReason?: string;
 } & { isStatusChanging?: boolean } & Pick<LoadingState, "isDeleting">
 
