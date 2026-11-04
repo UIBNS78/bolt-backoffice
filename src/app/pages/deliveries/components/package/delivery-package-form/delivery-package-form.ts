@@ -116,6 +116,7 @@ export class DeliveryPackageForm implements OnDestroy {
       status: [data?.status ?? PACKAGE_STATUS.pending, [Validators.required, Validators.min(0), Validators.max(4)]],
       driverInformation: [{ value: data?.driverInformation ?? null, disabled: true }],
       reportedAt: [data?.reportedAt ? format(data.reportedAt, "dd MMMM yyyy") : null],
+      reportedReason: [data?.reportedReason, null],
       cancelReason: [data?.cancelReason ?? null]
     });
 
@@ -163,8 +164,9 @@ export class DeliveryPackageForm implements OnDestroy {
     formData.append("deliveryPrice", values.deliveryPrice);
     formData.append("isFragile", values.isFragile);
     formData.append("status", values.status);
-    if (values.reportedAt) {
+    if (values.reportedAt && values.reportedReason) {
       formData.append("reportedAt", new Date(values.reportedAt).toISOString());
+      formData.append("reportedReason", values.reportedReason);
     }
     if (values.cancelReason) {
       formData.append("cancelReason", values.cancelReason);
@@ -269,6 +271,7 @@ export class DeliveryPackageForm implements OnDestroy {
       // set reported date required
       if (value === PACKAGE_STATUS.reported) {
         this.form.get("reportedAt")?.setValidators([Validators.required]);
+        this.form.get("reportedReason")?.setValidators([Validators.required]);
         this.scrollToBottom();
       } else {
         this.form.get("reportedAt")?.clearValidators();

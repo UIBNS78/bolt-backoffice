@@ -21,6 +21,13 @@
                     <p-message severity="error" size="small" variant="simple">Date requise.</p-message>
                 }
             </div>
+            <div class="flex flex-col gap-1 w-full">
+                <label for="reportedReason">Motif du report</label>
+                <p-autocomplete formControlName="reportedReason" [suggestions]="reasonOptions()" [invalid]="form.get('reportedReason')?.invalid && (form.get('reportedReason')?.touched || form.get('reportedReason')?.dirty)" (completeMethod)="searchReason($event)" fluid appendTo="body" />
+                @if (form.get('reportedReason')?.invalid && (form.get('reportedReason')?.touched || form.get('reportedReason')?.dirty)) {
+                    <p-message severity="error" size="small" variant="simple">Motif requise.</p-message>
+                }
+            </div>
             <div class="flex items-center justify-end gap-3">
                 <p-button type="button" label="Annuler" severity="secondary" variant="outlined" size="small" (click)="handleClose()" />
                 <p-button type="submit" label="Modifier" severity="contrast" size="small" />

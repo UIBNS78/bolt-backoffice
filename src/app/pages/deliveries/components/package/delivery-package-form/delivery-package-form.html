@@ -179,6 +179,13 @@
                                     <p-message severity="error" size="small" variant="simple">Date requise.</p-message>
                                 }
                             </div>
+                            <div class="flex flex-col gap-1 w-full">
+                                <label for="reportedReason">Motif du report</label>
+                                <p-autocomplete formControlName="reportedReason" [suggestions]="reasonOptions()" [invalid]="form.get('reportedReason')?.invalid && (form.get('reportedReason')?.touched || form.get('reportedReason')?.dirty)" (completeMethod)="searchReason($event)" fluid appendTo="body" />
+                                @if (form.get('reportedReason')?.invalid && (form.get('reportedReason')?.touched || form.get('reportedReason')?.dirty)) {
+                                    <p-message severity="error" size="small" variant="simple">Motif requise.</p-message>
+                                }
+                            </div>
                         }
                         <!-- driver information -->
                         @if (packageStatusControl.value === 2 && packageTypeSignal() === 2) {
@@ -247,7 +254,7 @@
                                 <p-autocomplete formControlName="cancelReason" [suggestions]="reasonOptions()" [invalid]="form.get('cancelReason')?.invalid && (form.get('cancelReason')?.touched || form.get('cancelReason')?.dirty)" (completeMethod)="searchReason($event)" fluid appendTo="body" />
                                 @if (form.get('cancelReason')?.invalid && (form.get('cancelReason')?.touched || form.get('cancelReason')?.dirty)) {
                                     <p-message severity="error" size="small" variant="simple">Motif requise.</p-message>
-                                }                                
+                                }
                             </div>
                          }
                     </div>

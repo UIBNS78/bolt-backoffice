@@ -1,6 +1,8 @@
-import { Component, EventEmitter, inject, Input, input, InputSignal, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, inject, Input, input, InputSignal, Output, signal, WritableSignal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PACKAGE_STATUS } from '@shared/types/package';
+import { addDays } from 'date-fns';
+import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DialogModule } from 'primeng/dialog';
@@ -13,26 +15,34 @@ import { MessageModule } from 'primeng/message';
     DialogModule,
     ButtonModule,
     MessageModule,
-    DatePickerModule
+    DatePickerModule,
+    AutoCompleteModule
   ],
   templateUrl: './delivery-package-reported-form.html',
   styleUrl: './delivery-package-reported-form.css',
 })
 export class DeliveryPackageReportedForm {
-  private formBuilder: FormBuilder = inject(FormBuilder);
-  private _form: FormGroup = new FormGroup({});
-
+  // vars
   @Output() closeEmitter: EventEmitter<void> = new EventEmitter<void>();
   @Output() submitEmitter: EventEmitter<FormData> = new EventEmitter<FormData>();
   visible: InputSignal<boolean> = input.required<boolean>();
-  @Input() 
-  set defaultDate(date: Date | null) {
-    this._form = this.formBuilder.group({
-      reportedAt: date ? new Date(date) : null
+  
+  private formBuilder: FormBuilder = inject(FormBuilder);
+  protected form: FormGroup = new FormGroup({});
+  protected defaultReason: string[] = [
+    "Décision du client",
+    "Client injoignable",
+    "Colis endommagé",
+    "Colis incomplet",
+    "Décision du propriétaire",
+  ];
+  protected reasonOptions: WritableSignal<string[]> = signal(this.defaultReason);
+
+  constructor() {
+    this.form = this.formBuilder.group({
+      reportedAt: [addDays(new Date(), 1), [Validators.required]],
+      reportedReason: ["", [Validators.required, Validators.minLength(3), Validators.maxLength(30)]]
     });
-  };
-  get form(): FormGroup {
-    return this._form;
   }
 
   handleSubmit(): void {
@@ -44,7 +54,16 @@ export class DeliveryPackageReportedForm {
     const formData: FormData = new FormData();
     formData.append("status", PACKAGE_STATUS.reported.toString());
     formData.append("reportedAt", new Date(this.form.get("reportedAt")?.value).toISOString());
+    formData.append("reportedReason", this.form.get("reportedReason")?.value as string);
     this.submitEmitter.emit(formData);
+  }
+
+  searchReason(event: AutoCompleteCompleteEvent): void {
+    if (!event.query || event.query.length <= 0) {
+      this.reasonOptions.set([...this.defaultReason]);
+    } else {
+      this.reasonOptions.set(this.defaultReason.filter(option => option.includes(event.query)));
+    }
   }
   
   handleClose(): void {
